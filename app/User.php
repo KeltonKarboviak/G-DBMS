@@ -7,6 +7,20 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     /**
+     * The primary key of the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'email';
+
+    /**
+-     * Indicates if the IDs are auto-incrementing.
+-     *
+-     * @var bool
+-     */
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
