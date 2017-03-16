@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GqeResult extends Model
 {
-    use Traits\HasCompositePrimaryKey
+    use Traits\HasCompositePrimaryKey;
 
     /**
      * The primary keys of the table.
