@@ -52,6 +52,30 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
+                            <label for="role" class="col-md-4 control-label">User's Role</label>
+
+                            <div class="col-md-6">
+                                <select id="role" class="form-control" name="role_id" value="{{ old('role_id') }}">
+                                    <option></option>
+                                    @foreach (\App\UserRole::all() as $role)
+                                        @if (old('role') == $role->id)
+                                            <option value="{{ $role->id }}" selected>{{ $role->name }}</option>
+                                        @else
+                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                        @endif
+                                        {{-- <option value="{{ $role->id }}" {{ (old('role_id') == $role->id ? "selected":"") }}>{{ $role->name }}</option> --}}
+                                    @endforeach
+                                </select>
+
+                                @if ($errors->has('role_id'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('role_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Password</label>
 
