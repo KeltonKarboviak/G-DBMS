@@ -21,3 +21,8 @@ Route::get('/', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+
+Route::get('/student', 'StudentController@index');
+Route::get('/student/{student}', 'StudentController@update');
+Route::get('/student/{student}', ['as' => 'student.update', 'uses' => 'StudentController@update']);
+Route::post('/student/{student}', 'StudentController@update_submit');
