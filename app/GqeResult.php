@@ -16,9 +16,30 @@ class GqeResult extends Model
     protected $primaryKey = ['student_id', 'offer_id'];
 
     /**
--     * Indicates if the IDs are auto-incrementing.
--     *
--     * @var bool
--     */
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
     public $incrementing = false;
+
+    /**
+     *
+     */
+    public function student() {
+        return $this->belongsTo(Student::class, 'student_id');
+    }
+
+    /**
+     *
+     */
+    public function offering() {
+        return $this->belongsTo(GqeOffering::class, 'offer_id');
+    }
+
+    /**
+     *
+     */
+    public function pass_level() {
+        return $this->belongsTo(PassLevel::class, 'pass_level_id');
+    }
 }

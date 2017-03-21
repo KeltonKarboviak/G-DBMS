@@ -14,9 +14,9 @@ class Position extends Model
     protected $primaryKey = 'id';
 
     /**
--     * Indicates if the IDs are auto-incrementing.
--     *
--     * @var bool
--     */
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
     public $incrementing = false;
 }

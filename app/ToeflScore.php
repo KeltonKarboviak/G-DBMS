@@ -14,9 +14,16 @@ class ToeflScore extends Model
     protected $primaryKey = 'student_id';
 
     /**
--     * Indicates if the IDs are auto-incrementing.
--     *
--     * @var bool
--     */
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
     public $incrementing = false;
+
+    /**
+     *
+     */
+    public function student() {
+        return $this->hasOne(Student::class, 'id');
+    }
 }

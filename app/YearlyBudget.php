@@ -14,9 +14,16 @@ class YearlyBudget extends Model
     protected $primaryKey = 'academic_year';
 
     /**
--     * Indicates if the IDs are auto-incrementing.
--     *
--     * @var bool
--     */
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
     public $incrementing = false;
+
+    /**
+     *
+     */
+    public function funding_source() {
+        return $this->belongsTo(FundingSource::class, 'funding_source_id');
+    }
 }

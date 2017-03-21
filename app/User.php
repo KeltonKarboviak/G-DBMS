@@ -38,4 +38,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     *
+     */
+    public function role() {
+        return $this->belongsTo(UserRole::class, 'role_id');
+    }
 }
