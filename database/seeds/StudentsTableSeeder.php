@@ -24,7 +24,7 @@ class StudentsTableSeeder extends Seeder
                 'semester_graduated_id' => null
             ],
             [
-                'id' => '8882222', 'first_name' => 'Conner', 'last_name' => 'Bowley',
+                'id' => '8882222', 'first_name' => 'Connor', 'last_name' => 'Bowley',
                 'advisor_id' => '0002222', 'email' => 'connor.bowley@und.edu',
                 'semester_started_id' => 5, 'program_id' => 2, 'undergrad_gpa' => 3.925,
                 'faculty_supported' => true, 'has_program_study' => true,
