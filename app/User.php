@@ -14,10 +14,10 @@ class User extends Authenticatable
     protected $primaryKey = 'email';
 
     /**
--     * Indicates if the IDs are auto-incrementing.
--     *
--     * @var bool
--     */
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
     public $incrementing = false;
 
     /**
@@ -35,7 +35,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'role_id', 'password', 'remember_token',
+        'password', 'remember_token',
     ];
 
 }
