@@ -23,8 +23,8 @@ class CreateGqeResultsTable extends Migration
 
             $table->float('score', 5, 2)->unsigned()->nullable()->default(null);
 
-            $table->integer('pass_lvl_id')->unsigned()->nullable()->default(null);
-            $table->foreign('pass_lvl_id')->references('id')->on('pass_levels')->onDelete('cascade');
+            $table->integer('pass_level_id')->unsigned()->nullable()->default(null);
+            $table->foreign('pass_level_id')->references('id')->on('pass_levels')->onDelete('cascade');
         });
     }
 
