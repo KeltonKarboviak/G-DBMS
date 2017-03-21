@@ -92,7 +92,7 @@
 	{!! Form::label('semester_graduated_id', 'Semester Graduated:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::select('semester_graduated_id', $semesters, null, ['placeholder' => "Choose a semester"]) !!}
+		{!! Form::select('semester_graduated_id', $semesters, null, ['placeholder' => "Choose a semester", 'class' => 'form-control']) !!}
 	</div>
 </div>
 
