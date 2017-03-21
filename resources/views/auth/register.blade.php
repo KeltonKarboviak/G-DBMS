@@ -64,7 +64,6 @@
                                         @else
                                             <option value="{{ $role->id }}">{{ $role->name }}</option>
                                         @endif
-                                        {{-- <option value="{{ $role->id }}" {{ (old('role_id') == $role->id ? "selected":"") }}>{{ $role->name }}</option> --}}
                                     @endforeach
                                 </select>
 
