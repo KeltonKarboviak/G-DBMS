@@ -6,11 +6,11 @@
 		<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h2 class="panel-title">Edit Student</h2>
+					<h2 class="panel-title">Add Student</h2>
 				</div>
 				<div class="panel-body">
 
-					{!! Form::model($student, ['route' => ['student.update_submit', $student], 'method' => 'PATCH', 'class' => 'form-horizontal']) !!}
+					{!! Form::model($student, ['route' => ['student.store_submit', $student], 'method' => 'POST', 'class' => 'form-horizontal']) !!}
 						@include('student/partials/_student_info')
 					{!! Form::close() !!}
 				</div>

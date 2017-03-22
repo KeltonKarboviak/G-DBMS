@@ -20,6 +20,8 @@ class CreateSemestersTable extends Migration
         // support adding MySQL YEAR data type
         DB::statement('ALTER TABLE semesters ADD calendar_year YEAR(4);');
         DB::statement('ALTER TABLE semesters ADD academic_year YEAR(4);');
+
+        DB::statement('ALTER TABLE semesters ADD CONSTRAINT FOREIGN KEY(academic_year) REFERENCES yearly_budgets(academic_year);');
     }
 
     /**

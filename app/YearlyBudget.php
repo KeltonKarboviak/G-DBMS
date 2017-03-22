@@ -19,6 +19,7 @@ class YearlyBudget extends Model
      * @var bool
      */
     public $incrementing = false;
+    public $timestamps = false;
 
     /**
      *

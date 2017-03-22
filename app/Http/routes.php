@@ -20,9 +20,20 @@ Route::get('/', function () {
 
 Route::auth();
 
+Route::post('/semesters/add', ['as' => 'semester.store_submit', 'uses' => 'SemesterController@store_submit']);
+
+
 Route::get('/home', 'HomeController@index');
 
+Route::get('/semesters/add',['as' => 'semester.store', 'uses' => 'SemesterController@store']);
+
 Route::get('/student', 'StudentController@index');
-Route::get('/student/{student}', 'StudentController@update');
+
+Route::get('/student/add', ['as' => 'student.store', 'uses' => 'StudentController@store']);
+Route::post('/student/add', ['as' => 'student.store_submit', 'uses' => 'StudentController@store_submit']);
+
+// Route::get('/student/{student}', 'StudentController@update');
 Route::get('/student/{student}', ['as' => 'student.update', 'uses' => 'StudentController@update']);
-Route::post('/student/{student}', 'StudentController@update_submit');
+Route::patch('/student/{student}', ['as' => 'student.update_submit', 'uses' => 'StudentController@update_submit']);
+Route::delete('/student/{student}', ['as' => 'student.delete', 'uses' => 'StudentController@delete']);
+

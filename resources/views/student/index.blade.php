@@ -16,10 +16,14 @@
 					          	<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ $count }}">{{ $student->last_name . ", " . $student->first_name }}</a>
 					        </h3>
 						    <div class="panel-title pull-right" >
-						      	<div class="btn-group">
-							        <a href="{{ url('/student/' . $student->id) }}" class="btn" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>
-							        <a class="btn" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
-					      		</div>
+						      	
+						        {!! Form::open(['method' => 'DELETE', 'route' => ['student.delete', $student], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
+						        	<div class="btn-group">
+					        			<!-- <button class="btn" data-toggle="tooltip" title="Edit"> --><a class="btn btn-default" data-toggle="tooltip" title="Edit" href="{{ url('/student/' . $student->id) }}"><span class="glyphicon glyphicon-edit"></span></a><!-- </button> -->
+						        		{!! Form::button('<i class="glyphicon glyphicon-trash" data-toggle="tooltip" title="Delete"></i>', ['type' => 'submit', 'class' => 'btn btn-default']) !!}
+						        	</div>
+						        {!! Form::close() !!}
+					      		
 					      	</div>
 					      	<div class="clearfix"></div>
 			      		</div>
@@ -45,6 +49,27 @@
 
             </div> 
         </div>
+        <div class="col-md-1">
+	        {!! Form::open(['method' => 'GET', 'route' => ['student.store']]) !!}
+	        	{!! Form::button('Add a Student', ['type' => 'submit', 'class' => 'btn']) !!}
+	        {!! Form::close() !!}      		
+	        <!-- <a href="{{ url('/student/add') }}" class="btn">Add a User</a> -->
+        </div>
 	</div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+
+  function ConfirmDelete()
+  {
+	  var x = confirm("Are you sure you want to delete?");
+	  if (x)
+	    return true;
+	  else
+	    return false;
+  }
+
+</script>
 @endsection
