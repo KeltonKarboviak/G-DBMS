@@ -24,6 +24,8 @@ Route::get('/{returnroute}/semesters/add',['as' => 'semester.store', 'uses' => '
 Route::post('/{returnroute}/semesters/add', ['as' => 'semester.store_submit', 'uses' => 'SemesterController@store_submit']);
 
 Route::get('/home', 'HomeController@index');
+Route::get('/home/chart', 'HomeController@chart');
+Route::get('/home/drilldown', 'HomeController@drilldown');
 
 Route::get('/student', 'StudentController@index');
 
