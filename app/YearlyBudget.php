@@ -21,6 +21,12 @@ class YearlyBudget extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    protected $appends = ['full_name'];
+
+    public function getFullNameAttribute() {
+    	return $this->academic_year . '-' . ($this->academic_year+1);
+    }
+
     /**
      *
      */
