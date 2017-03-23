@@ -26,9 +26,12 @@ Route::post('/{returnroute}/semesters/add', ['as' => 'semester.store_submit', 'u
 Route::get('/home', 'HomeController@index');
 Route::get('/home/chart', 'HomeController@chart');
 Route::get('/home/drilldown', 'HomeController@drilldown');
+Route::get('/home/budget/{budget}', 'HomeController@budget_show');
+Route::patch('/home/budget/{budget}', ['as' => 'budget.update', 'uses' => 'HomeController@budget_update']);
 
 // Route::get('/student', 'StudentController@index');
 Route::get('/student', ['as' => 'student.index_filter', 'uses' => 'StudentController@index_filter']);
+// Route::get('/student', 'StudentController@index');
 
 Route::get('/student/add', ['as' => 'student.store', 'uses' => 'StudentController@store']);
 Route::post('/student/add', ['as' => 'student.store_submit', 'uses' => 'StudentController@store_submit']);

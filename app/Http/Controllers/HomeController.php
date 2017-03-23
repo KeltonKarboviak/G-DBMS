@@ -31,6 +31,7 @@ class HomeController extends Controller
     public function index()
     {
         return view('/home', [
+            'budget' => YearlyBudget::find( (int)date('m') >= 8 ? (int)date('Y') :  (int)date('Y') - 1 ),
             'years' => YearlyBudget::all()->lists('full_name', 'academic_year'),
         ]);
     }
@@ -107,6 +108,37 @@ class HomeController extends Controller
         return Response::json([
            'success' => true,
            'drilldowns' => ['name' => $name, 'data' => $drilldownData]
+        ]);
+    }
+
+    public function budget_show(Request $request, YearlyBudget $budget) {
+        // $year = $request->input('year');
+        // $budget = YearlyBudget::find($year);
+
+        if ($request->ajax()) {
+            return Response::json([
+                'success' => $budget != null,
+                'budget' => $budget,
+            ]);
+        }
+
+        return view('/home', [
+            'budget' => $budget,
+            'years' => YearlyBudget::all()->lists('full_name', 'academic_year'),
+        ]);
+    }
+
+    public function budget_update(Request $request, YearlyBudget $budget) {
+
+        $budget->update($request->only(['academic_year', 'budget']));
+
+        $request->session()->flash(
+            'alert-success', "Budget update for {$budget->full_name} was successful! New amount: {$request->budget}"
+        );
+
+        return view('/home', [
+            'budget' => $budget,
+            'years' => YearlyBudget::all()->lists('full_name', 'academic_year'),
         ]);
     }
 }

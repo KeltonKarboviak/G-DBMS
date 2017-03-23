@@ -19,7 +19,10 @@ class YearlyBudget extends Model
      * @var bool
      */
     public $incrementing = false;
+
     public $timestamps = false;
+
+    protected $fillable = ['academic_year', 'budget'];
 
     protected $appends = ['full_name'];
 

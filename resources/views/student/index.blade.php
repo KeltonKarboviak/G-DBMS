@@ -91,7 +91,7 @@
 
             	<!-- Start data for each student -->
             	@foreach ($students as $student)
-            		<?php $count = $count+1; ?>
+            		<?php $count = $count + 1; ?>
 
             		<div class="panel panel-primary">
 				      	<div class="panel-heading clearfix">

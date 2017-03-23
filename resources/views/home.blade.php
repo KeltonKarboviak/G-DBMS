@@ -8,9 +8,56 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    {!! Form::select('academic_year', $years, null, ['placeholder' => "Choose an Academic Year", 'class' => 'form-control']) !!}
 
                     <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+
+                    {!! Form::model($budget, ['route' => ['budget.update', $budget], 'method' => 'PATCH', 'class' => 'form-horizontal']) !!}
+
+                        <div class="form-group">
+                            <!--{!! Form::label('academic_year', 'Chart:', ['class' => 'col-md-4 control-label']) !!}-->
+
+                            <div class="col-md-12">
+                                {!! Form::select('academic_year', $years, null, ['placeholder' => "Choose an Academic Year", 'class' => 'form-control']) !!}
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group{{ $errors->has('academic_year') ? ' has-error' : '' }}">
+                            {!! Form::label('academic_year', 'Academic Year:', ['class' => 'col-md-4 control-label']) !!}
+
+                            <div class="col-md-6">
+                                {!! Form::number('academic_year', null, ['disabled' => 'disabled', 'class' => 'form-control disabled']) !!}
+
+                                @if ($errors->has('academic_year'))
+                                    <span class="help-block">
+                        				<strong>{{ $errors->first('academic_year') }}</strong>
+                        			</span>
+                        		@endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('budget') ? ' has-error' : '' }}">
+                            {!! Form::label('budget', 'Budget:', ['class' => 'col-md-4 control-label']) !!}
+
+                            <div class="col-md-6">
+                                {!! Form::number('budget', null, ['class' => 'form-control']) !!}
+
+                                @if ($errors->has('budget'))
+                                    <span class="help-block">
+                        				<strong>{{ $errors->first('budget') }}</strong>
+                        			</span>
+                        		@endif
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                {!! Form::submit('Update', ['class' => 'btn btn-success']) !!}
+                            </div>
+                        </div>
+                        <!--academic_year, budget, funding_source_id-->
+					{!! Form::close() !!}
                 </div>
             </div>
         </div>
@@ -88,6 +135,9 @@ $(document).ready(function () {
 
         var year = $(this).val();
 
+        // Change the form's action to direct to the correct budget academic_year
+        $("form").attr("action", "/home/budget/" + year);
+
         // AJAX call to get pie chart data
         $.ajax({
             type: "GET",
@@ -114,7 +164,17 @@ $(document).ready(function () {
                 chart.hideLoading();
             }
         }, 'json');
-    });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/budget/" + year,
+            data: {year: year},
+            success: function (data) {
+                $("input[name=academic_year").val(data['budget']['academic_year']);
+                $("input[name=budget").val(data['budget']['budget']);
+            }
+        }, 'json');
+    }).change();
 
 });
 </script>
