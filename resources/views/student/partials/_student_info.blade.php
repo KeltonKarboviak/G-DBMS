@@ -98,7 +98,7 @@
 	<div class="col-md-6">
 		{!! Form::select('semester_started_id', $semesters, null, ['placeholder' => "Choose a semester", 'class' => 'form-control']) !!}
 	</div>
-	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href="/semesters/add"><span class="glyphicon glyphicon-plus"></span></a>
+	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a>
 </div>
 
 <div class="form-group{{ $errors->has('is_current') ? ' has-error' : '' }}">
@@ -129,7 +129,7 @@
 			</span>
 		@endif
 	</div>
-	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href="/semesters/add"><span class="glyphicon glyphicon-plus"></span></a>
+	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a>
 </div>
 
 <div class="form-group">

@@ -9,7 +9,8 @@
 					<h2 class="panel-title">Add a Semester</h2>
 				</div>
 				<div class="panel-body">
-					{!! Form::open(['method' => 'POST', 'route' => ['semester.store_submit',$semester]]) !!}
+					{!! Form::open(['method' => 'POST', 'route' => ['semester.store_submit',$returnroute,$semester], 'class' => 'form-horizontal']) !!}
+						{!! Form::hidden('returnroute',$returnroute) !!}
 						<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 							{!! Form::label('name', 'Name:', ['class' => 'col-md-4 control-label']) !!}
 
@@ -53,7 +54,7 @@
 							<div class="col-md-6 col-md-offset-4">
 								<div class="btn-group">
 						       	{!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
-								{!! Form::button('Cancel', ['onClick' => "parent.location='" . session()->pull('previousURL','/home') . "'", 'class' => 'btn btn-danger']) !!} 
+								{!! Form::button('Cancel', ['onClick' => "parent.location='" . str_replace("SLASH","/",$returnroute) . "'", 'class' => 'btn btn-danger']) !!} 
 						        </div>
 						    </div>
 						</div>

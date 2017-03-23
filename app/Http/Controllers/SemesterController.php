@@ -37,30 +37,25 @@ class SemesterController extends Controller
         $this->middleware('auth');
     }
 
-    public function store()
+    public function store($returnroute)
     {
-        // echo "before " . session('previousURL');
-        if(!session()->has("previousURL"))
-        {
-            session()->put("previousURL",URL::previous());
-        }
         // echo "after " . session('previousURL');
         return view('/semester/store', [
             'semester' => null,
             'names' => $this->names,
-            // 'previousURL' => URL::previous(),
+            'returnroute' => $returnroute,
             // 'previousURL' => session('previousURL')
         ]);
     }
 
     public function store_submit(Request $request, Semester $semester)
     {
-        // $this->validate($request,$this->rules,$this->messages);
-        $validator = Validator::make($request->all(),$this->rules,$this->messages);
-        if($validator->fails())
-        {
-            return Redirect::to('/semesters/add')->withErrors($validator)->withInput();
-        }
+        $this->validate($request,$this->rules,$this->messages);
+        // $validator = Validator::make($request->all(),$this->rules,$this->messages);
+        // if($validator->fails())
+        // {
+        //     return Redirect::to(str_replace("SLASH","/",$request->get("returnroute")) . '/semesters/add')->withErrors($validator)->withInput();
+        // }
 
         if(YearlyBudget::where("academic_year", $request->get("academic_year"))->get()->count() == 0)
         {
@@ -71,10 +66,10 @@ class SemesterController extends Controller
             $yearly_budget->save();
         }
 
-        // $semester->create($request->except("previousURL"));
-        $semester->create($request->all());
+        $semester->create($request->except("returnroute"));
+        // $semester->create($request->all());
 
-        // return Redirect::to($request->get("previousURL"));
-        return Redirect::to(session()->pull('previousURL','/home'));
+        return Redirect::to(str_replace("SLASH","/",$request->get("returnroute")));
+        // return Redirect::to(session()->pull('previousURL','/home'));
     }
 }

@@ -20,12 +20,10 @@ Route::get('/', function () {
 
 Route::auth();
 
-Route::post('/semesters/add', ['as' => 'semester.store_submit', 'uses' => 'SemesterController@store_submit']);
-
+Route::get('/{returnroute}/semesters/add',['as' => 'semester.store', 'uses' => 'SemesterController@store']);
+Route::post('/{returnroute}/semesters/add', ['as' => 'semester.store_submit', 'uses' => 'SemesterController@store_submit']);
 
 Route::get('/home', 'HomeController@index');
-
-Route::get('/semesters/add',['as' => 'semester.store', 'uses' => 'SemesterController@store']);
 
 Route::get('/student', 'StudentController@index');
 

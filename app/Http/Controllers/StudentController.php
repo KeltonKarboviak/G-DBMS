@@ -115,6 +115,7 @@ class StudentController extends Controller
     public function update_submit(Request $request, Student $student)
     {
     	// global $rules, $messages;
+    	$this->rules['id'] = 'required|size:7|regex:/\d{7}/|unique:students,id,'.$student->id;
     	$request->merge([
     		"has_program_study" => $this->checkboxConvert($request->get("has_program_study","off")),
     		"is_current" => $this->checkboxConvert($request->get("is_current","off")),
