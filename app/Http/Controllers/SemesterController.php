@@ -51,11 +51,6 @@ class SemesterController extends Controller
     public function store_submit(Request $request, Semester $semester)
     {
         $this->validate($request,$this->rules,$this->messages);
-        // $validator = Validator::make($request->all(),$this->rules,$this->messages);
-        // if($validator->fails())
-        // {
-        //     return Redirect::to(str_replace("SLASH","/",$request->get("returnroute")) . '/semesters/add')->withErrors($validator)->withInput();
-        // }
 
         if(YearlyBudget::where("academic_year", $request->get("academic_year"))->get()->count() == 0)
         {
@@ -67,9 +62,7 @@ class SemesterController extends Controller
         }
 
         $semester->create($request->except("returnroute"));
-        // $semester->create($request->all());
 
         return Redirect::to(str_replace("SLASH","/",$request->get("returnroute")));
-        // return Redirect::to(session()->pull('previousURL','/home'));
     }
 }

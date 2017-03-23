@@ -25,7 +25,8 @@ Route::post('/{returnroute}/semesters/add', ['as' => 'semester.store_submit', 'u
 
 Route::get('/home', 'HomeController@index');
 
-Route::get('/student', 'StudentController@index');
+// Route::get('/student', 'StudentController@index');
+Route::get('/student', ['as' => 'student.index_filter', 'uses' => 'StudentController@index_filter']);
 
 Route::get('/student/add', ['as' => 'student.store', 'uses' => 'StudentController@store']);
 Route::post('/student/add', ['as' => 'student.store_submit', 'uses' => 'StudentController@store_submit']);
@@ -34,4 +35,15 @@ Route::post('/student/add', ['as' => 'student.store_submit', 'uses' => 'StudentC
 Route::get('/student/{student}', ['as' => 'student.update', 'uses' => 'StudentController@update']);
 Route::patch('/student/{student}', ['as' => 'student.update_submit', 'uses' => 'StudentController@update_submit']);
 Route::delete('/student/{student}', ['as' => 'student.delete', 'uses' => 'StudentController@delete']);
+
+Route::get('/advisor', 'AdvisorController@index');
+
+Route::get('/advisor/info/{advisor}', ['as' => 'advisor.info', 'uses' => 'AdvisorController@info']);
+
+Route::get('/advisor/add', ['as' => 'advisor.store', 'uses' => 'AdvisorController@store']);
+Route::post('/advisor/add', ['as' => 'advisor.store_submit', 'uses' => 'AdvisorController@store_submit']);
+
+Route::get('/advisor/{advisor}', ['as' => 'advisor.update', 'uses' => 'AdvisorController@update']);
+Route::patch('/advisor/{advisor}', ['as' => 'advisor.update_submit', 'uses' => 'AdvisorController@update_submit']);
+Route::delete('/advisor/{advisor}', ['as' => 'advisor.delete', 'uses' => 'AdvisorController@delete']);
 

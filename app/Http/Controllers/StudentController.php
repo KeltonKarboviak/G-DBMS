@@ -47,10 +47,117 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    // public function index()
+    // {
+    //     return view('/student/index', [
+    //         'students' => Student::orderBy('last_name')->get()
+    //     ]);
+    // }
+
+    public function index_filter(Request $request)
     {
+        $query = Student::orderBy('last_name');
+        $vals = array();
+
+        if($request->has('first_name'))
+            $query->where('first_name',$request->get('first_name'));
+        if($request->has('last_name'))
+            $query->where('last_name',$request->get('last_name'));
+        if($request->has('is_current'))
+        {
+            if($request->get('is_current') === 'Yes')
+            {
+                $query->where('is_current',true);
+            }
+            else
+                $query->where('is_current',false);
+        }
+        if($request->has('has_committee'))
+        {
+            if($request->get('has_committee') === 'Yes')
+                $query->where('has_committee',true);
+            else
+                $query->where('has_committee',false);
+        }
+        if($request->has('has_program_study'))
+        {
+            if($request->get('has_program_study') === 'Yes')
+                $query->where('has_program_study',true);
+            else
+                $query->where('has_program_study',false);
+        }
+        if($request->has('is_graduated'))
+        {
+            if($request->get('is_graduated') === 'Yes')
+                $query->where('is_graduated',true);
+            else
+                $query->where('is_graduated',false);
+        }
+        if($request->has('faculty_supported'))
+        {
+            if($request->get('faculty_supported') === 'Yes')
+                $query->where('faculty_supported',true);
+            else
+                $query->where('faculty_supported',false);
+        }
+        if ($request->has('program_id')) 
+        {
+            $ids = $request->get('program_id');
+            $query->where(function($query) use ($ids)
+            {
+                foreach ($ids as $id) {
+                    $query->orWhere('program_id',$id);
+                }
+            }); 
+        }
+        if ($request->has('advisor_id')) 
+        {
+            $ids = $request->get('advisor_id');
+            $query->where(function($query) use ($ids)
+            {
+                foreach ($ids as $id) {
+                    $query->orWhere('advisor_id',$id);
+                }
+            }); 
+        }
+        if ($request->has('semester_started_id')) 
+        {
+            $ids = $request->get('semester_started_id');
+            $query->where(function($query) use ($ids)
+            {
+                foreach ($ids as $id) {
+                    $query->orWhere('semester_started_id',$id);
+                }
+            }); 
+        }
+        if ($request->has('semester_graduated_id')) 
+        {
+            $ids = $request->get('semester_graduated_id');
+            $query->where(function($query) use ($ids)
+            {
+                foreach ($ids as $id) {
+                    $query->orWhere('semester_graduated_id',$id);
+                }
+            }); 
+        }
+
         return view('/student/index', [
-            'students' => Student::orderBy('last_name')->get()
+            'students' => $query->get(),
+            'advisors' => Advisor::all()->lists("full_name","id"),
+            'programs' => Program::lists("name","id"), 
+            'semesters' => Semester::all()->lists("full_name","id"),
+            'yesNo' => ['Yes' => 'Yes', 'No' => 'No'],
+            'first_name' => $request->get('first_name'),
+            'last_name' => $request->get('last_name'),
+            'advisor_id' => $request->get('advisor_id'),
+            'program_id' => $request->get('program_id'),
+            'semester_started_id' => $request->get('semester_started_id'),
+            'semester_graduated_id' => $request->get('semester_graduated_id'),
+            'is_current' => $request->get('is_current'),
+            'is_graduated' => $request->get('is_graduated'),
+            'has_program_study' => $request->get('has_program_study'),
+            'faculty_supported' => $request->get('faculty_supported'),
+            'has_committee' => $request->get('has_committee'),
         ]);
     }
 
@@ -85,6 +192,7 @@ class StudentController extends Controller
     	// global $rules, $messages;
     	$request->merge([
     		"has_program_study" => $this->checkboxConvert($request->get("has_program_study","off")),
+            "has_committee" => $this->checkboxConvert($request->get("has_committee","off")),
     		"is_current" => $this->checkboxConvert($request->get("is_current","off")),
     		"is_graduated" => $this->checkboxConvert($request->get("is_graduated","off")),
     	]);
@@ -119,6 +227,7 @@ class StudentController extends Controller
     	$this->rules['id'] = 'required|size:7|regex:/\d{7}/|unique:students,id,'.$student->id;
     	$request->merge([
     		"has_program_study" => $this->checkboxConvert($request->get("has_program_study","off")),
+            "has_committee" => $this->checkboxConvert($request->get("has_committee","off")),
     		"is_current" => $this->checkboxConvert($request->get("is_current","off")),
     		"is_graduated" => $this->checkboxConvert($request->get("is_graduated","off")),
     	]);

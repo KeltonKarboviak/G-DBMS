@@ -24,7 +24,7 @@ class Student extends Model
 
     protected $fillable = [
         'id', 'first_name', 'last_name', 'email', 'advisor_id', 'program_id', 'undergrad_gpa', 'has_program_study',
-        'semester_started_id', 'is_current', 'semester_graduated_id', 'is_graduated'
+        'semester_started_id', 'is_current', 'semester_graduated_id', 'is_graduated','has_committee'
     ];
 
     /**

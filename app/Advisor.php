@@ -22,6 +22,12 @@ class Advisor extends Model
 
     protected $appends = ['full_name'];
 
+    public $timestamps = false;
+
+    protected $fillable = [
+        'id','first_name','last_name','email'
+    ];
+
     public function getFullNameAttribute() {
     	return "{$this->first_name} {$this->last_name}";
     }

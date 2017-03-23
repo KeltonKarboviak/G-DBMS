@@ -53,6 +53,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a></li>
                     <li><a href="{{ url('/student') }}">Student Info</a></li>
+                    <li><a href="{{ url('/advisor') }}">Advisor Info</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -76,6 +77,15 @@
             </div>
         </div>
     </nav>
+
+    <div class="flash-message">
+    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+      @if(Session::has('alert-' . $msg))
+
+      <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+      @endif
+    @endforeach
+  </div> <!-- end .flash-message -->
 
     @yield('content')
 

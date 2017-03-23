@@ -21,7 +21,8 @@ class StudentsTableSeeder extends Seeder
                 'semester_started_id' => 5, 'program_id' => 3, 'undergrad_gpa' => 3.250,
                 'faculty_supported' => false, 'has_program_study' => false,
                 'is_current' => true, 'is_graduated' => false,
-                'semester_graduated_id' => null
+                'semester_graduated_id' => null,
+                'has_committee' => false
             ],
             [
                 'id' => '8882222', 'first_name' => 'Connor', 'last_name' => 'Bowley',
@@ -29,7 +30,8 @@ class StudentsTableSeeder extends Seeder
                 'semester_started_id' => 5, 'program_id' => 2, 'undergrad_gpa' => 3.925,
                 'faculty_supported' => true, 'has_program_study' => true,
                 'is_current' => true, 'is_graduated' => false,
-                'semester_graduated_id' => null
+                'semester_graduated_id' => null,
+                'has_committee' => true
             ],
             [
                 'id' => '8883333', 'first_name' => 'Joe', 'last_name' => 'Schmo',
@@ -37,7 +39,8 @@ class StudentsTableSeeder extends Seeder
                 'semester_started_id' => 1, 'program_id' => 4, 'undergrad_gpa' => 3.102,
                 'faculty_supported' => false, 'has_program_study' => false,
                 'is_current' => true, 'is_graduated' => false,
-                'semester_graduated_id' => null
+                'semester_graduated_id' => null,
+                'has_committee' => false
             ],
             [
                 'id' => '8884444', 'first_name' => 'John', 'last_name' => 'Smith',
@@ -45,7 +48,8 @@ class StudentsTableSeeder extends Seeder
                 'semester_started_id' => 1, 'program_id' => 4, 'undergrad_gpa' => 3.555,
                 'faculty_supported' => true, 'has_program_study' => true,
                 'is_current' => true, 'is_graduated' => true,
-                'semester_graduated_id' => 6
+                'semester_graduated_id' => 6,
+                'has_committee' => true
             ],
         ];
 

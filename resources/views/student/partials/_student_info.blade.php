@@ -84,6 +84,14 @@
 	</div>
 </div>
 
+<div class="form-group{{ $errors->has('has_committee') ? ' has-error' : '' }}">
+	{!! Form::label('has_committee', 'Has Committee:', ['class' => 'col-md-4 control-label']) !!}
+
+	<div class="col-md-6">
+		{!! Form::checkbox('has_committee', null) !!}
+	</div>
+</div>
+
 <div class="form-group{{ $errors->has('has_program_study') ? ' has-error' : '' }}">
 	{!! Form::label('has_program_study', 'Has Program of Study:', ['class' => 'col-md-4 control-label']) !!}
 
