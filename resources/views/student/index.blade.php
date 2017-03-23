@@ -2,9 +2,7 @@
 
 @section('styles')
 <style>
-	.nav-pills {
-		background-color: black;
-	}
+
 </style>
 @endsection
 
@@ -119,12 +117,16 @@
 			<h1>Some text to enable scrolling</h1>
 			<h1>Some text to enable scrolling</h1>
         </div>
-        <div class="col-md-1">
-	        {!! Form::open(['method' => 'GET', 'route' => ['student.store']]) !!}
-	        	{!! Form::button('Add a Student', ['type' => 'submit', 'class' => 'btn']) !!}
-	        {!! Form::close() !!}
-	        <!-- <a href="{{ url('/student/add') }}" class="btn">Add a User</a> -->
-        </div>
+
+		<!-- Affixed side nav for 'Add a Student' button -->
+        <nav class="col-md-3">
+        	<div data-spy="affix" data-offset-top="0">
+        		<ul class="nav nav-pills nav-stacked">
+        			<li><a href="{{ url('/student/add') }}" class="btn btn-success btn-lg">Add a Student</a></li>
+        		</ul>
+        	</div>
+    	</nav>
+
 	</div>
 </div>
 @endsection
