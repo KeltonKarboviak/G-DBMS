@@ -49,7 +49,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return view('/student/index');
+        return view('/student/index', [
+            'students' => Student::orderBy('last_name')->get()
+        ]);
     }
 
     public function delete(Student $student)
@@ -106,10 +108,9 @@ class StudentController extends Controller
     	return view('/student/update', [
     		'student' => $student,
     		'advisors' => Advisor::all()->lists("full_name","id"),
-    		'programs' => Program::lists("name","id"), 
+    		'programs' => Program::lists("name","id"),
     		'semesters' => Semester::all()->lists("full_name","id")
     	]);
-    	//return view('/student/update')->with('student', $student);
     }
 
     public function update_submit(Request $request, Student $student)
