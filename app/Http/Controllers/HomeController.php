@@ -37,6 +37,11 @@ class HomeController extends Controller
     }
 
     public function chart(Request $request) {
+        // Check to see if the request is an AJAX call
+        if (!$request->ajax()) {
+            // @TODO return 404 page if it is not AJAX
+        }
+
         $year = $request->input('year');
 
         $budget = YearlyBudget::find($year, ['budget']);
@@ -70,6 +75,11 @@ class HomeController extends Controller
     }
 
     public function drilldown(Request $request) {
+        // Check to see if the request is an AJAX call
+        if (!$request->ajax()) {
+            // @TODO return 404 page if it is not AJAX
+        }
+
         $year = $request->input('year');
         $name = $request->input('name');
 
