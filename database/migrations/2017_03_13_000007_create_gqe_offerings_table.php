@@ -16,10 +16,14 @@ class CreateGqeOfferingsTable extends Migration
             $table->increments('id');
 
             $table->integer('gqe_section_id')->unsigned();
-            $table->foreign('gqe_section_id')->references('id')->on('gqe_sections')->onDelete('cascade');
+            $table->foreign('gqe_section_id')->references('id')->on('gqe_sections')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->integer('semester_id')->unsigned();
-            $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade');
+            $table->foreign('semester_id')->references('id')->on('semesters')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->date('date');
             $table->float('cutoff_ms', 5, 2)->unsigned()->nullable()->default(null);

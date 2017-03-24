@@ -15,7 +15,9 @@ class CreateGreScoresTable extends Migration
         Schema::create('gre_scores', function (Blueprint $table) {
             $table->char('student_id');
             $table->primary('student_id');
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->foreign('student_id')->references('id')->on('students')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->integer('score')->unsigned;
         });

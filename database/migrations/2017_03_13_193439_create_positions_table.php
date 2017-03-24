@@ -15,12 +15,13 @@ class CreatePositionsTable extends Migration
         Schema::create('positions', function (Blueprint $table) {
             $table->char('id', 5);
             $table->primary('id');
-            // @TODO or $table->increments('id');
 
             $table->char('name', 3);
 
             $table->integer('program_id')->unsigned();
-            $table->foreign('program_id')->references('id')->on('programs')->onDelete('cascade');
+            $table->foreign('program_id')->references('id')->on('programs')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->unique(['name', 'program_id']);
 

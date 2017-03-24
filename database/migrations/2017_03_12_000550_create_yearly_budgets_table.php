@@ -16,7 +16,9 @@ class CreateYearlyBudgetsTable extends Migration
             $table->decimal('budget', 9, 2);
 
             $table->integer('funding_source_id')->unsigned();
-            $table->foreign('funding_source_id')->references('id')->on('funding_sources')->onDelete('cascade');
+            $table->foreign('funding_source_id')->references('id')->on('funding_sources')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
         // Need to add this afterwards because the Blueprint class does not
         // support adding MySQL YEAR data type

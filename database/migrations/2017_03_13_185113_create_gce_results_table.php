@@ -16,7 +16,9 @@ class CreateGceResultsTable extends Migration
             $table->increments('id');
 
             $table->char('student_id', 7);
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->foreign('student_id')->references('id')->on('students')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->boolean('passed');
             $table->date('date');

@@ -13,10 +13,10 @@ class AddAcademicYearFkSemestersTable extends Migration
     public function up()
     {
         Schema::table('semesters', function (Blueprint $table) {
-            $table->foreign('academic_year')->references('academic_year')->on('yearly_budgets')->onDelete('cascade');
+            $table->foreign('academic_year')->references('academic_year')->on('yearly_budgets')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
-
-        // DB::statement('ALTER TABLE')
     }
 
     /**
@@ -27,7 +27,7 @@ class AddAcademicYearFkSemestersTable extends Migration
     public function down()
     {
         Schema::table('semesters', function (Blueprint $table) {
-            //
+            $table->dropForeign(['academic_year']);
         });
     }
 }
