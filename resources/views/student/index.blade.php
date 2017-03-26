@@ -192,18 +192,3 @@
 	</div>
 </div>
 @endsection
-
-@section('scripts')
-<script>
-
-function ConfirmDelete()
-{
-  var x = confirm("Are you sure you want to delete?");
-  return x;
-}
-
-$(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-});
-</script>
-@endsection
