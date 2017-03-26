@@ -125,7 +125,7 @@
 							        		<li class="list-group-item">Graduated: {{ $student->is_graduated ? "Yes" : "No" }}</li>
 							        		<li class="list-group-item">Semester Graduated: {{ $student->semester_graduated != null ? $student->semester_graduated->full_name : "N/A" }}</li>
 							        		<li class="list-group-item">Faculty Supported (for Ranking): {{ $student->faculty_supported ? "Yes" : "No" }}</li>
-							        		<li class="list-group-item{{ !$student->has_program_study ? ' list-group-item-danger' : '' }}">Has Committee: {{ $student->has_committee == 1 ? "Yes" : "No" }}</li>
+							        		<li class="list-group-item{{ !$student->has_committee ? ' list-group-item-danger' : '' }}">Has Committee: {{ $student->has_committee == 1 ? "Yes" : "No" }}</li>
 						        		</ul>
 						        	</div>
 						        </div>
