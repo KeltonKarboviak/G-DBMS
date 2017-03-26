@@ -9,7 +9,7 @@
 					<h2 class="panel-title">Advisor Information</h2>
 				</div>
 				<div class="panel-body">
-		        	<ul>
+		        	<ul class="list-group">
 		        		<li class="list-group-item">Name: {{ $advisor->first_name . " " . $advisor->last_name }}</li>
 		        		<li class="list-group-item">EMPLID: {{ $advisor->id }}</li>
 		        		<li class="list-group-item">Email: {{ $advisor->email }}</li>
