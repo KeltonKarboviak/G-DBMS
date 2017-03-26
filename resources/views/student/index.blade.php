@@ -32,7 +32,7 @@
 
 						<div class="form-group">
 							{!! Form::label('advisor_id',"Advisor:") !!}
-							{!! Form::select('advisor_id[]', $advisors, $advisors, ['id' => 'advisor_id', 'class' => 'form-control', 'multiple']) !!}
+							{!! Form::select('advisor_id[]', $advisors, $advisor_id, ['id' => 'advisor_id', 'class' => 'form-control', 'multiple']) !!}
 						</div>
 
 						<div class="form-group">
