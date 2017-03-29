@@ -51,7 +51,7 @@ class AdvisorController extends Controller
     {
     	return view('/advisor/info', [
     		'advisor' => $advisor,
-    		'students' => Student::where('advisor_id',$advisor->id)->orderBy('last_name')->get(),
+    		'students' => Student::where('advisor_id',$advisor->id)->where('is_current',true)->orderBy('last_name')->get(),
     	]);
     }
 

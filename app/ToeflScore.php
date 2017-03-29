@@ -19,6 +19,9 @@ class ToeflScore extends Model
      * @var bool
      */
     public $incrementing = false;
+    public $timestamps = false;
+
+    public $fillable = ['student_id','score'];
 
     /**
      *

@@ -1,150 +1,61 @@
-<div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
-	{!! Form::label('first_name', 'First Name:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::text('first_name', null, ['class' => 'form-control']) !!}
-
-		@if ($errors->has('first_name'))
-			<span class="help-block">
-				<strong>{{ $errors->first('first_name') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
-	{!! Form::label('last_name', 'Last Name:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::text('last_name', null, ['class' => 'form-control']) !!}
-
-		@if ($errors->has('last_name'))
-			<span class="help-block">
-				<strong>{{ $errors->first('last_name') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('id') ? ' has-error' : '' }}">
-	{!! Form::label('id', 'EMPLID:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::text('id', null, ['class' => 'form-control']) !!}
-
-		@if ($errors->has('id'))
-			<span class="help-block">
-				<strong>{{ $errors->first('id') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-	{!! Form::label('email', 'Email:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::email('email', null, ['class' => 'form-control']) !!}
-
-		@if ($errors->has('email'))
-			<span class="help-block">
-				<strong>{{ $errors->first('email') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('advisor_id') ? ' has-error' : '' }}">
-	{!! Form::label('advisor_id', 'Advisor:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::select('advisor_id', $advisors, null, ['placeholder' => "Choose an advisor", 'class' => 'form-control']) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('program_id') ? ' has-error' : '' }}">
-	{!! Form::label('program_id', 'Program:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::select('program_id', $programs, null, ['placeholder' => "Choose a program", 'class' => 'form-control']) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('undergrad_gpa') ? ' has-error' : '' }}">
-	{!! Form::label('undergrad_gpa', 'Undergrad GPA:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::text('undergrad_gpa', null, ['class' => 'form-control']) !!}
-
-		@if ($errors->has('undergrad_gpa'))
-			<span class="help-block">
-				<strong>{{ $errors->first('undergrad_gpa') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('has_committee') ? ' has-error' : '' }}">
-	{!! Form::label('has_committee', 'Has Committee:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('has_committee', null) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('has_program_study') ? ' has-error' : '' }}">
-	{!! Form::label('has_program_study', 'Has Program of Study:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('has_program_study', null) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('semester_started_id') ? ' has-error' : '' }}">
-	{!! Form::label('semester_started_id', 'Semester Started:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::select('semester_started_id', $semesters, null, ['placeholder' => "Choose a semester", 'class' => 'form-control']) !!}
-	</div>
-	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a>
-</div>
-
-<div class="form-group{{ $errors->has('is_current') ? ' has-error' : '' }}">
-	{!! Form::label('is_current', 'Current Student:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('is_current', null) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('is_graduated') ? ' has-error' : '' }}">
-	{!! Form::label('is_graduated', 'Graduated:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('is_graduated', null) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('semester_graduated_id') ? ' has-error' : '' }}">
-	{!! Form::label('semester_graduated_id', 'Semester Graduated:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::select('semester_graduated_id', $semesters, null, ['placeholder' => "Choose a semester", 'class' => 'form-control']) !!}
-
-		@if ($errors->has('semester_graduated_id'))
-			<span class="help-block">
-				<strong>{{ $errors->first('semester_graduated_id') }}</strong>
-			</span>
-		@endif
-	</div>
-	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a>
-</div>
-
-<div class="form-group">
-	<div class="col-md-6 col-md-offset-4">
-		<div class="btn-group">
-       	{!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
-       	{!! Form::button('Cancel', ['onClick' => "parent.location='/student'", 'class' => 'btn btn-danger']) !!}
+<div class="panel panel-primary">
+  	<div class="panel-heading clearfix">
+  		<div class="panel-title pull-left" style="padding-top: 4px;">
+  			<a data-toggle="collapse" href="#collapse{{ $count }}">{{ $student->last_name . ", " . $student->first_name }}</a>
+  		</div>
+  		@if($allowChanges)
+  		{!! Form::open(['method' => 'DELETE', 'route' => ['student.delete', $student], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
+      		<div class="btn-group pull-right">
+      			<a href="{{ url('/student/' . $student->id) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>
+      			{!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-default btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Delete']) !!}
+      		</div>
+      	{!! Form::close() !!}
+      	@endif
+		</div>
+  	<div id="collapse{{ $count }}" class="panel-collapse collapse">
+  		<div class="panel-body">
+      		<div class="row">
+      			<div class="col-md-6">
+		        	<ul class="list-group">
+		        		<li class="list-group-item">EMPLID: {{ $student->id }}</li>
+		        		<li class="list-group-item">Email: <a href="mailto:{{ $student->email }}">{{ $student->email }} <span class="glyphicon glyphicon-envelope"></span></a></li>
+		        		<li class="list-group-item">Program: {{ $student->program->name }}</li>
+		        		@if(!$fromAdvisor)
+		        		<li class="list-group-item">Advisor: {{ $student->advisor->full_name }} <a href={{ "/advisor/info/" . $student->advisor_id}} class="glyphicon glyphicon-new-window"></a></li>
+		        		@endif
+		        		<li class="list-group-item">Undergrad GPA: {{ $student->undergrad_gpa }}</li>
+		        		<li class="list-group-item{{ !$student->has_program_study ? ' list-group-item-danger' : '' }}">Has Program of Study: {{ $student->has_program_study == 1 ? "Yes" : "No" }}</li>
+		        		<?php $passedGCE = App\GceResult::where('student_id',$student->id)->where('passed',true)->count() > 0; ?>
+		        		@if($student->program->needs_gce)
+		        		<li class="list-group-item{{ !$passedGCE ? ' list-group-item-danger' : '' }}">GCE Completed: {{ $passedGCE ? "Yes" : "No" }}</li>
+		        		@endif
+		        		@if($student->gre != null)
+		        		<li class="list-group-item">GRE Score: {{ $student->gre->score }}</li>
+		        		@endif
+		        	</ul>
+	        	</div>
+	        	<div class="col-md-6">
+	        		<ul class="list-group">
+	        			<li class="list-group-item">Semester Started: {{ $student->semester_started->full_name }}</li>
+		        		<li class="list-group-item{{ !$student->is_current ? ' list-group-item-warning' : '' }}">Current: {{ $student->is_current ? "Yes" : "No" }}</li>
+		        		<li class="list-group-item">Graduated: {{ $student->is_graduated ? "Yes" : "No" }}</li>
+		        		<li class="list-group-item">Semester Graduated: {{ $student->semester_graduated != null ? $student->semester_graduated->full_name : "N/A" }}</li>
+		        		<li class="list-group-item">Faculty Sponsored: {{ $student->faculty_supported ? "Yes" : "No" }}</li>
+		        		@if($student->program->needs_committee)
+		        		<li class="list-group-item{{ !$student->has_committee ? ' list-group-item-danger' : '' }}">Has Committee: {{ $student->has_committee == 1 ? "Yes" : "No" }}</li>
+		        		@endif
+		        		@if($student->program->needs_gce && $passedGCE)
+		        		<li class="list-group-item">GCE Completion Date: {{ $passedGCE ? App\GceResult::select('date')->where('student_id',$student->id)->where('passed',true)->get()[0]["date"] : "" }}
+		        		@endif
+		        		@if($student->ielts != null)
+		        		<li class="list-group-item">IELTS Score: {{ $student->ielts->score }}</li>
+		        		@endif
+		        		@if($student->toefl != null)
+		        		<li class="list-group-item">TOEFL Score: {{ $student->toefl->score }}</li>
+		        		@endif
+	        		</ul>
+	        	</div>
+	        </div>
         </div>
     </div>
 </div>

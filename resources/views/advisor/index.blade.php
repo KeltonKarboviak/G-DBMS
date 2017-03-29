@@ -19,6 +19,7 @@
 				      		</div>
 				      		{!! Form::open(['method' => 'DELETE', 'route' => ['advisor.delete', $advisor], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
 					      		<div class="btn-group pull-right">
+					      			<a href="{{ url('/advisor/info/' . $advisor->id) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Detailed Info"><span class="glyphicon glyphicon-info-sign"></span></a>
 					      			<a href="{{ url('/advisor/' . $advisor->id) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>
 					      			{!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-default btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Delete']) !!}
 					      		</div>

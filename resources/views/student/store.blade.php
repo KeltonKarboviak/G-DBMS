@@ -11,7 +11,7 @@
 				<div class="panel-body">
 
 					{!! Form::model($student, ['route' => ['student.store_submit', $student], 'method' => 'POST', 'class' => 'form-horizontal']) !!}
-						@include('student/partials/_student_info')
+						@include('student/partials/_student_addedit')
 					{!! Form::close() !!}
 				</div>
 			</div>

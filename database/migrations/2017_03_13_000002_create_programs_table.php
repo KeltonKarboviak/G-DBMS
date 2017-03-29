@@ -15,6 +15,9 @@ class CreateProgramsTable extends Migration
         Schema::create('programs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 100);
+            $table->boolean('needs_committee');
+            $table->boolean('needs_gce');
+            $table->integer('gqes_needed');
         });
     }
 

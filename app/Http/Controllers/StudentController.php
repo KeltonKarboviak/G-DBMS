@@ -11,6 +11,9 @@ use App\Student;
 use App\Advisor;
 use App\Program;
 use App\Semester;
+use App\GreScore;
+use App\IeltsScore;
+use App\ToeflScore;
 
 class StudentController extends Controller
 {
@@ -23,14 +26,23 @@ class StudentController extends Controller
 		'undergrad_gpa' => 'required|numeric|between:0,4',
 		'program_id' => 'required', 
 		'semester_graduated_id' => 'required_if:is_graduated,on',
-		'semester_started_id' => 'required'
+		'semester_started_id' => 'required',
+        'toefl_score' => 'integer|between:0,120',
+        'gre_score' => 'integer|between:260,340',
+        'ielts_score' => 'numeric|between:0,9.5',
 	];
 
 	private $messages = [
 		'semester_graduated_id.required_if' => 'You must supply the semester the student graduated.',
 		'id.regex' => 'The EMPLID must in format of DDDDDDD where D is a digit.',
 		'id.required' => 'The EMPLID is required.',
-		'id.size' => 'The EMPLID must be 7 digits.'
+		'id.size' => 'The EMPLID must be 7 digits.',
+        'toefl_score.between' => 'TOEFL score must be an integer between 0 and 120',
+        'gre_score.between' => 'GRE score must be an integer between 260 and 340',
+        'ielts_score.between' => 'IELTS score must be a number between 0 and 9.5',
+        'toefl_score.integer' => 'TOEFL score must be an integer between 0 and 120',
+        'gre_score.integer' => 'GRE score must be an integer between 260 and 340',
+        'ielts_score.numeric' => 'IELTS score must be a number between 0 and 9.5',
 	];
     /**
      * Create a new controller instance.
@@ -56,14 +68,21 @@ class StudentController extends Controller
 
     public function index_filter(Request $request)
     {
-        $query = Student::orderBy('last_name');
+        $query = Student::with('gre','ielts','toefl')->orderBy('last_name');
         $vals = array();
+
+        // dd($request->all() == null,$request->has('is_current'),$request->get('is_current'),$request->get('advisor_id'));
 
         if($request->has('first_name'))
             $query->where('first_name',$request->get('first_name'));
         if($request->has('last_name'))
             $query->where('last_name',$request->get('last_name'));
-        if($request->has('is_current'))
+        // if($request->has('is_current'))
+        if($request->all() == null)
+        {
+            $query->where('is_current',true);
+        }
+        else if($request->has('is_current')) //the default is for current students only
         {
             if($request->get('is_current') === 'Yes')
             {
@@ -153,7 +172,7 @@ class StudentController extends Controller
             'program_id' => $request->get('program_id'),
             'semester_started_id' => $request->get('semester_started_id'),
             'semester_graduated_id' => $request->get('semester_graduated_id'),
-            'is_current' => $request->get('is_current'),
+            'is_current' => $request->input('is_current','Yes'),
             'is_graduated' => $request->get('is_graduated'),
             'has_program_study' => $request->get('has_program_study'),
             'faculty_supported' => $request->get('faculty_supported'),
@@ -195,24 +214,37 @@ class StudentController extends Controller
             "has_committee" => $this->checkboxConvert($request->get("has_committee","off")),
     		"is_current" => $this->checkboxConvert($request->get("is_current","off")),
     		"is_graduated" => $this->checkboxConvert($request->get("is_graduated","off")),
+            "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
 
-    	$this->validate($request,$this->rules,$this->messages);
+    	$this->validate($request,$this->rules,$this->messages);     
 
     	if($request->semester_graduated_id == "")
-    	{
-    		$student->create($request->except(['semester_graduated_id']));
-    	}
-    	else
-    	{
-    		$student->create($request->all());
-    	}
+        {
+            $student->create($request->except(['semester_graduated_id','gre_score','toefl_score','ielts_score']));
+        }
+        else
+        {
+            $student->create($request->except(['gre_score','toefl_score','ielts_score']));
+        }
+
+        if($request->has('gre_score'))
+            $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
+
+        if($request->has('ielts_score'))
+            $ielts = IeltsScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('ielts_score')]);
+
+        if($request->has('toefl_score'))
+            $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
+
+
 
     	return Redirect::to('/student');
     }
 
     public function update(Student $student)
     {
+        $student->load('gre','toefl','ielts');
     	return view('/student/update', [
     		'student' => $student,
     		'advisors' => Advisor::all()->lists("full_name","id"),
@@ -230,6 +262,7 @@ class StudentController extends Controller
             "has_committee" => $this->checkboxConvert($request->get("has_committee","off")),
     		"is_current" => $this->checkboxConvert($request->get("is_current","off")),
     		"is_graduated" => $this->checkboxConvert($request->get("is_graduated","off")),
+            "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
 
     	// dd($request->all());
@@ -238,12 +271,21 @@ class StudentController extends Controller
 
     	if($request->semester_graduated_id == "")
     	{
-    		$student->update($request->except(['semester_graduated_id']));
+    		$student->update($request->except(['semester_graduated_id','gre_score','toefl_score','ielts_score']));
     	}
     	else
     	{
-    		$student->update($request->all());
+    		$student->update($request->except(['gre_score','toefl_score','ielts_score']));
     	}
+
+        if($request->has('gre_score'))
+            $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
+
+        if($request->has('ielts_score'))
+            $ielts = IeltsScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('ielts_score')]);
+
+        if($request->has('toefl_score'))
+            $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
 
     	return Redirect::to('/student');
     }

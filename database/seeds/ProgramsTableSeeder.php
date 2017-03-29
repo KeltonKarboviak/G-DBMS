@@ -15,10 +15,10 @@ class ProgramsTableSeeder extends Seeder
         // DB::table('programs')->delete();
 
         $programs = [
-            ['id' => 1, 'name' => 'Non-Degree Seeking'],
-            ['id' => 2, 'name' => 'MS Thesis'],
-            ['id' => 3, 'name' => 'MS Non-Thesis'],
-            ['id' => 4, 'name' => 'PhD Scientific Computing'],
+            ['id' => 1, 'name' => 'Non-Degree Seeking', 'needs_committee' => false, 'needs_gce' => false, 'gqes_needed' => 0],
+            ['id' => 2, 'name' => 'MS Thesis', 'needs_committee' => true, 'needs_gce' => false, 'gqes_needed' => 3],
+            ['id' => 3, 'name' => 'MS Non-Thesis', 'needs_committee' => false, 'needs_gce' => false, 'gqes_needed' => 3],
+            ['id' => 4, 'name' => 'PhD Scientific Computing', 'needs_committee' => true, 'needs_gce' => true, 'gqes_needed' => 4],
         ];
 
         // Uncomment the below to run the seeder
