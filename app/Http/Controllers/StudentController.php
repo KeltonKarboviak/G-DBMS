@@ -30,6 +30,7 @@ class StudentController extends Controller
         'toefl_score' => 'integer|between:0,120',
         'gre_score' => 'integer|between:260,340',
         'ielts_score' => 'numeric|between:0,9.5',
+        'topic' => 'between:0,255',
 	];
 
 	private $messages = [
@@ -217,10 +218,20 @@ class StudentController extends Controller
             "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
 
+        if($request->has('semester_graduated_id')) // if student is graduated
+        {
+            $this->rules['is_graduated'] = 'Accepted';
+            $this->messages['is_graduated.accepted'] = 'The student must be graduated to have a graduation semester';
+            $this->rules['is_current'] = 'different:is_graduated';
+            $this->messages['is_current.different'] = 'A student cannot be both current and graduated';
+        }
+
     	$this->validate($request,$this->rules,$this->messages);     
 
     	if($request->semester_graduated_id == "")
         {
+            // $student->semester_graduated_id = null;
+            // $student->save();
             $student->create($request->except(['semester_graduated_id','gre_score','toefl_score','ielts_score']));
         }
         else
@@ -265,12 +276,23 @@ class StudentController extends Controller
             "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
 
+
+        if($request->has('semester_graduated_id'))
+        {
+            $this->rules['is_graduated'] = 'Accepted';
+            $this->messages['is_graduated.accepted'] = 'The student must be graduated to have a graduation semester';
+            $this->rules['is_current'] = 'different:is_graduated';
+            $this->messages['is_current.different'] = 'A student cannot be both current and graduated';
+        }
+
     	// dd($request->all());
 
     	$this->validate($request,$this->rules,$this->messages);
 
     	if($request->semester_graduated_id == "")
     	{
+            $student->semester_graduated_id = null;
+            $student->save();
     		$student->update($request->except(['semester_graduated_id','gre_score','toefl_score','ielts_score']));
     	}
     	else

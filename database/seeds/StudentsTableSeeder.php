@@ -22,7 +22,8 @@ class StudentsTableSeeder extends Seeder
                 'faculty_supported' => false, 'has_program_study' => false,
                 'is_current' => true, 'is_graduated' => false,
                 'semester_graduated_id' => null,
-                'has_committee' => false
+                'has_committee' => false,
+                'topic' => 'Making NGAFID work using BigData',
             ],
             [
                 'id' => '8882222', 'first_name' => 'Connor', 'last_name' => 'Bowley',
@@ -31,7 +32,8 @@ class StudentsTableSeeder extends Seeder
                 'faculty_supported' => true, 'has_program_study' => true,
                 'is_current' => true, 'is_graduated' => false,
                 'semester_graduated_id' => null,
-                'has_committee' => true
+                'has_committee' => true,
+                'topic' => 'Finding avian species in UAV imagery with CNNs',
             ],
             [
                 'id' => '8883333', 'first_name' => 'Joe', 'last_name' => 'Schmo',
@@ -40,7 +42,8 @@ class StudentsTableSeeder extends Seeder
                 'faculty_supported' => false, 'has_program_study' => false,
                 'is_current' => true, 'is_graduated' => false,
                 'semester_graduated_id' => null,
-                'has_committee' => false
+                'has_committee' => false,
+                'topic' => '',
             ],
             [
                 'id' => '8884444', 'first_name' => 'John', 'last_name' => 'Smith',
@@ -49,7 +52,8 @@ class StudentsTableSeeder extends Seeder
                 'faculty_supported' => true, 'has_program_study' => true,
                 'is_current' => true, 'is_graduated' => true,
                 'semester_graduated_id' => 6,
-                'has_committee' => true
+                'has_committee' => true,
+                'topic' => 'Saving the world with BigData and Hadoop',
             ],
         ];
 

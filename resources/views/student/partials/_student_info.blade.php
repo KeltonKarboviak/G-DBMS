@@ -56,6 +56,9 @@
 	        		</ul>
 	        	</div>
 	        </div>
+	        <ul class="list-group">
+        		<li class="list-group-item">Topic: {{ $student->topic }}</li>
+        	</ul>
         </div>
     </div>
 </div>

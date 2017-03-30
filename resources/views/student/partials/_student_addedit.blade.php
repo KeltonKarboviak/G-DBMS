@@ -70,6 +70,20 @@
 	</div>
 </div>
 
+<div class="form-group{{ $errors->has('topic') ? ' has-error' : '' }}">
+	{!! Form::label('topic', 'Topic:', ['class' => 'col-md-4 control-label']) !!}
+
+	<div class="col-md-6">
+		{!! Form::textarea('topic', null, ['class' => 'form-control', 'rows' => 2]) !!}
+
+		@if ($errors->has('topic'))
+			<span class="help-block">
+				<strong>{{ $errors->first('topic') }}</strong>
+			</span>
+		@endif
+	</div>
+</div>
+
 <div class="form-group{{ $errors->has('undergrad_gpa') ? ' has-error' : '' }}">
 	{!! Form::label('undergrad_gpa', 'Undergrad GPA:', ['class' => 'col-md-4 control-label']) !!}
 
@@ -166,6 +180,11 @@
 
 	<div class="col-md-6">
 		{!! Form::checkbox('is_current', null, $student == null ? 'yes' : $student->is_current) !!}
+		@if ($errors->has('is_current'))
+			<span class="help-block">
+				<strong>{{ $errors->first('is_current') }}</strong>
+			</span>
+		@endif
 	</div>
 </div>
 
@@ -174,6 +193,11 @@
 
 	<div class="col-md-6">
 		{!! Form::checkbox('is_graduated', null) !!}
+		@if ($errors->has('is_graduated'))
+			<span class="help-block">
+				<strong>{{ $errors->first('is_graduated') }}</strong>
+			</span>
+		@endif
 	</div>
 </div>
 

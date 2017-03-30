@@ -46,6 +46,7 @@ class CreateStudentsTable extends Migration
             $table->foreign('semester_graduated_id')->references('id')->on('semesters')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->string('topic');
         });
     }
 
