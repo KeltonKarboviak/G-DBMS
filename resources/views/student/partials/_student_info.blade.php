@@ -1,11 +1,21 @@
+<?php $showRank = isset($showRank) ? $showRank : false; ?>
+
 <div class="panel panel-primary">
   	<div class="panel-heading clearfix">
   		<div class="panel-title pull-left" style="padding-top: 4px;">
-  			<a data-toggle="collapse" href="#collapse{{ $count }}">{{ $student->last_name . ", " . $student->first_name }}</a>
+  			@if($sort_by === 'first_name')
+  				<a data-toggle="collapse" href="#collapse{{ $count }}">{{ $student->first_name . " " . $student->last_name }}</a>
+  			@else
+  				<a data-toggle="collapse" href="#collapse{{ $count }}">{{ $student->last_name . ", " . $student->first_name }}</a>
+  			@endif
   		</div>
+  		
   		@if($allowChanges)
   		{!! Form::open(['method' => 'DELETE', 'route' => ['student.delete', $student], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
       		<div class="btn-group pull-right">
+      			@if($showRank)
+      				<a data-toggle="collapse" href="#collapse{{ $count }}" class="bg-primary btn btn-primary btn-sm">Rank: {{ $student->ranking }}</a>
+      			@endif
       			<a href="{{ url('/student/' . $student->id) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>
       			{!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-default btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Delete']) !!}
       		</div>

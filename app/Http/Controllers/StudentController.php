@@ -45,6 +45,16 @@ class StudentController extends Controller
         'gre_score.integer' => 'GRE score must be an integer between 260 and 340',
         'ielts_score.numeric' => 'IELTS score must be a number between 0 and 9.5',
 	];
+
+    private $sort_options = ['last_name' => 'Last name',
+        'first_name' => 'First name',
+        'ranking' => 'Ranking',
+        'id' => 'EMPLID',
+        'has_committee' => 'Has committee',
+        'has_program_study' => 'Has program of study',
+        'semester_started_id' => 'Semester started',
+        'program_id' => 'Program',
+      ];
     /**
      * Create a new controller instance.
      *
@@ -53,6 +63,11 @@ class StudentController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function rank_compare(Student $s1, Student $s2)
+    {
+        return $s2->ranking - $s1->ranking;
     }
 
     /**
@@ -69,10 +84,15 @@ class StudentController extends Controller
 
     public function index_filter(Request $request)
     {
-        $query = Student::with('gre','ielts','toefl')->orderBy('last_name');
-        $vals = array();
+        $sort_by = $request->get('sort_by','last_name');
+
+        $query = Student::with('gre','ielts','toefl');
+        if($sort_by !== 'ranking')
+            $query->orderBy($sort_by);
 
         // dd($request->all() == null,$request->has('is_current'),$request->get('is_current'),$request->get('advisor_id'));
+
+
 
         if($request->has('first_name'))
             $query->where('first_name',$request->get('first_name'));
@@ -161,8 +181,23 @@ class StudentController extends Controller
             }); 
         }
 
+        $students = $query->get();
+        // $sArray = $students->all();
+        $showRank = false;
+        if($sort_by === 'ranking')
+        {
+            // usort($sArray,["App\Http\Controllers\StudentController","rank_compare"]);
+            // $students->sortBy('ranking');
+            $students = $students->sortByDesc(function($stud){
+                return $stud->ranking;
+            });
+            $showRank = true;
+            // dd($students,$students[0]->ranking);
+        }
+
         return view('/student/index', [
-            'students' => $query->get(),
+            // 'students' => $sArray,
+            'students' => $students,
             'advisors' => Advisor::all()->lists("full_name","id"),
             'programs' => Program::lists("name","id"), 
             'semesters' => Semester::all()->lists("full_name","id"),
@@ -178,6 +213,9 @@ class StudentController extends Controller
             'has_program_study' => $request->get('has_program_study'),
             'faculty_supported' => $request->get('faculty_supported'),
             'has_committee' => $request->get('has_committee'),
+            'sort_options' => $this->sort_options,
+            'sort_by' => $sort_by,
+            'showRank' => $showRank,
         ]);
     }
 
@@ -194,6 +232,27 @@ class StudentController extends Controller
     	else
     		return false;
     }
+
+    // private function calcRanking(Student $student)
+    // {
+    //     //gpa * 100 + GRE + English_Prof + Faculty_Sponsored
+
+    //     //get gre contribution
+    //     $gre_score = $student->gre == null ? 300 : $student->gre->score;
+
+    //     //get english speaking contribution
+    //     $toefl_score = $student->toefl == null ? -1 : $student->toefl->score / 120.0 * 100;
+    //     $ielts_score = $student->ielts == null ? -1 : $student->ielts->score / 9.5 * 100;
+    //     if($ielts_score == -1 && $toefl_score == -1) //natural english speaker
+    //         $english = 100;
+    //     else
+    //         $english = $toefl_score > $ielts_score ? $toefl_score : $ielts_score;
+
+    //     //get faculty sponsor contribution
+    //     $sponsor = $student->faculty_supported ? 100 : 0;
+
+    //     return $student->undergrad_gpa * 100 + $gre_score + $english + $sponsor;
+    // }
 
     public function store()
     {

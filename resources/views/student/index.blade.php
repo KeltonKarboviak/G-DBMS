@@ -18,6 +18,11 @@
 				<h3>Filters</h3>
 					{!! Form::open(['method' => 'GET', 'route' => ['student.index_filter'], 'class' => 'form-horizontal']) !!}
 						<div class="form-group">
+							{!! Form::label('sort_by', 'Sort By:') !!}
+							{!! Form::select('sort_by', $sort_options, $sort_by, ['class' => 'form-control']) !!}
+						</div>
+
+						<div class="form-group">
 							{!! Form::label('first_name',"First Name:") !!}
 							{!! Form::text('first_name', $first_name, ['class' => 'form-control']) !!}
 						</div>
@@ -89,10 +94,11 @@
 	            	<a class="btn btn-default" id="expand_all">Expand All</a>
 	            	<a class="btn btn-default" id="collapse_all">Collapse All</a>
 	            </div>
+
             	<!-- Start data for each student -->
             	@foreach($students as $student)
             		<?php $count = $count + 1; ?>
-            		@include('student/partials/_student_info',['student' => $student, 'fromAdvisor' => false, 'allowChanges' => true, 'count' => $count])
+            		@include('student/partials/_student_info',['student' => $student, 'fromAdvisor' => false, 'allowChanges' => true, 'count' => $count, 'showRank' => $showRank])
             	@endforeach
 
             </div>
