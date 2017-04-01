@@ -10,6 +10,7 @@ use DB;
 
 use App\Advisor;
 use App\Student;
+use App\StudentProgram;
 
 class AdvisorController extends Controller
 {
@@ -49,9 +50,13 @@ class AdvisorController extends Controller
 
     public function info(Advisor $advisor)
     {
+        // dd(Student::with('programs')->join('student_programs','student_programs.student_id','=','students.id')
+        //     ->where('student_programs.advisor_id', $advisor->id)->distinct()->get(['students.*']));
     	return view('/advisor/info', [
     		'advisor' => $advisor,
-    		'students' => Student::where('advisor_id',$advisor->id)->where('is_current',true)->orderBy('last_name')->get(),
+    		// 'students' => Student::where('advisor_id',$advisor->id)->where('is_current',true)->orderBy('last_name')->get(),
+            'students' => Student::with('programs')->join('student_programs','students.id','=','student_programs.student_id')
+                ->where('student_programs.advisor_id', $advisor->id)->where('is_current',true)->distinct()->get(['students.*']),
     	]);
     }
 

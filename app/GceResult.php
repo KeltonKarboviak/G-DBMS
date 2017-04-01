@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class GceResult extends Model
 {
+	public $timestamps = false;
+	protected $fillable = [
+		'student_id','passed','date',
+	];
     /**
      *
      */

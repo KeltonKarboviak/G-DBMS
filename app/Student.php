@@ -23,12 +23,16 @@ class Student extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id', 'first_name', 'last_name', 'email', 'advisor_id', 'program_id', 'undergrad_gpa', 'has_program_study',
-        'semester_started_id', 'is_current', 'semester_graduated_id', 'is_graduated','has_committee','faculty_supported','topic',
+        'id', 'first_name', 'last_name', 'email', 'undergrad_gpa','faculty_supported', 
     ];
 
 
-    protected $appends = ['ranking'];
+    protected $appends = ['ranking','full_name'];
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . " " . $this->last_name;
+    }
 
     public function getRankingAttribute()
     {
@@ -59,20 +63,6 @@ class Student extends Model
     /**
      *
      */
-    public function advisor() {
-        return $this->belongsTo(Advisor::class, 'advisor_id');
-    }
-
-    /**
-     *
-     */
-    public function program() {
-        return $this->belongsTo(Program::class, 'program_id');
-    }
-
-    /**
-     *
-     */
     public function gre() {
         return $this->hasOne(GreScore::class);
     }
@@ -94,15 +84,8 @@ class Student extends Model
     /**
      *
      */
-    public function semester_started() {
-        return $this->belongsTo(Semester::class, 'semester_started_id');
-    }
-
-    /**
-     *
-     */
-    public function semester_graduated() {
-        return $this->belongsTo(Semester::class, 'semester_graduated_id');
+    public function programs() {
+        return $this->hasMany(StudentProgram::class,'student_id','id');
     }
 
     /**

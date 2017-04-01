@@ -54,36 +54,6 @@
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('advisor_id') ? ' has-error' : '' }}">
-	{!! Form::label('advisor_id', 'Advisor:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::select('advisor_id', $advisors, null, ['placeholder' => "Choose an advisor", 'class' => 'form-control']) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('program_id') ? ' has-error' : '' }}">
-	{!! Form::label('program_id', 'Program:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::select('program_id', $programs, null, ['placeholder' => "Choose a program", 'class' => 'form-control']) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('topic') ? ' has-error' : '' }}">
-	{!! Form::label('topic', 'Topic:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::textarea('topic', null, ['class' => 'form-control', 'rows' => 2]) !!}
-
-		@if ($errors->has('topic'))
-			<span class="help-block">
-				<strong>{{ $errors->first('topic') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-
 <div class="form-group{{ $errors->has('undergrad_gpa') ? ' has-error' : '' }}">
 	{!! Form::label('undergrad_gpa', 'Undergrad GPA:', ['class' => 'col-md-4 control-label']) !!}
 
@@ -95,6 +65,14 @@
 				<strong>{{ $errors->first('undergrad_gpa') }}</strong>
 			</span>
 		@endif
+	</div>
+</div>
+
+<div class="form-group{{ $errors->has('faculty_supported') ? ' has-error' : '' }}">
+	{!! Form::label('faculty_supported', 'Faculty Sponsored:', ['class' => 'col-md-4 control-label']) !!}
+
+	<div class="col-md-6">
+		{!! Form::checkbox('faculty_supported', null) !!}
 	</div>
 </div>
 
@@ -138,82 +116,6 @@
 			</span>
 		@endif
 	</div>
-</div>
-
-<div class="form-group{{ $errors->has('semester_started_id') ? ' has-error' : '' }}">
-	{!! Form::label('semester_started_id', 'Semester Started:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::select('semester_started_id', $semesters, null, ['placeholder' => "Choose a semester", 'class' => 'form-control']) !!}
-	</div>
-	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a>
-</div>
-
-@if($student == null || $student->program->needs_committee)
-<div class="form-group{{ $errors->has('has_committee') ? ' has-error' : '' }}">
-	{!! Form::label('has_committee', 'Has Committee:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('has_committee', null) !!}
-	</div>
-</div>
-@endif
-
-<div class="form-group{{ $errors->has('has_program_study') ? ' has-error' : '' }}">
-	{!! Form::label('has_program_study', 'Has Program of Study:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('has_program_study', null) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('faculty_supported') ? ' has-error' : '' }}">
-	{!! Form::label('faculty_supported', 'Faculty Sponsored:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('faculty_supported', null) !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('is_current') ? ' has-error' : '' }}">
-	{!! Form::label('is_current', 'Current Student:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('is_current', null, $student == null ? 'yes' : $student->is_current) !!}
-		@if ($errors->has('is_current'))
-			<span class="help-block">
-				<strong>{{ $errors->first('is_current') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('is_graduated') ? ' has-error' : '' }}">
-	{!! Form::label('is_graduated', 'Graduated:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::checkbox('is_graduated', null) !!}
-		@if ($errors->has('is_graduated'))
-			<span class="help-block">
-				<strong>{{ $errors->first('is_graduated') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('semester_graduated_id') ? ' has-error' : '' }}">
-	{!! Form::label('semester_graduated_id', 'Semester Graduated:', ['class' => 'col-md-4 control-label']) !!}
-
-	<div class="col-md-6">
-		{!! Form::select('semester_graduated_id', $semesters, null, ['placeholder' => "Choose a semester", 'class' => 'form-control']) !!}
-
-		@if ($errors->has('semester_graduated_id'))
-			<span class="help-block">
-				<strong>{{ $errors->first('semester_graduated_id') }}</strong>
-			</span>
-		@endif
-	</div>
-	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a>
 </div>
 
 <div class="form-group">

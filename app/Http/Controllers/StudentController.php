@@ -8,6 +8,7 @@ use App\Http\Requests;
 use Redirect;
 
 use App\Student;
+use App\StudentProgram;
 use App\Advisor;
 use App\Program;
 use App\Semester;
@@ -22,19 +23,13 @@ class StudentController extends Controller
 		'last_name' => 'required',
 		'id' => 'required|size:7|regex:/\d{7}/|unique:students',
 		'email' => 'email',
-		'advisor_id' => 'required',
 		'undergrad_gpa' => 'required|numeric|between:0,4',
-		'program_id' => 'required', 
-		'semester_graduated_id' => 'required_if:is_graduated,on',
-		'semester_started_id' => 'required',
         'toefl_score' => 'integer|between:0,120',
         'gre_score' => 'integer|between:260,340',
         'ielts_score' => 'numeric|between:0,9.5',
-        'topic' => 'between:0,255',
 	];
 
 	private $messages = [
-		'semester_graduated_id.required_if' => 'You must supply the semester the student graduated.',
 		'id.regex' => 'The EMPLID must in format of DDDDDDD where D is a digit.',
 		'id.required' => 'The EMPLID is required.',
 		'id.size' => 'The EMPLID must be 7 digits.',
@@ -86,7 +81,7 @@ class StudentController extends Controller
     {
         $sort_by = $request->get('sort_by','last_name');
 
-        $query = Student::with('gre','ielts','toefl');
+        $query = Student::with('gre','ielts','toefl')->join('student_programs','student_programs.student_id','=','students.id','left outer');
         if($sort_by !== 'ranking')
             $query->orderBy($sort_by);
 
@@ -101,13 +96,27 @@ class StudentController extends Controller
         // if($request->has('is_current'))
         if($request->all() == null)
         {
-            $query->where('is_current',true);
+            // $query->where('is_current',true);
+            $query->where(function($query)
+            {
+                $query->orWhere('is_current',true)->orWhere(function($query)
+                {
+                    $query->whereNull('is_current');
+                });
+            }); 
         }
         else if($request->has('is_current')) //the default is for current students only
         {
             if($request->get('is_current') === 'Yes')
             {
-                $query->where('is_current',true);
+                // $query->where('is_current',true);
+                $query->where(function($query)
+                {
+                    $query->orWhere('is_current',true)->orWhere(function($query)
+                    {
+                        $query->whereNull('is_current');
+                    });
+                }); 
             }
             else
                 $query->where('is_current',false);
@@ -180,8 +189,7 @@ class StudentController extends Controller
                 }
             }); 
         }
-
-        $students = $query->get();
+        $students = $query->distinct()->get(['students.*']);
         // $sArray = $students->all();
         $showRank = false;
         if($sort_by === 'ranking')
@@ -225,35 +233,6 @@ class StudentController extends Controller
     	return Redirect::to('/student');
     }
 
-    private function checkboxConvert($onoff)
-    {
-    	if($onoff == "on")
-    		return true;
-    	else
-    		return false;
-    }
-
-    // private function calcRanking(Student $student)
-    // {
-    //     //gpa * 100 + GRE + English_Prof + Faculty_Sponsored
-
-    //     //get gre contribution
-    //     $gre_score = $student->gre == null ? 300 : $student->gre->score;
-
-    //     //get english speaking contribution
-    //     $toefl_score = $student->toefl == null ? -1 : $student->toefl->score / 120.0 * 100;
-    //     $ielts_score = $student->ielts == null ? -1 : $student->ielts->score / 9.5 * 100;
-    //     if($ielts_score == -1 && $toefl_score == -1) //natural english speaker
-    //         $english = 100;
-    //     else
-    //         $english = $toefl_score > $ielts_score ? $toefl_score : $ielts_score;
-
-    //     //get faculty sponsor contribution
-    //     $sponsor = $student->faculty_supported ? 100 : 0;
-
-    //     return $student->undergrad_gpa * 100 + $gre_score + $english + $sponsor;
-    // }
-
     public function store()
     {
     	// dd("hi");
@@ -266,37 +245,24 @@ class StudentController extends Controller
     	]);
     }
 
+    private function checkboxConvert($onoff)
+    {
+        if($onoff == "on")
+            return true;
+        else
+            return false;
+    }
+
     public function store_submit(Request $request, Student $student)
     {
     	// global $rules, $messages;
     	$request->merge([
-    		"has_program_study" => $this->checkboxConvert($request->get("has_program_study","off")),
-            "has_committee" => $this->checkboxConvert($request->get("has_committee","off")),
-    		"is_current" => $this->checkboxConvert($request->get("is_current","off")),
-    		"is_graduated" => $this->checkboxConvert($request->get("is_graduated","off")),
             "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
 
-        if($request->has('semester_graduated_id')) // if student is graduated
-        {
-            $this->rules['is_graduated'] = 'Accepted';
-            $this->messages['is_graduated.accepted'] = 'The student must be graduated to have a graduation semester';
-            $this->rules['is_current'] = 'different:is_graduated';
-            $this->messages['is_current.different'] = 'A student cannot be both current and graduated';
-        }
-
     	$this->validate($request,$this->rules,$this->messages);     
 
-    	if($request->semester_graduated_id == "")
-        {
-            // $student->semester_graduated_id = null;
-            // $student->save();
-            $student->create($request->except(['semester_graduated_id','gre_score','toefl_score','ielts_score']));
-        }
-        else
-        {
-            $student->create($request->except(['gre_score','toefl_score','ielts_score']));
-        }
+        $student->create($request->except(['gre_score','toefl_score','ielts_score']));
 
         if($request->has('gre_score'))
             $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
@@ -328,36 +294,15 @@ class StudentController extends Controller
     	// global $rules, $messages;
     	$this->rules['id'] = 'required|size:7|regex:/\d{7}/|unique:students,id,'.$student->id;
     	$request->merge([
-    		"has_program_study" => $this->checkboxConvert($request->get("has_program_study","off")),
-            "has_committee" => $this->checkboxConvert($request->get("has_committee","off")),
-    		"is_current" => $this->checkboxConvert($request->get("is_current","off")),
-    		"is_graduated" => $this->checkboxConvert($request->get("is_graduated","off")),
             "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
-
-
-        if($request->has('semester_graduated_id'))
-        {
-            $this->rules['is_graduated'] = 'Accepted';
-            $this->messages['is_graduated.accepted'] = 'The student must be graduated to have a graduation semester';
-            $this->rules['is_current'] = 'different:is_graduated';
-            $this->messages['is_current.different'] = 'A student cannot be both current and graduated';
-        }
 
     	// dd($request->all());
 
     	$this->validate($request,$this->rules,$this->messages);
 
-    	if($request->semester_graduated_id == "")
-    	{
-            $student->semester_graduated_id = null;
-            $student->save();
-    		$student->update($request->except(['semester_graduated_id','gre_score','toefl_score','ielts_score']));
-    	}
-    	else
-    	{
-    		$student->update($request->except(['gre_score','toefl_score','ielts_score']));
-    	}
+    	$student->update($request->except(['gre_score','toefl_score','ielts_score']));
+
 
         if($request->has('gre_score'))
             $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);

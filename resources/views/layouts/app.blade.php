@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
     <link rel="stylesheet" href="{{ elixir('css/app.css') }}">
 
+    <!-- For datepicker -f->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"> -->
+
+
     <!-- Allows for page-specific CSS to be inserted here -->
     @yield('styles')
 
@@ -64,7 +68,13 @@
                             <li><a href="#">Pass Level</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">GCE</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">GCE <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="gce/add">Add</a></li>
+                            <li><a href="#">Edit</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -104,6 +114,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="{{ elixir('js/app.js') }}"></script>
+
+    <!-- For datepicker -->
+    <!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script>
+        $(function() {
+          $( "#datepicker" ).datepicker();
+        });
+    </script> -->
 
     <!-- Allows for page-specific JavaScript to be inserted here -->
     @yield('scripts')
