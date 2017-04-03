@@ -77,14 +77,6 @@ class GqeResultsController extends Controller
                 ->last();
             });
 
-        $students = Student::with('gqe_results.offering.section', 'gqe_results.pass_level', 'programs.program')->whereHas('programs', function ($query) {
-                return $query->where('student_programs.is_current', 1);
-            })->get(['id', 'first_name', 'last_name'])->each(function ($student, $key) {
-                $student->current_program = $student->programs->filter(function ($program) {
-                    return $program->is_current === 1;
-                })->last();
-            });
-
         return view('/gqe/result/index', [
             'sections' => $sections,
             'students' => $students,

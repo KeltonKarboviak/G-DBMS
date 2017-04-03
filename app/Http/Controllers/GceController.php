@@ -21,6 +21,8 @@ class GceController extends Controller
         'student_id' => 'required',
     ];
 
+    private $messages  = [];
+
     private function checkboxConvert($onoff)
     {
         if($onoff == "on")
@@ -63,10 +65,17 @@ class GceController extends Controller
         // dd(date('Y-m-d',strtotime(str_replace('/','-',$request->get('date')))));
         $request->merge([
             "passed" => $this->checkboxConvert($request->get("passed","off")),
-            "date" => $this->dateConvert($request->get('date')),
+            // "date" => $this->dateConvert($request->get('date')),
         ]);
 
-        $this->validate($request,$this->rules);
+        if($request->get('passed'))
+        {
+            // dd('passed');
+            $this->rules['student_id'] = 'unique:gce_results,student_id,NULL,id,passed,1';
+            $this->messages['student_id.unique'] = 'The student has already passed the GCE.';
+        }
+
+        $this->validate($request,$this->rules,$this->messages);
 
         $gce->create($request->all());
 

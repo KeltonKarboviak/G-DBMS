@@ -146,7 +146,7 @@
                                             return $result->offering->section->id;
                                         });
 
-                                    $pass_level_needed = $student->program->pass_level_needed_id;
+                                    $pass_level_needed = $student->current_program->program->pass_level_needed_id;
 
                                     $finished_gqes = $section_results->sum(function ($section) use ($pass_level_needed) {
                                         return $section->contains(function ($index, $result) use ($pass_level_needed) {
@@ -166,14 +166,14 @@
                                                     ? 'success'
                                                     : 'danger')
                                             }}">
-                                                {{ sprintf("%.2f  (%s)", $result->score, $result->pass_level !== null ? $result->pass_level->name : 'N/A') }}
+                                                {{ sprintf("%.2f  (%s)", $result->score, $result->pass_level !== null ? $result->pass_level->name : 'Pending') }}
                                             </div>
                                         @endforeach
                                     </td>
                                 @endforeach
 
                                 <td>
-                                    <span class="glyphicon glyphicon-{{ $finished_gqes >= $student->program->gqes_needed ? 'ok' : 'remove' }}"></span>
+                                    <span class="glyphicon glyphicon-{{ $finished_gqes >= $student->current_program->program->gqes_needed ? 'ok' : 'remove' }}"></span>
                                 </td>
                             </tr>
                         @endforeach
