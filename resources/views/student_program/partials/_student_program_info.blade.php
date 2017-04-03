@@ -13,7 +13,7 @@
       	{!! Form::close() !!}
       	@endif
 	</div>
-  	<div id="collapse_stud_prog_partial{{ $stud_prog_count }}" class="panel-collapse {{ $student_program == null ? '' : (!$student_program->is_current ? 'collapse' : '') }}">
+  	<div id="collapse_stud_prog_partial{{ $stud_prog_count }}" class="panel-collapse {{ $student_program == null ? '' : (!$student_program->is_current ? 'collapse' : 'in') }}">
   		<div class="panel-body">
       		<div class="row">
       			<div class="col-md-6">
