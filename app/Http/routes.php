@@ -62,3 +62,9 @@ Route::post('/gqe/result', ['as' => 'gqe.store', 'uses' => 'GqeResultsController
 Route::get('/gqe/result/{gqe}/edit', ['as' => 'gqe.edit', 'uses' => 'GqeResultsController@edit']);
 Route::patch('/gqe/result/{gqe}', ['as' => 'gqe.update', 'uses' => 'GqeResultsController@update']);
 Route::delete('/gqe/result/{gqe}', ['as' => 'gqe.destroy', 'uses' => 'GqeResultsController@destroy']);
+
+Route::get('/assistantship/add', ['as' => 'assistantship.store', 'uses' => 'AssistantshipController@store']);
+Route::post('/assistantship/add', ['as' => 'assistantship.store_submit', 'uses' => 'AssistantshipController@store_submit']);
+Route::get('/assistantship/{assist}', ['as' => 'assistantship.update', 'uses' => 'AssistantshipController@update']);
+Route::patch('/assistantship/{assist}', ['as' => 'assistantship.update_submit', 'uses' => 'AssistantshipController@update_submit']);
+Route::delete('/assistantship/{assist}', ['as' => 'assistantship.delete', 'uses' => 'AssistantshipController@delete']);
