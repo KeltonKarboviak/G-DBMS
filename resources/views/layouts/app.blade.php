@@ -71,7 +71,7 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">GCE <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="gce/add">Add</a></li>
+                            <li><a href="{{ url('gce/add') }}">Add</a></li>
                             <li><a href="#">Edit</a></li>
                         </ul>
                     </li>
