@@ -22,6 +22,8 @@ class CreateProgramsTable extends Migration
             $table->integer('pass_level_needed_id')->unsigned();
             $table->foreign('pass_level_needed_id')->references('id')->on('pass_levels')
                 ->onUpdate('cascade');
+
+            $table->integer('assistantship_semesters_allowed');
         });
     }
 

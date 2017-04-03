@@ -25,8 +25,8 @@ class CreateAssistantshipsTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->char('position_id', 5);
-            $table->foreign('position_id')->references('id')->on('positions')
+            $table->char('position', 3);
+            $table->foreign('position')->references('name')->on('positions')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
