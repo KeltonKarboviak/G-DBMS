@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class TuitionWaiver extends Model
 {
+
+    public $appends = [
+        'description',
+    ];
+
+    public function getDescriptionAttribute()
+    {
+        return $this->student->full_name . " - " . $this->semester->full_name . ' - ' . $this->credit_hours . " credits";
+    }
+
     /**
      *
      */
