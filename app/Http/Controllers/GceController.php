@@ -18,7 +18,6 @@ class GceController extends Controller
 {
     private $rules = [
         'date' => 'required|date',
-        'student_id' => 'required',
     ];
 
     private $messages  = [];
@@ -67,6 +66,7 @@ class GceController extends Controller
             "passed" => $this->checkboxConvert($request->get("passed","off")),
             // "date" => $this->dateConvert($request->get('date')),
         ]);
+        $this->rules['student_id'] = 'required';
 
         if($request->get('passed'))
         {
@@ -99,17 +99,47 @@ class GceController extends Controller
         return view('gce/update', [
             'gce' => $gce,
             'students' => Student::orderBy('first_name')->join('student_programs','students.id','=','student_programs.student_id')->join('programs','student_programs.program_id','=','programs.id')->where('programs.needs_gce',true)->distinct()->get(['students.*'])->lists('full_name','id'),
+            'readonly' => true,
+        ]);
+    }
+
+    public function update_submit(Request $request, GceResult $gce)
+    {
+        // dd(date('Y-m-d',strtotime(str_replace('/','-',$request->get('date')))));
+        $request->merge([
+            "passed" => $this->checkboxConvert($request->get("passed","off")),
+            // "date" => $this->dateConvert($request->get('date')),
+        ]);
+
+        if($request->get('passed'))
+        {
+            // dd('passed');
+            $this->rules['student_id'] = 'unique:gce_results,student_id,NULL,id,passed,1';
+            $this->messages['student_id.unique'] = 'The student has already passed the GCE.';
+        }
+
+        $this->validate($request,$this->rules,$this->messages);
+
+        $gce->update($request->all());
+
+        Session::flash('alert-success','GCE Result updated successfully');
+
+        return view('gce/update', [
+            'gce' => $gce,
+            'students' => Student::orderBy('first_name')->join('student_programs','students.id','=','student_programs.student_id')->join('programs','student_programs.program_id','=','programs.id')->where('programs.needs_gce',true)->distinct()->get(['students.*'])->lists('full_name','id'),
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  GceResult  $gce
      */
     public function delete(GceResult $gce)
     {
-        //
+        $gce->delete();
+        Session::flash('alert-success', 'GCE Result deleted.');
+        return Redirect::to('/student');
     }
 }
+

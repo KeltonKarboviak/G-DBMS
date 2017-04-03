@@ -55,8 +55,20 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a></li>
-                    <li><a href="{{ url('/student') }}">Student Info</a></li>
-                    <li><a href="{{ url('/advisor') }}">Advisor Info</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('/student') }}">Info</a></li>
+                            <li><a href="{{ url('student/add') }}">Add</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Advisor <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('/advisor') }}">Info</a></li>
+                            <li><a href="{{ url('advisor/add') }}">Add</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">GQE <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -70,7 +82,6 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">GCE <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('gce/add') }}">Add</a></li>
-                            <li><a href="#">Edit</a></li>
                         </ul>
                     </li>
                 </ul>

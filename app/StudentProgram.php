@@ -27,6 +27,44 @@ class StudentProgram extends Model
         'semester_graduated_id', 'is_graduated','has_committee','topic','student_id',
     ];
 
+    protected $appends = [
+        'num_gqes_passed',  //int
+        'num_gqes_needed',  //int
+        'passed_gqes',      //boolean
+    ];
+
+    public function getNumGqesPassedAttribute()
+    {
+        $section_results = $this
+            ->gqe_results->sortBy(function ($result) {
+                return sprintf('%-12s%s', $result->offering->gqe_section_id, $result->offering->date);
+            })
+            ->values()
+            ->groupBy(function ($result) {
+                return $result->offering->section->id;
+            });
+
+        $pass_level_needed = $this->program->pass_level_needed_id;
+
+        $finished_gqes = $section_results->sum(function ($section) use ($pass_level_needed) {
+            return $section->contains(function ($index, $result) use ($pass_level_needed) {
+                return $result->pass_level_id >= $pass_level_needed;
+            });
+        });
+
+        return $finished_gqes;
+    }
+
+    public function getNumGqesNeededAttribute()
+    {
+        return $this->program->gqes_needed;
+    }
+
+    public function getPassedGqesAttribute()
+    {
+        return $this->num_gqes_passed >= $this->num_gqes_needed;
+    }
+
     /**
      *
      */
@@ -59,7 +97,11 @@ class StudentProgram extends Model
      *
      */
     public function gce_results() {
-        return $this->hasMany(GceResult::class, 'student_id');
+        return $this->hasMany(GceResult::class, 'student_id','student_id');
+    }
+
+    public function gqe_results() {
+        return $this->hasMany(GqeResult::class, 'student_id','student_id');
     }
 
     public function student() {

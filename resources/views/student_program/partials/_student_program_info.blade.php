@@ -23,12 +23,14 @@
 		        		@endif
 		        		<li class="list-group-item">Semester Started: {{ $student_program->semester_started->full_name }}</li>
 		        		<li class="list-group-item{{ !$student_program->has_program_study ? ' list-group-item-danger' : '' }}">Has Program of Study: {{ $student_program->has_program_study == 1 ? "Yes" : "No" }}</li>
-		        		@if($student_program != null)
-		        			<?php $passedGCE = App\GceResult::where('student_id',$student_program->student_id)->where('passed',true)->count() > 0; ?>
+		        		<?php $passedGCE = false; ?>
+		        		@if($student_program != null && !$student_program->gce_results->isEmpty())
+		        			<?php $passedGCE = $student_program->gce_results->contains(function ($index, $result) { return $result->passed; }); ?>
 		        		@endif
 		        		@if($student_program->program->needs_gce)
 		        		<li class="list-group-item{{ !$passedGCE ? ' list-group-item-danger' : '' }}">GCE Completed: {{ $passedGCE ? "Yes" : "No" }}</li>
 		        		@endif
+		        		<li class="list-group-item{{ !$student_program->passed_gqes ? ' list-group-item-danger' : ''}}">GQEs Passed: {{ $student_program->num_gqes_passed . "/" . $student_program->num_gqes_needed }}</li>
 		        	</ul>
 	        	</div>
 	        	<div class="col-md-6">

@@ -56,6 +56,13 @@
 	        		'fromAdvisor' => $fromAdvisor, 'allowChanges' => $allowChanges, 
 	        		'stud_prog_count' => $count . '_' . $spcount])
 	        @endforeach
+
+	        @if($student->gce_results->count() > 0)
+	        	<h4>GCEs</h4>
+	        	@foreach($student->gce_results as $gce)
+	        		@include('gce/partials/_gce_info',['gce' => $gce, 'allowChanges' => $allowChanges])
+	        	@endforeach
+	        @endif
         </div>
     </div>
 </div>

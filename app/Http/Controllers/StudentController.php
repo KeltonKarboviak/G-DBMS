@@ -81,7 +81,7 @@ class StudentController extends Controller
     {
         $sort_by = $request->get('sort_by','last_name');
 
-        $query = Student::with('gre','ielts','toefl')->join('student_programs','student_programs.student_id','=','students.id','left outer');
+        $query = Student::with('gce_results','gre','ielts','toefl')->join('student_programs','student_programs.student_id','=','students.id','left outer');
         if($sort_by !== 'ranking')
             $query->orderBy($sort_by);
 

@@ -1,9 +1,9 @@
-
+<?php $readonly = isset($readonly) ? $readonly : false ?>
 <div class="form-group{{ $errors->has('student_id') ? ' has-error' : '' }}">
 	{!! Form::label('student_id', 'Student:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::select('student_id', $students, null, ['placeholder' => 'Choose a student', 'class' => 'form-control']) !!}
+		{!! Form::select('student_id', $students, null, ['placeholder' => 'Choose a student', 'class' => 'form-control', 'disabled' => $readonly]) !!}
 
 		@if ($errors->has('student_id'))
 			<span class="help-block">
