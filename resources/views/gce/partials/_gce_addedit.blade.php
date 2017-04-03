@@ -25,7 +25,14 @@
 	{!! Form::label('date', 'Date of Exam:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::text('date', null, ['id' => 'datepicker']) !!}
+		<div class="input-group">
+			{!! Form::text('date', null, ['id' => 'datepicker', 'class' => 'form-control']) !!}
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" data-toggle="tooltip" title="Select a date">
+					<span class="glyphicon glyphicon-calendar"></span>
+				</button>
+			</span>
+		</div>
 
 		@if ($errors->has('date'))
 			<span class="help-block">
