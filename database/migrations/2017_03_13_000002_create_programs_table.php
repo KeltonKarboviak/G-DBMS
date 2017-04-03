@@ -18,6 +18,10 @@ class CreateProgramsTable extends Migration
             $table->boolean('needs_committee');
             $table->boolean('needs_gce');
             $table->integer('gqes_needed');
+
+            $table->integer('pass_level_needed_id')->unsigned();
+            $table->foreign('pass_level_needed_id')->references('id')->on('pass_levels')
+                ->onUpdate('cascade');
         });
     }
 

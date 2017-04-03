@@ -56,3 +56,9 @@ Route::get('/gce/{gce}', ['as' => 'gce.update', 'uses' => 'GceController@update'
 Route::patch('/gce/{gce}', ['as' => 'gce.update_submit', 'uses' => 'GceController@update_submit']);
 Route::delete('/gce/{gce}', ['as' => 'gce.delete', 'uses' => 'GceController@delete']);
 
+Route::get('/gqe/result', 'GqeResultsController@index');
+Route::get('/gqe/result/add', ['as' => 'gqe.add', 'uses' => 'GqeResultsController@add']);
+Route::post('/gqe/result', ['as' => 'gqe.store', 'uses' => 'GqeResultsController@store']);
+Route::get('/gqe/result/{gqe}/edit', ['as' => 'gqe.edit', 'uses' => 'GqeResultsController@edit']);
+Route::patch('/gqe/result/{gqe}', ['as' => 'gqe.update', 'uses' => 'GqeResultsController@update']);
+Route::delete('/gqe/result/{gqe}', ['as' => 'gqe.destroy', 'uses' => 'GqeResultsController@destroy']);

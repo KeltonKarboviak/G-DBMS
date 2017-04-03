@@ -62,7 +62,7 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">GQE <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Result</a></li>
+                            <li><a href="{{ url('gqe/result') }}">Result</a></li>
                             <li><a href="#">Offering</a></li>
                             <li><a href="#">Section</a></li>
                             <li><a href="#">Pass Level</a></li>

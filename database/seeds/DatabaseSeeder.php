@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(FundingSourcesTableSeeder::class);
         $this->call(YearlyBudgetsTableSeeder::class);
 
+        $this->call(PassLevelsTableSeeder::class);
+
         $this->call(SemestersTableSeeder::class);
         $this->call(ProgramsTableSeeder::class);
         $this->call(AdvisorsTableSeeder::class);
@@ -30,7 +32,6 @@ class DatabaseSeeder extends Seeder
         $this->call(IeltsScoresTableSeeder::class);
         $this->call(GreScoresTableSeeder::class);
 
-        $this->call(PassLevelsTableSeeder::class);
         $this->call(GqeSectionsTableSeeder::class);
         $this->call(GqeOfferingsTableSeeder::class);
         $this->call(GqeResultsTableSeeder::class);
