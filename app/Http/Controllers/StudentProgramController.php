@@ -21,7 +21,7 @@ class StudentProgramController extends Controller
     private $rules = [
         'student_id' => 'required',
         'advisor_id' => 'required',
-        'program_id' => 'required', 
+        'program_id' => 'required',
         'semester_graduated_id' => 'required_if:is_graduated,on',
         'semester_started_id' => 'required',
         'topic' => 'between:0,255',
@@ -68,7 +68,7 @@ class StudentProgramController extends Controller
             'student_program' => null,
             'sent_student' => $student,
             'advisors' => Advisor::all()->lists("full_name","id"),
-            'programs' => Program::lists("name","id"), 
+            'programs' => Program::lists("name","id"),
             'semesters' => Semester::all()->lists("full_name","id")
         ]);
     }
@@ -93,7 +93,7 @@ class StudentProgramController extends Controller
             $this->messages['is_current.different'] = 'A student cannot be both current and graduated';
         }
 
-        $this->validate($request,$this->rules,$this->messages); 
+        $this->validate($request,$this->rules,$this->messages);
 
         // dd($request->except(['id','semester_graduated_id']));
         if($request->semester_graduated_id == "")
@@ -140,8 +140,8 @@ class StudentProgramController extends Controller
 
         if($request->semester_graduated_id == "")
         {
-            // $student_program->semester_graduated_id = null;
-            // $student_program->save();
+            $student_program->semester_graduated_id = null;
+            $student_program->save();
             $student_program->update($request->except(['semester_graduated_id']));
         }
         else
