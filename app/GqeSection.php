@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class GqeSection extends Model
 {
+    public $timestamps = false;
+
+    protected $fillable = ['name'];
+
     /**
      *
      */
