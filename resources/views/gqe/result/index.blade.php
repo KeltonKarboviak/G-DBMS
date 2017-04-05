@@ -4,14 +4,6 @@
 
 @section('styles')
 <style>
-    .table > tbody > tr > td > div:nth-child(even) {
-        /*color: red;*/
-        /*border-top: 1px dashed black;
-        border-bottom: 1px dashed black;*/
-        /*margin-top: 3px;
-        margin-bottom: 3px;*/
-    }
-
     th {
         text-align: center;
     }
@@ -100,6 +92,10 @@
         background-color: #fcf8e3;
         border: 1px solid #faebcc;
     }
+
+    .modal-body {
+        text-align: left;
+    }
 </style>
 @endsection
 
@@ -112,7 +108,7 @@
             <h4>Results: {{ $students->count() }}</h4>
         </nav>
 
-        <div class="col-md-9">
+        <div class="col-md-7">
 
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center">
@@ -157,31 +153,119 @@
 
                                 @foreach ($sections as $section)
                                     <td>
-                                        <?php $results = !$section_results->isEmpty() ? $section_results[$section->id] : []; ?>
+                                        <?php $results = $section_results->get($section->id, []); ?>
                                         @foreach ($results as $result)
-                                            <div class="
-                                            {{ $result->pass_level_id === null
-                                                ? 'warning'
-                                                : ($result->pass_level_id >= $pass_level_needed
-                                                    ? 'success'
-                                                    : 'danger')
-                                            }}">
+                                            <div data-toggle="modal" data-target="#modal_{{ $result->student_id }}_{{ $result->offer_id }}" data-backdrop="static"
+                                                class="{{ $result->pass_level_id === null
+                                                    ? 'warning'
+                                                    : ($result->pass_level_id >= $pass_level_needed
+                                                        ? 'success'
+                                                        : 'danger') }}">
                                                 {{ sprintf("%.2f  (%s)", $result->score, $result->pass_level !== null ? $result->pass_level->name : 'Pending') }}
                                             </div>
-                                        @endforeach
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="modal_{{ $result->student_id }}_{{ $result->offer_id }}" role="dialog">
+                                                <div class="modal-dialog">
+
+                                                    <!-- Modal content -->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            <h4 class="modal-title">{{ "{$student->full_name}'s GQE Result for {$result->offering->full_name}" }}</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <form class="form-horizontal">
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-6 control-label">GQE Section:</label>
+                                                                            <div class="col-md-6">
+                                                                                <p class="form-control-static">{{ $result->offering->section->name }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-6 control-label">Semester Taken:</label>
+                                                                            <div class="col-md-6">
+                                                                                <p class="form-control-static">{{ $result->offering->semester->full_name }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-6 control-label">Date:</label>
+                                                                            <div class="col-md-6">
+                                                                                <p class="form-control-static">{{ $result->offering->date }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+
+                                                                <div class="col-md-6">
+                                                                    <form class="form-horizontal">
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-6 control-label">Score Received:</label>
+                                                                            <div class="col-md-6">
+                                                                                <p class="form-control-static">{{ sprintf("%.2f", $result->score) }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-6 control-label">Pass Level:</label>
+                                                                            <div class="col-md-6">
+                                                                                <p class="form-control-static">{{ $result->pass_level !== null ? $result->pass_level->name : 'Pending' }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-6 control-label">MS Cutoff Score:</label>
+                                                                            <div class="col-md-6">
+                                                                                <p class="form-control-static">{{ $result->offering->cutoff_ms }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-6 control-label">PhD Cutoff Score:</label>
+                                                                            <div class="col-md-6">
+                                                                                <p class="form-control-static">{{ $result->offering->cutoff_phd }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            {!! Form::open(['method' => 'DELETE', 'route' => ['gqe_result.delete', $student, $result->offering], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
+                                                            <div class="btn-group">
+                                                                <a href="{{ route('gqe_result.update', [$student->id, $result->offering->id]) }}" class="btn btn-default" data-toggle="tooltip" title="Edit">
+                                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                                </a>
+                                                                <button type="submit" class="btn btn-default" data-toggle="tooltip" title="Delete">
+                                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                                </button>
+                                                            </div>
+                                                            {!! Form::close() !!}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div><!-- /.modal -->
+                                        @endforeach <!-- /foreach ($results as $result) -->
                                     </td>
-                                @endforeach
+                                @endforeach <!-- /foreach ($sections as $section) -->
 
                                 <td>
                                     <span class="glyphicon glyphicon-{{ $finished_gqes >= $student->current_program->program->gqes_needed ? 'ok' : 'remove' }}"></span>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach <!-- /foreach ($students as $student) -->
                     </tbody>
                 </table>
-            </div>
+            </div> <!-- /.table-responsive -->
 
-        </div>
+        </div> <!-- /.col-md-7 -->
+
+        <!-- Affixed side nav for 'Add a GQE Result' button -->
+        <nav class="col-md-2">
+        	<div data-spy="affix" data-offset-top="-1">
+    			<a href="{{ url('/gqe/result/add') }}" class="btn btn-success btn-lg">Add a GQE Result</a>
+        	</div>
+    	</nav> <!-- /.col-md-2 -->
 
     </div>
 </div>

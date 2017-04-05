@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class GqeOffering extends Model
 {
+
+    public $timestamps = false;
+
+    protected $fillable = [];
+
+    protected $appends = ['full_name'];
+
+    public function getFullNameAttribute() {
+        return "{$this->semester->full_name} - {$this->section->name}";
+    }
+
     /**
      *
      */

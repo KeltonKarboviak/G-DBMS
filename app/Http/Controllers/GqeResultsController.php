@@ -6,19 +6,20 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\GqeOffering;
+use App\GqeResult;
 use App\GqeSection;
-use App\Semester;
+use App\GqeOffering;
 use App\Student;
 
 class GqeResultsController extends Controller
 {
     private $rules = [
-
+        'score' => 'numeric|min:0'
 	];
 
 	private $messages = [
-
+        'student_id.required' => 'The Student ID field is required.',
+        'offer_id.required' => 'The GQE Offering ID field is required.',
 	];
 
     /**
@@ -26,43 +27,11 @@ class GqeResultsController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth');
     }
 
     public function index() {
-        // $students->each(function ($student) use ($semester) {
-        //     $student->gqe_results->filter(function ($result) use ($semester) {
-        //         return $result->offering->semester_id == $semester->id;
-        //     });
-        // });
-        //
-        // $stu_results->whereHas('offering', function ($query) use ($semester->id) { $query->where('gqe_offerings.semester_id', $semester->id); })->get();
-
-        // SELECT
-        // 	sections.student,
-        // 	SUM(sections.sum)
-        // FROM
-        // 	(
-        // 		SELECT
-        // 			s.id as 'student',
-        // 			SUM(
-        // 				IF(r.pass_level_id >= 2, 1, 0)
-        // 			) as 'sum'
-        // 		FROM
-        // 			students s
-        // 			LEFT JOIN gqe_results r ON s.id = r.student_id
-        // 			LEFT JOIN gqe_offerings o ON r.offer_id = o.id
-        // 		WHERE
-        // 			s.is_current
-        // 		GROUP BY
-        // 			s.id,
-        // 			o.gqe_section_id
-        // 	) as sections
-        // GROUP BY
-        // 	sections.student;
-
         $sections = GqeSection::orderBy('id', 'asc')->get();
 
         $students = Student::with('gqe_results.offering.section', 'gqe_results.pass_level', 'programs.program')
@@ -83,23 +52,68 @@ class GqeResultsController extends Controller
         ]);
     }
 
-    public function add() {
+    public function store(GqeResult $result) {
+        $students = Student::with('programs')
+            ->whereHas('programs', function ($query) {
+                return $query->where('student_programs.is_current', 1);
+            })
+            ->get()
+            ->pluck('full_name', 'id');
 
+        $offerings = GqeOffering::orderBy('date', 'desc')
+            ->with('semester', 'section')
+            ->get()
+            ->pluck('full_name', 'id');
+
+        return view('/gqe/result/store', [
+            'result' => $result,
+            'students' => $students,
+            'offerings' => $offerings,
+        ]);
     }
 
-    public function store(Request $request) {
+    public function store_submit(Request $request) {
+        $this->rules['student_id'] = 'required|exists:students,id';
+        $this->rules['offer_id'] = 'required|exists:gqe_offerings,id';
 
+        $this->validate($request, $this->rules, $this->messages);
+
+        $result = GqeResult::create($request->all());
+
+        session()->flash('alert-success', 'The GQE Result has been successfully created.');
+
+        return redirect('/gqe/result');
     }
 
-    public function edit(GqeOffering $offering) {
+    public function update($student_id, $offer_id) {
+        $result = GqeResult::find(['student_id' => $student_id, 'offer_id' => $offer_id])
+            ->load('student');
 
+        return view('/gqe/result/update', [
+            'result' => $result,
+        ]);
     }
 
-    public function update(Request $request, GqeOffering $offering) {
+    public function update_submit(Request $request, $student_id, $offer_id) {
+        $result = GqeResult::find(['student_id' => $student_id, 'offer_id' => $offer_id]);
+        // dd($request->all(), $result, $request->only(['score']), $request->get('score') ? $request->get('score') : null);
 
+        $this->validate($request, $this->rules, $this->messages);
+
+        $result->score = $request->get('score') ? $request->get('score') : null;
+        $result->save();
+
+        session()->flash('alert-success', 'The GQE Result has been successfully updated.');
+
+        return redirect('/gqe/result');
     }
 
-    public function destroy(GqeOffering $offering) {
+    public function delete($student_id, $offer_id) {
+        $result = GqeResult::find(['student_id' => $student_id, 'offer_id' => $offer_id]);
+        $result->delete();
 
+        session()->flash('alert-success', 'The GQE Result has been successfully deleted.');
+
+        return redirect('/gqe/result');
     }
 }

@@ -22,6 +22,10 @@ class GqeResult extends Model
      */
     public $incrementing = false;
 
+    public $timestamps = false;
+
+    protected $fillable = ['student_id', 'offer_id', 'score'];
+
     /**
      *
      */
