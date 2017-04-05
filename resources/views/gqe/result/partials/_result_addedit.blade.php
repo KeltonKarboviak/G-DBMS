@@ -47,7 +47,6 @@
         <div class="btn-group">
             {!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
             <a href="{{ url('/gqe/result') }}" class="btn btn-danger">Cancel</a>
-            {{--{!! Form::button('Cancel', ['class' => 'btn btn-danger']) !!}--}}
         </div>
     </div>
 </div>

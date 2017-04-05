@@ -59,20 +59,20 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('/student') }}">Info</a></li>
-                            <li><a href="{{ url('student/add') }}">Add</a></li>
+                            <li><a href="{{ url('/student/add') }}">Add</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Advisor <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('/advisor') }}">Info</a></li>
-                            <li><a href="{{ url('advisor/add') }}">Add</a></li>
+                            <li><a href="{{ url('/advisor/add') }}">Add</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">GQE <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('gqe/result') }}">Result</a></li>
+                            <li><a href="{{ url('/gqe/result') }}">Result</a></li>
                             <li><a href="#">Offering</a></li>
                             <li><a href="#">Section</a></li>
                             <li><a href="#">Pass Level</a></li>
@@ -81,7 +81,7 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">GCE <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('gce/add') }}">Add</a></li>
+                            <li><a href="{{ url('/gce/add') }}">Add</a></li>
                         </ul>
                     </li>
                 </ul>

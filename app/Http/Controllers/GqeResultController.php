@@ -11,7 +11,7 @@ use App\GqeSection;
 use App\GqeOffering;
 use App\Student;
 
-class GqeResultsController extends Controller
+class GqeResultController extends Controller
 {
     private $rules = [
         'score' => 'numeric|min:0'
