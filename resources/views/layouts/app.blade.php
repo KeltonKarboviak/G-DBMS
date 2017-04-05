@@ -75,7 +75,7 @@
                             <li><a href="{{ url('/gqe/result') }}">Result</a></li>
                             <li><a href="#">Offering</a></li>
                             <li><a href="{{ url('/gqe/section') }}">Section</a></li>
-                            <li><a href="#">Pass Level</a></li>
+                            <li><a href="{{ url('/gqe/passlevel') }}">Pass Level</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
