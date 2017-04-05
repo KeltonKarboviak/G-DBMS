@@ -18,8 +18,8 @@ class GqeResultController extends Controller
 	];
 
 	private $messages = [
-        'student_id.required' => 'The Student ID field is required.',
-        'offer_id.required' => 'The GQE Offering ID field is required.',
+        'student_id.required' => 'The Student field is required.',
+        'offer_id.required' => 'The GQE Offering field is required.',
 	];
 
     /**
@@ -78,7 +78,9 @@ class GqeResultController extends Controller
 
         $this->validate($request, $this->rules, $this->messages);
 
-        $result = GqeResult::create($request->all());
+        $result = GqeResult::create($request->except(['score']));
+        $result->score = $request->get('score') ?: null;
+        $result->save();
 
         session()->flash('alert-success', 'The GQE Result has been successfully created.');
 
@@ -96,11 +98,10 @@ class GqeResultController extends Controller
 
     public function update_submit(Request $request, $student_id, $offer_id) {
         $result = GqeResult::find(['student_id' => $student_id, 'offer_id' => $offer_id]);
-        // dd($request->all(), $result, $request->only(['score']), $request->get('score') ? $request->get('score') : null);
 
         $this->validate($request, $this->rules, $this->messages);
 
-        $result->score = $request->get('score') ? $request->get('score') : null;
+        $result->score = $request->get('score') ?: null;
         $result->save();
 
         session()->flash('alert-success', 'The GQE Result has been successfully updated.');

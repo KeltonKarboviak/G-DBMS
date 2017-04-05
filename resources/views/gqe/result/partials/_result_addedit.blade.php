@@ -1,10 +1,10 @@
 <!-- resources/views/gqe/result/partials/_result_addedit.blade.php -->
 
 <div class="form-group{{ $errors->has('student_id') ? ' has-error' : '' }}">
-    {!! Form::label('student_id', 'Student ID:', ['class' => 'col-md-4 control-label']) !!}
+    {!! Form::label('student_id', 'Student:', ['class' => 'col-md-4 control-label']) !!}
 
     <div class="col-md-6">
-        {!! Form::select('student_id', $students, null, ['placeholder' => 'Choose a student', 'class' => 'form-control', 'disabled' => $disabled]) !!}
+        {!! Form::select('student_id', $students, null, ['placeholder' => 'Choose a Student', 'class' => 'form-control', 'disabled' => $disabled]) !!}
 
         @if ($errors->has('student_id'))
             <span class="help-block">
@@ -15,7 +15,7 @@
 </div>
 
 <div class="form-group{{ $errors->has('offer_id') ? ' has-error' : '' }}">
-    {!! Form::label('offer_id', 'GQE Offering ID:', ['class' => 'col-md-4 control-label']) !!}
+    {!! Form::label('offer_id', 'GQE Offering:', ['class' => 'col-md-4 control-label']) !!}
 
     <div class="col-md-6">
         {!! Form::select('offer_id', $offerings, null, ['placeholder' => 'Choose a GQE Offering', 'class' => 'form-control', 'disabled' => $disabled]) !!}
