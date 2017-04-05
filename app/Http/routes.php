@@ -63,6 +63,13 @@ Route::get('/gqe/result/{student_id}/{offer_id}/edit', ['as' => 'gqe_result.upda
 Route::patch('/gqe/result/{student_id}/{offer_id}', ['as' => 'gqe_result.update_submit', 'uses' => 'GqeResultController@update_submit']);
 Route::delete('/gqe/result/{student_id}/{offer_id}', ['as' => 'gqe_result.delete', 'uses' => 'GqeResultController@delete']);
 
+Route::get('/gqe/offering', 'GqeOfferingController@index');
+Route::get('/gqe/offering/add', ['as' => 'gqe_offering.store', 'uses' => 'GqeOfferingController@store']);
+Route::post('/gqe/offering', ['as' => 'gqe_offering.store_submit', 'uses' => 'GqeOfferingController@store_submit']);
+Route::get('/gqe/offering/{offering}/edit', ['as' => 'gqe_offering.update', 'uses' => 'GqeOfferingController@update']);
+Route::patch('/gqe/offering/{offering}', ['as' => 'gqe_offering.update_submit', 'uses' => 'GqeOfferingController@update_submit']);
+Route::delete('/gqe/offering/{offering}', ['as' => 'gqe_offering.delete', 'uses' => 'GqeOfferingController@delete']);
+
 Route::get('/gqe/section', 'GqeSectionController@index');
 Route::get('/gqe/section/add', ['as' => 'gqe_section.store', 'uses' => 'GqeSectionController@store']);
 Route::post('/gqe/section', ['as' => 'gqe_section.store_submit', 'uses' => 'GqeSectionController@store_submit']);

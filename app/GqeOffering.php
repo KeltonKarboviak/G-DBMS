@@ -9,7 +9,13 @@ class GqeOffering extends Model
 
     public $timestamps = false;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'gqe_section_id',
+        'semester_id',
+        'date',
+        'cutoff_ms',
+        'cutoff_phd'
+    ];
 
     protected $appends = ['full_name'];
 
