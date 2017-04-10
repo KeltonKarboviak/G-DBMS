@@ -1,10 +1,13 @@
-<?php $readonly = isset($readonly) ? $readonly : false ?>
+<?php $readonly = isset($readonly) ? $readonly : false?>
 <div class="form-group{{ $errors->has('student_id') ? ' has-error' : '' }}">
 	{!! Form::label('student_id', 'Student:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
 		{!! Form::select('student_id', $students, null, ['placeholder' => 'Choose a student', 'class' => 'form-control', 'disabled' => $readonly]) !!}
 
+		<span class="help-block" id="assist_amounts">
+			
+		</span>
 		@if ($errors->has('student_id'))
 			<span class="help-block">
 				<strong>{{ $errors->first('student_id') }}</strong>
@@ -13,15 +16,15 @@
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('position_id') ? ' has-error' : '' }}">
-	{!! Form::label('position_id', 'Position:', ['class' => 'col-md-4 control-label']) !!}
+<div class="form-group{{ $errors->has('position') ? ' has-error' : '' }}">
+	{!! Form::label('position', 'Position:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::select('position_id', $positions, null, ['placeholder' => "Choose a position", 'class' => 'form-control']) !!}
+		{!! Form::select('position', $positions, null, ['placeholder' => "Choose a position", 'class' => 'form-control']) !!}
 
-		@if ($errors->has('position_id'))
+		@if ($errors->has('position'))
 			<span class="help-block">
-				<strong>{{ $errors->first('position_id') }}</strong>
+				<strong>{{ $errors->first('position') }}</strong>
 			</span>
 		@endif
 	</div>
@@ -84,12 +87,12 @@
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('date_deferred') ? ' has-error' : '' }}">
-	{!! Form::label('date_deferred', 'Date Deferred Until:', ['class' => 'col-md-4 control-label']) !!}
+<div class="form-group{{ $errors->has('defer_date') ? ' has-error' : '' }}">
+	{!! Form::label('defer_date', 'Date Deferred Until:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
 		<div class="input-group">
-			{!! Form::text('date_deferred', null, ['id' => 'datepicker2', 'class' => 'form-control']) !!}
+			{!! Form::text('defer_date', null, ['id' => 'datepicker2', 'class' => 'form-control']) !!}
 			<span class="input-group-btn">
 				<button class="btn btn-default" type="button" data-toggle="tooltip" title="Select a date">
 					<span class="glyphicon glyphicon-calendar"></span>
@@ -97,23 +100,23 @@
 			</span>
 		</div>
 
-		@if ($errors->has('date_deferred'))
+		@if ($errors->has('defer_date'))
 			<span class="help-block">
-				<strong>{{ $errors->first('date_deferred') }}</strong>
+				<strong>{{ $errors->first('defer_date') }}</strong>
 			</span>
 		@endif
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('current_status') ? ' has-error' : '' }}">
-	{!! Form::label('current_status', 'Current Status:', ['class' => 'col-md-4 control-label']) !!}
+<div class="form-group{{ $errors->has('current_status_id') ? ' has-error' : '' }}">
+	{!! Form::label('current_status_id', 'Current Status:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::select('current_status', $statuses, null, ['placeholder' => "Choose a status", 'class' => 'form-control']) !!}
+		{!! Form::select('current_status_id', $statuses, null, ['placeholder' => "Choose a status", 'class' => 'form-control']) !!}
 
-		@if ($errors->has('current_status'))
+		@if ($errors->has('current_status_id'))
 			<span class="help-block">
-				<strong>{{ $errors->first('current_status') }}</strong>
+				<strong>{{ $errors->first('current_status_id') }}</strong>
 			</span>
 		@endif
 	</div>
@@ -133,29 +136,29 @@
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('stipend_funding_source_id') ? ' has-error' : '' }}">
-	{!! Form::label('stipend_funding_source_id', 'Stipend Funding Source:', ['class' => 'col-md-4 control-label']) !!}
+<div class="form-group{{ $errors->has('funding_source_id') ? ' has-error' : '' }}">
+	{!! Form::label('funding_source_id', 'Stipend Funding Source:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::select('stipend_funding_source_id', $funding_sources, null, ['placeholder' => "Choose a funding source", 'class' => 'form-control']) !!}
+		{!! Form::select('funding_source_id', $funding_sources, null, ['placeholder' => "Choose a funding source", 'class' => 'form-control']) !!}
 
-		@if ($errors->has('stipend_funding_source_id'))
+		@if ($errors->has('funding_source_id'))
 			<span class="help-block">
-				<strong>{{ $errors->first('stipend_funding_source_id') }}</strong>
+				<strong>{{ $errors->first('funding_source_id') }}</strong>
 			</span>
 		@endif
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('corresponding_tuition_waiver') ? ' has-error' : '' }}">
-	{!! Form::label('corresponding_tuition_waiver', 'Corresponding Tuition Waiver:', ['class' => 'col-md-4 control-label']) !!}
+<div class="form-group{{ $errors->has('corresponding_tuition_waiver_id') ? ' has-error' : '' }}">
+	{!! Form::label('corresponding_tuition_waiver_id', 'Corresponding Tuition Waiver:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::select('corresponding_tuition_waiver', $tuition_waivers, null, ['placeholder' => "Choose a tuition waiver", 'class' => 'form-control']) !!}
+		{!! Form::select('corresponding_tuition_waiver_id', $tuition_waivers, null, ['placeholder' => "Choose a tuition waiver", 'class' => 'form-control']) !!}
 
-		@if ($errors->has('corresponding_tuition_waiver'))
+		@if ($errors->has('corresponding_tuition_waiver_id'))
 			<span class="help-block">
-				<strong>{{ $errors->first('corresponding_tuition_waiver') }}</strong>
+				<strong>{{ $errors->first('corresponding_tuition_waiver_id') }}</strong>
 			</span>
 		@endif
 	</div>
@@ -165,7 +168,23 @@
 	<div class="col-md-6 col-md-offset-4">
 		<div class="btn-group">
        	{!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
-       	{!! Form::button('Cancel', ['onClick' => "parent.location='/home'", 'class' => 'btn btn-danger']) !!}
+       	{!! Form::button('Cancel', ['onClick' => "parent.location='/assistantship'", 'class' => 'btn btn-danger']) !!}
         </div>
     </div>
 </div>
+
+@foreach ($assist_amounts as $student => $msg)
+	<input type="hidden" id="msg_{{ $student }}" value="{{ $msg }}" />
+@endforeach
+
+@section('scripts')
+<script>
+$(function () {
+	$('select[name="student_id"').change(function () {
+		$('span#assist_amounts').html(
+			$('#msg_' + $(this).val()).val()
+		);
+	});
+});
+</script>
+@endsection

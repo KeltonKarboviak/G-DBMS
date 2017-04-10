@@ -84,6 +84,7 @@ Route::get('/gqe/passlevel/{level}/edit', ['as' => 'pass_level.update', 'uses' =
 Route::patch('/gqe/passlevel/{level}', ['as' => 'pass_level.update_submit', 'uses' => 'PassLevelController@update_submit']);
 Route::delete('/gqe/passlevel/{level}', ['as' => 'pass_level.delete', 'uses' => 'PassLevelController@delete']);
 
+Route::get('/assistantship', ['as' => 'assistantship.index_filter', 'uses' => 'AssistantshipController@index_filter']);
 Route::get('/assistantship/add', ['as' => 'assistantship.store', 'uses' => 'AssistantshipController@store']);
 Route::post('/assistantship/add', ['as' => 'assistantship.store_submit', 'uses' => 'AssistantshipController@store_submit']);
 Route::get('/assistantship/{assist}', ['as' => 'assistantship.update', 'uses' => 'AssistantshipController@update']);

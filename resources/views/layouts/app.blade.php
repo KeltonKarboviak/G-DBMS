@@ -84,6 +84,13 @@
                             <li><a href="{{ url('/gce/add') }}">Add</a></li>
                         </ul>
                     </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Assistantships <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('/assistantship/') }}">Info</a></li>
+                            <li><a href="{{ url('/assistantship/add') }}">Add</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->

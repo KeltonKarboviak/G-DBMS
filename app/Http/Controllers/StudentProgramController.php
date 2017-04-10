@@ -19,11 +19,11 @@ class StudentProgramController extends Controller
 {
 
     private $rules = [
-        'student_id' => 'required',
-        'advisor_id' => 'required',
-        'program_id' => 'required',
-        'semester_graduated_id' => 'required_if:is_graduated,on',
-        'semester_started_id' => 'required',
+        'student_id' => 'required|exists:students,id',
+        'advisor_id' => 'required|exists:advisors,id',
+        'program_id' => 'required|exists:programs,id',
+        'semester_graduated_id' => 'required_if:is_graduated,on|exists:semesters,id',
+        'semester_started_id' => 'required|exists:semesters,id',
         'topic' => 'between:0,255',
     ];
 

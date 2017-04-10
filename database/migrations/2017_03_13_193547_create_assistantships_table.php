@@ -39,7 +39,7 @@ class CreateAssistantshipsTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->integer('corresponding_tuition_waiver_id')->unsigned();
+            $table->integer('corresponding_tuition_waiver_id')->unsigned()->nullable()->default(null);
             $table->foreign('corresponding_tuition_waiver_id')->references('id')->on('tuition_waivers')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');

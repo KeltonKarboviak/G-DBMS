@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Assistantship extends Model
 {
+
+    public $timestamps = false;
+    protected $fillable = [
+        'student_id','semester_id','position','date_offered','date_responded','defer_date','current_status_id','corresponding_tuition_waiver_id',
+        'stipend','funding_source_id',
+    ];
     /**
      *
      */
@@ -23,9 +29,9 @@ class Assistantship extends Model
     /**
      *
      */
-    public function position() {
-        return $this->belongsTo(Position::class, 'position_id');
-    }
+    // public function position() {
+    //     return $this->belongsTo(Position::class, 'position');
+    // }
 
     /**
      *

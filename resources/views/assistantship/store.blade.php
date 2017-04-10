@@ -10,7 +10,7 @@
 				</div>
 				<div class="panel-body">
 
-					{!! Form::model($assist, ['route' => ['assistantship.update_submit', $assist], 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+					{!! Form::model($assist, ['route' => ['assistantship.store_submit', $assist], 'method' => 'POST', 'class' => 'form-horizontal']) !!}
 						@include('assistantship/partials/_assistantship_addedit')
 					{!! Form::close() !!}
 				</div>
