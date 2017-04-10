@@ -8,6 +8,8 @@
 
             	<?php $count = 0; ?>
 
+            	<?php $allowChanges = Auth::user()->role->name == 'Director'; ?>
+
             	<!-- Start data for each advisor -->
             	@foreach ($advisors as $advisor)
             		<?php $count = $count+1; ?>
@@ -20,8 +22,10 @@
 				      		{!! Form::open(['method' => 'DELETE', 'route' => ['advisor.delete', $advisor], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
 					      		<div class="btn-group pull-right">
 					      			<a href="{{ url('/advisor/info/' . $advisor->id) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Detailed Info"><span class="glyphicon glyphicon-info-sign"></span></a>
-					      			<a href="{{ url('/advisor/' . $advisor->id) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>
-					      			{!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-default btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Delete']) !!}
+					      			@if($allowChanges)
+						      			<a href="{{ url('/advisor/' . $advisor->id) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>
+						      			{!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-default btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Delete']) !!}
+					      			@endif
 					      		</div>
 					      	{!! Form::close() !!}
 			      		</div>
@@ -43,13 +47,15 @@
         </div>
 
         <!-- Affixed side nav for 'Add a Student' button -->
-        <nav class="col-md-3">
-        	<div data-spy="affix" data-offset-top="-1">
-        		<ul class="nav nav-pills nav-stacked">
-        			<li><a href="{{ url('/advisor/add') }}" class="btn btn-success btn-lg">Add an Advisor</a></li>
-        		</ul>
-        	</div>
-    	</nav>
+        @if($allowChanges)
+	        <nav class="col-md-3">
+	        	<div data-spy="affix" data-offset-top="-1">
+	        		<ul class="nav nav-pills nav-stacked">
+	        			<li><a href="{{ url('/advisor/add') }}" class="btn btn-success btn-lg">Add an Advisor</a></li>
+	        		</ul>
+	        	</div>
+	    	</nav>
+    	@endif
 
 	</div>
 </div>

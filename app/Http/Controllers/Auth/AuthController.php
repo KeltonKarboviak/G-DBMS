@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
+use Illuminate\Http\Request;
+use URL;
+use Session;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -28,7 +32,9 @@ class AuthController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
+
+    protected $redirectAfterLogout = '/login';
 
     /**
      * Create a new authentication controller instance.
@@ -37,7 +43,36 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+        // $this->middleware($this->guestMiddleware(), ['except' => 'logout');
+        // $this->middleware('has_role:Director',['except' => 'logout']);
+    }
+
+    public function showRegistrationForm()
+    {
+        if(!Auth::check())
+            return redirect('/login');
+
+        if(!(Auth::user()->role->name === 'Director'))
+        {
+            Session::flash('alert-danger','You do not have permissions to register a new user.');
+            return redirect('/');
+        }
+        return view('auth/register');
+    }
+
+    public function register(Request $request)
+    {
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $this->create($request->all());
+
+        return redirect($this->redirectPath());
     }
 
     /**

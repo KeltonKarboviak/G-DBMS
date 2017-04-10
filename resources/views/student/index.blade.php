@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<?php $allowChanges = Auth::user()->role->name === 'Director' || Auth::user()->role->name === 'Secretary'?>
 <div class="container">
 	<div class="row">
 
@@ -87,18 +88,20 @@
             	<!-- Start data for each student -->
             	@foreach($students as $student)
             		<?php $count = $count + 1; ?>
-            		@include('student/partials/_student_info',['student' => $student, 'fromAdvisor' => false, 'allowChanges' => true, 'count' => $count, 'showRank' => $showRank])
+            		@include('student/partials/_student_info',['student' => $student, 'fromAdvisor' => false, 'allowChanges' => $allowChanges, 'count' => $count, 'showRank' => $showRank])
             	@endforeach
 
             </div>
         </div>
 
 		<!-- Affixed side nav for 'Add a Student' button -->
-        <nav class="col-md-2">
-        	<div data-spy="affix" data-offset-top="-1">
-    			<a href="{{ url('/student/add') }}" class="btn btn-success btn-lg">Add a Student</a>
-        	</div>
-    	</nav>
+		@if($allowChanges)
+	        <nav class="col-md-2">
+	        	<div data-spy="affix" data-offset-top="-1">
+	    			<a href="{{ url('/student/add') }}" class="btn btn-success btn-lg">Add a Student</a>
+	        	</div>
+	    	</nav>
+    	@endif
 
 	</div>
 </div>

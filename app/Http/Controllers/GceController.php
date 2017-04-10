@@ -16,6 +16,17 @@ use App\GceResult;
 
 class GceController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     private $rules = [
         'date' => 'required|date',
     ];

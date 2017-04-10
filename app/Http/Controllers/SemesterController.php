@@ -39,12 +39,10 @@ class SemesterController extends Controller
 
     public function store($returnroute)
     {
-        // echo "after " . session('previousURL');
         return view('/semester/store', [
             'semester' => null,
             'names' => $this->names,
             'returnroute' => $returnroute,
-            // 'previousURL' => session('previousURL')
         ]);
     }
 

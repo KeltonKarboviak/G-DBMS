@@ -22,6 +22,16 @@ use App\Program;
 class AssistantshipController extends Controller
 {
 
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     private $rules = [
         'position' => 'required|exists:positions,name',
         'date_offered' => 'date|required',

@@ -51,54 +51,69 @@
                 </a>
             </div>
 
+            
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('/student') }}">Info</a></li>
-                            <li><a href="{{ url('/student/add') }}">Add</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Advisor <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('/advisor') }}">Info</a></li>
-                            <li><a href="{{ url('/advisor/add') }}">Add</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">GQE <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('/gqe/result') }}">Result</a></li>
-                            <li><a href="{{ url('/gqe/offering') }}">Offering</a></li>
-                            <li><a href="{{ url('/gqe/section') }}">Section</a></li>
-                            <li><a href="{{ url('/gqe/passlevel') }}">Pass Level</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">GCE <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('/gce/add') }}">Add</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Assistantships <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('/assistantship/') }}">Info</a></li>
-                            <li><a href="{{ url('/assistantship/add') }}">Add</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                @if(Auth::check())
+                    <?php $role = Auth::user()->role->name; ?>
+                    <!-- Left Side Of Navbar -->
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ url('/home') }}">Home</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('/student') }}">Info</a></li>
+                                @if($role == 'Director' || $role == 'Secretary')
+                                    <li><a href="{{ url('/student/add') }}">Add</a></li>
+                                @endif
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Advisor <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('/advisor') }}">Info</a></li>
+                                @if($role == 'Director')
+                                    <li><a href="{{ url('/advisor/add') }}">Add</a></li>
+                                @endif
+                            </ul>
+                        </li>
+                        @if($role == 'Director' || $role == 'Chair')
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">GQE <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('/gqe/result') }}">Result</a></li>
+                                    <li><a href="{{ url('/gqe/offering') }}">Offering</a></li>
+                                    <li><a href="{{ url('/gqe/section') }}">Section</a></li>
+                                    <li><a href="{{ url('/gqe/passlevel') }}">Pass Level</a></li>
+                                </ul>
+                            </li>
+                        @endif
+                        @if($role == 'Director')
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">GCE <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('/gce/add') }}">Add</a></li>
+                                </ul>
+                            </li>
+                        @endif
+                        @if($role == 'Director' || $role == 'Chair')
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Assistantships <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('/assistantship/') }}">Info</a></li>
+                                    @if($role == 'Director')
+                                        <li><a href="{{ url('/assistantship/add') }}">Add</a></li>
+                                    @endif
+                                </ul>
+                            </li>
+                        @endif
+                    </ul>
+                @endif
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -106,6 +121,9 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
+                                @if($role == 'Director')
+                                    <li><a href="{{ url('/register') }}">Register new user</a></li>
+                                @endif
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                             </ul>
                         </li>

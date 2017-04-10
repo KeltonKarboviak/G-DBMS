@@ -1,103 +1,110 @@
 @extends('layouts.app')
 
 @section('content')
+<?php $allowViewing = Auth::user()->role->name == 'Director' || Auth::user()->role->name == 'Chair'?>
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading">Dashboard</div>
 
-                <div class="panel-body">
+                @if($allowViewing)
+                    <div class="panel-body">
 
-                    <ul class="nav nav-tabs nav-justified">
-                        <li class="active"><a href="#chart" data-toggle="tab">Chart</a></li>
-                        <li><a href="#table" data-toggle="tab">Table</a></li>
-                    </ul>
+                        <ul class="nav nav-tabs nav-justified">
+                            <li class="active"><a href="#chart" data-toggle="tab">Chart</a></li>
+                            <li><a href="#table" data-toggle="tab">Table</a></li>
+                        </ul>
 
-                    <div class="tab-content">
-                        <!-- Chart tab contents -->
-                        <div id="chart" class="tab-pane fade in active">
-                            <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                        </div>
+                        <div class="tab-content">
+                            <!-- Chart tab contents -->
+                            <div id="chart" class="tab-pane fade in active">
+                                <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+                            </div>
 
-                        <!-- Table tab contents -->
-                        <div id="table" class="tab-pane fade">
-                            <div class="table-responsive">
-                                <table id="budget_table" class="table table-hover">
-                                    <thead>
-                                        <tr class="bg-primary">
-                                            <th>Source</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr id="remaining" class="info" data-toggle="collapse" data-target=".collapse_remaining">
-                                            <td>Remaining</td><td></td>
-                                        </tr>
+                            <!-- Table tab contents -->
+                            <div id="table" class="tab-pane fade">
+                                <div class="table-responsive">
+                                    <table id="budget_table" class="table table-hover">
+                                        <thead>
+                                            <tr class="bg-primary">
+                                                <th>Source</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="remaining" class="info" data-toggle="collapse" data-target=".collapse_remaining">
+                                                <td>Remaining</td><td></td>
+                                            </tr>
 
-                                        <tr id="assistantships" class="info" data-toggle="collapse" data-target=".collapse_assistantships">
-                                            <td>Assistantships</td><td></td>
-                                        </tr>
+                                            <tr id="assistantships" class="info" data-toggle="collapse" data-target=".collapse_assistantships">
+                                                <td>Assistantships</td><td></td>
+                                            </tr>
 
-                                        <tr id="waivers" class="info" data-toggle="collapse" data-target=".collapse_waivers">
-                                            <td>Tuition Waivers</td><td></td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr class="bg-primary">
-                                            <th>Total</th><th></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                            <tr id="waivers" class="info" data-toggle="collapse" data-target=".collapse_waivers">
+                                                <td>Tuition Waivers</td><td></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="bg-primary">
+                                                <th>Total</th><th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                         </div>
+
+                        {!! Form::model($budget, ['route' => ['budget.update', $budget], 'method' => 'PATCH', 'class' => 'form-horizontal']) !!}
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    {!! Form::select('academic_year', $years, null, ['placeholder' => "Choose an Academic Year", 'class' => 'form-control']) !!}
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="form-group{{ $errors->has('academic_year') ? ' has-error' : '' }}">
+                                {!! Form::label('academic_year', 'Academic Year:', ['class' => 'col-md-4 control-label']) !!}
+
+                                <div class="col-md-6">
+                                    {!! Form::number('academic_year', null, ['disabled' => 'disabled', 'class' => 'form-control disabled']) !!}
+
+                                    @if ($errors->has('academic_year'))
+                                        <span class="help-block">
+                            				<strong>{{ $errors->first('academic_year') }}</strong>
+                            			</span>
+                            		@endif
+                                </div>
+                            </div>
+
+                            <div class="form-group{{ $errors->has('budget') ? ' has-error' : '' }}">
+                                {!! Form::label('budget', 'Budget:', ['class' => 'col-md-4 control-label']) !!}
+
+                                <div class="col-md-6">
+                                    {!! Form::number('budget', null, ['class' => 'form-control']) !!}
+
+                                    @if ($errors->has('budget'))
+                                        <span class="help-block">
+                            				<strong>{{ $errors->first('budget') }}</strong>
+                            			</span>
+                            		@endif
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4">
+                                    {!! Form::submit('Update', ['class' => 'btn btn-success']) !!}
+                                </div>
+                            </div>
+    					{!! Form::close() !!}
+
                     </div>
-
-                    {!! Form::model($budget, ['route' => ['budget.update', $budget], 'method' => 'PATCH', 'class' => 'form-horizontal']) !!}
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                {!! Form::select('academic_year', $years, null, ['placeholder' => "Choose an Academic Year", 'class' => 'form-control']) !!}
-                            </div>
-                        </div>
-
-                        <hr />
-
-                        <div class="form-group{{ $errors->has('academic_year') ? ' has-error' : '' }}">
-                            {!! Form::label('academic_year', 'Academic Year:', ['class' => 'col-md-4 control-label']) !!}
-
-                            <div class="col-md-6">
-                                {!! Form::number('academic_year', null, ['disabled' => 'disabled', 'class' => 'form-control disabled']) !!}
-
-                                @if ($errors->has('academic_year'))
-                                    <span class="help-block">
-                        				<strong>{{ $errors->first('academic_year') }}</strong>
-                        			</span>
-                        		@endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('budget') ? ' has-error' : '' }}">
-                            {!! Form::label('budget', 'Budget:', ['class' => 'col-md-4 control-label']) !!}
-
-                            <div class="col-md-6">
-                                {!! Form::number('budget', null, ['class' => 'form-control']) !!}
-
-                                @if ($errors->has('budget'))
-                                    <span class="help-block">
-                        				<strong>{{ $errors->first('budget') }}</strong>
-                        			</span>
-                        		@endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                {!! Form::submit('Update', ['class' => 'btn btn-success']) !!}
-                            </div>
-                        </div>
-					{!! Form::close() !!}
-
-                </div>
+                @else
+                    <div class='panel-body'>
+                        <span class='text'> Welcome to G-DBMS!</span>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

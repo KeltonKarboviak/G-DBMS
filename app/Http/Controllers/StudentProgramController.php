@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use Redirect;
+use Session;
 
 use App\Student;
 use App\StudentProgram;

@@ -1,9 +1,3 @@
-@if($errors->has())
-   @foreach ($errors->all() as $error)
-      <div>{{ $error }}</div>
-  @endforeach
-@endif
-
 {!! Form::hidden('id',null) !!}
 
 <div class="form-group{{ $errors->has('student_id') ? ' has-error' : '' }}">

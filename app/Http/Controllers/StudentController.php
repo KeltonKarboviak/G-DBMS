@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Redirect;
+use Session;
 
 use App\Student;
 use App\StudentProgram;
@@ -84,9 +85,6 @@ class StudentController extends Controller
         $query = Student::with('gce_results','gqe_results','gre','ielts','toefl')->join('student_programs','student_programs.student_id','=','students.id','left outer');
         if($sort_by !== 'ranking')
             $query->orderBy($sort_by);
-
-        // dd($request->all() == null,$request->has('is_current'),$request->get('is_current'),$request->get('advisor_id'));
-
 
 
         if($request->has('first_name'))
