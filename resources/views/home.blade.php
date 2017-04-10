@@ -9,13 +9,52 @@
 
                 <div class="panel-body">
 
-                    <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+                    <ul class="nav nav-tabs nav-justified">
+                        <li class="active"><a href="#chart" data-toggle="tab">Chart</a></li>
+                        <li><a href="#table" data-toggle="tab">Table</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- Chart tab contents -->
+                        <div id="chart" class="tab-pane fade in active">
+                            <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+                        </div>
+
+                        <!-- Table tab contents -->
+                        <div id="table" class="tab-pane fade">
+                            <div class="table-responsive">
+                                <table id="budget_table" class="table table-hover">
+                                    <thead>
+                                        <tr class="bg-primary">
+                                            <th>Source</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="remaining" class="info" data-toggle="collapse" data-target=".collapse_remaining">
+                                            <td>Remaining</td><td></td>
+                                        </tr>
+
+                                        <tr id="assistantships" class="info" data-toggle="collapse" data-target=".collapse_assistantships">
+                                            <td>Assistantships</td><td></td>
+                                        </tr>
+
+                                        <tr id="waivers" class="info" data-toggle="collapse" data-target=".collapse_waivers">
+                                            <td>Tuition Waivers</td><td></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="bg-primary">
+                                            <th>Total</th><th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
                     {!! Form::model($budget, ['route' => ['budget.update', $budget], 'method' => 'PATCH', 'class' => 'form-horizontal']) !!}
-
                         <div class="form-group">
-                            <!--{!! Form::label('academic_year', 'Chart:', ['class' => 'col-md-4 control-label']) !!}-->
-
                             <div class="col-md-12">
                                 {!! Form::select('academic_year', $years, null, ['placeholder' => "Choose an Academic Year", 'class' => 'form-control']) !!}
                             </div>
@@ -56,8 +95,8 @@
                                 {!! Form::submit('Update', ['class' => 'btn btn-success']) !!}
                             </div>
                         </div>
-                        <!--academic_year, budget, funding_source_id-->
 					{!! Form::close() !!}
+
                 </div>
             </div>
         </div>
@@ -71,7 +110,7 @@
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
 
 <script>
-$(document).ready(function () {
+$(function () {
 
     // Build the chart
     Highcharts.chart('chart', {
@@ -88,15 +127,12 @@ $(document).ready(function () {
 
                         chart.showLoading('Loading ...');
 
-                        $.ajax({
-                            type: "GET",
-                            url: "{{ url('/home/drilldown') }}",
-                            data: {year: year, name: e.point.name},
-                            success: function (data) {
-                                chart.addSeriesAsDrilldown(e.point, data['drilldowns']);
-                                chart.hideLoading();
-                            }
-                        }, 'json');
+                        function addDrilldownToChart(data) {
+                            chart.addSeriesAsDrilldown(e.point, data['drilldowns']);
+                            chart.hideLoading();
+                        }
+
+                        getDrilldownData(year, e.point.drilldown, addDrilldownToChart);
                     }
                 }
             }
@@ -115,23 +151,32 @@ $(document).ready(function () {
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: "{point.name}:<br/>${y:,.2f}"
+                    format: "{point.name}:<br/>${y:.2f}"
                 },
                 showInLegend: true
             }
         }
     });
 
-
     $("select[name=academic_year]").change(function () {
         var chart = $("#chart").highcharts();
-
         chart.showLoading('Loading ...');
-
         chart.setTitle(null, {text: $('select[name=academic_year] option:selected').text()});
 
-        if (chart.series.length > 0)
+        while (chart.series.length > 0)
             chart.series[0].remove(true);
+
+        // Get the budget table's major row elements
+        var $major_rows = $('#budget_table > tbody > tr[id]');
+
+        // Empty each of the dollar amounts <td>'s from the major rows
+        $major_rows.children('td:last-child').html('');
+
+        // Detach all the collapsible <tr>'s
+        $major_rows.nextUntil('tr[id]').detach();
+
+        // Empty the total amount in the table footer
+        var $td_total = $('#budget_table > tfoot > tr > th:last-child').html('');
 
         var year = $(this).val();
 
@@ -140,32 +185,58 @@ $(document).ready(function () {
 
         // AJAX call to get pie chart data
         $.ajax({
+            dataType: "json",
             type: "GET",
             url: "{{ url('/home/chart') }}",
             data: {year: year},
             success: function (data) {
                 chart.addSeries({
-                  name: 'Source',
-                  colorByPoint: true,
-                  data: [{
-                      name: 'Assistantships',
-                      y: data['assistantships'],
-                      drilldown: 'Assistantships'
-                  }, {
-                      name: 'Tuition Waivers',
-                      y: data['waivers'],
-                      drilldown: 'Tuition Waivers'
-                  }, {
-                      name: 'Remaining',
-                      y: data['remaining']
-                  }]
+                    name: 'Source',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Assistantships',
+                        y: data['assistantships'],
+                        drilldown: 'assistantships'
+                    }, {
+                        name: 'Tuition Waivers',
+                        y: data['waivers'],
+                        drilldown: 'waivers'
+                    }, {
+                        name: 'Remaining',
+                        y: data['remaining']
+                    }]
                 });
 
                 chart.hideLoading();
-            }
-        }, 'json');
 
+                $major_rows.each(function (idx) {
+                    // Change the major_row's total
+                    var $row = $(this);
+                    $row.children('td:last-child').html(data[this.id].formatMoney(2));
+
+                    function addDrilldownToTable(students_data) {
+                        var $sub_rows = students_data['drilldowns']['data'].map(function (datum) {
+                            // datum == [student_name, dollar_amount]
+                            return $('<tr/>', {
+                                'class': 'panel-collapse collapse collapse_' + $row.attr('id'),
+                                html: '<td>' + datum[0] + '</td><td>' + datum[1].formatMoney(2) + '</td>'
+                            });
+                        });
+
+                        $row.after($sub_rows);
+                    }
+
+                    getDrilldownData(year, this.id, addDrilldownToTable);
+                });
+
+                // Change total amount
+                $td_total.html(data['budget'].formatMoney(2));
+            }
+        });
+
+        // AJAX call to fill-in the input fields with the selected budget information
         $.ajax({
+            dataType: "json",
             type: "GET",
             url: "/home/budget/" + year,
             data: {year: year},
@@ -173,9 +244,19 @@ $(document).ready(function () {
                 $("input[name=academic_year").val(data['budget']['academic_year']);
                 $("input[name=budget").val(data['budget']['budget']);
             }
-        }, 'json');
+        });
     }).change();
 
 });
+
+function getDrilldownData(year, drilldown_name, success_callback) {
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "{{ url('/home/drilldown') }}",
+        data: {year: year, name: drilldown_name},
+        success: success_callback
+    });
+}
 </script>
 @endsection
