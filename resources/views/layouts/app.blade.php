@@ -51,9 +51,9 @@
                 </a>
             </div>
 
-            
+
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                @if(Auth::check())
+                @if (Auth::check())
                     <?php $role = Auth::user()->role->name; ?>
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
@@ -76,7 +76,7 @@
                                 @endif
                             </ul>
                         </li>
-                        @if($role == 'Director' || $role == 'Chair')
+                        @if ($role == 'Director' || $role == 'Chair')
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">GQE <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
@@ -87,7 +87,7 @@
                                 </ul>
                             </li>
                         @endif
-                        @if($role == 'Director')
+                        @if ($role == 'Director')
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">GCE <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
@@ -95,13 +95,22 @@
                                 </ul>
                             </li>
                         @endif
-                        @if($role == 'Director' || $role == 'Chair')
+                        @if ($role == 'Director' || $role == 'Chair')
                             <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Assistantships <span class="caret"></span></a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Assistantship <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{ url('/assistantship/') }}">Info</a></li>
                                     @if($role == 'Director')
                                         <li><a href="{{ url('/assistantship/add') }}">Add</a></li>
+                                    @endif
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tuition Waiver <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('/waiver') }}">Info</a></li>
+                                    @if ($role == 'Director')
+                                        <li><a href="{{ url('/waiver/add') }}">Add</a></li>
                                     @endif
                                 </ul>
                             </li>
@@ -121,7 +130,7 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                @if($role == 'Director')
+                                @if ($role == 'Director')
                                     <li><a href="{{ url('/register') }}">Register new user</a></li>
                                 @endif
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
