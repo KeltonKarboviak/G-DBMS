@@ -13,14 +13,6 @@
         padding: 0;
     }
 
-    span.glyphicon-remove {
-        color: red;
-    }
-
-    span.glyphicon-ok {
-        color: green;
-    }
-
     .table > tbody > tr > td > div.success,
     .table > tbody > tr.success > td,
     .table > tbody > tr.success > th,
