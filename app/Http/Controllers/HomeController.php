@@ -88,7 +88,7 @@ class HomeController extends Controller
         if ($budget == null)
             return Response::json(['success' => false]);
 
-        if ($name === 'Assistantships') {
+        if ($name === 'assistantships') {
             $data = Assistantship
                 ::selectRaw('concat(students.first_name, " ", students.last_name) as full_name, sum(assistantships.stipend) as sum')
                 ->join('semesters', 'assistantships.semester_id', '=', 'semesters.id')
@@ -97,7 +97,7 @@ class HomeController extends Controller
                 ->where('assistantships.funding_source_id', 1)
                 ->groupBy('assistantships.student_id')
                 ->lists('sum', 'full_name');
-        } else if ($name === 'Tuition Waivers') {
+        } else if ($name === 'waivers') {
             $data = TuitionWaiver
                 ::selectRaw('concat(students.first_name, " ", students.last_name) as full_name, sum(tuition_waivers.amount_received) as sum')
                 ->join('semesters', 'tuition_waivers.semester_id', '=', 'semesters.id')
@@ -106,6 +106,8 @@ class HomeController extends Controller
                 ->where('tuition_waivers.funding_source_id', '=', 1)
                 ->groupBy('tuition_waivers.student_id')
                 ->lists('sum', 'full_name');
+        } else if ($name === 'remaining') {
+            $data = [];
         } else {
             return Response::json(['success' => false]);
         }
@@ -146,9 +148,6 @@ class HomeController extends Controller
             'alert-success', "Budget update for {$budget->full_name} was successful! New amount: {$request->budget}"
         );
 
-        return view('/home', [
-            'budget' => $budget,
-            'years' => YearlyBudget::all()->lists('full_name', 'academic_year'),
-        ]);
+        return redirect("/home/budget/{$budget->academic_year}");
     }
 }
