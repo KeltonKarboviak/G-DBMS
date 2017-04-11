@@ -89,7 +89,7 @@ class GqeResultController extends Controller
 
     public function update($student_id, $offer_id) {
         $result = GqeResult::find(['student_id' => $student_id, 'offer_id' => $offer_id])
-            ->load('student');
+            ->load('student', 'offering');
 
         return view('/gqe/result/update', [
             'result' => $result,
