@@ -14,7 +14,15 @@ class CreateSemestersTable extends Migration
     {
         Schema::create('semesters', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 10);
+            // $table->string('name', 10);
+            $table->integer('name_id')->unsigned();
+            // $table->foreign('name_id')->references('id')->on('semester_names')
+            //     ->onUpdate('cascade');
+        });
+
+        Schema::table('semesters', function ($table){
+            $table->foreign('name_id')->references('id')->on('semester_names')
+                ->onUpdate('cascade');
         });
         // Need to add this afterwards because the Blueprint class does not
         // support adding MySQL YEAR data type

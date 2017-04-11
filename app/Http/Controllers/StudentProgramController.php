@@ -14,6 +14,7 @@ use App\StudentProgram;
 use App\Advisor;
 use App\Program;
 use App\Semester;
+use App\SemesterName;
 use URL;
 
 class StudentProgramController extends Controller
@@ -23,13 +24,18 @@ class StudentProgramController extends Controller
         'student_id' => 'required|exists:students,id',
         'advisor_id' => 'required|exists:advisors,id',
         'program_id' => 'required|exists:programs,id',
-        'semester_graduated_id' => 'required_if:is_graduated,on|exists:semesters,id',
-        'semester_started_id' => 'required|exists:semesters,id',
+        // 'semester_graduated_id' => 'required_if:is_graduated,on|exists:semesters,id',
+        'semester_graduated_name_id' => 'required_if:is_graduated,on',
+        // 'semester_started_id' => 'required|exists:semesters,id',
+        'semester_started_name_id' => 'required',
+        'semester_started_year' => 'required',
+        'semester_graduated_name_id' => 'required_with:semester_graduated_year|required_if:is_graduated,on',
+        'semester_graduated_year' => 'required_with:semester_graduated_name_id',
         'topic' => 'between:0,255',
     ];
 
     private $messages = [
-        'semester_graduated_id.required_if' => 'You must supply the semester the student graduated.',
+        // 'semester_graduated_id.required_if' => 'You must supply the semester the student graduated.',
     ];
 
     /**
@@ -70,7 +76,7 @@ class StudentProgramController extends Controller
             'sent_student' => $student,
             'advisors' => Advisor::all()->lists("full_name","id"),
             'programs' => Program::lists("name","id"),
-            'semesters' => Semester::all()->lists("full_name","id")
+            'semester_names' => SemesterName::all()->lists("name","id"),
         ]);
     }
 
@@ -86,7 +92,7 @@ class StudentProgramController extends Controller
         ]);
 
 
-        if($request->has('semester_graduated_id')) // if student is graduated
+        if($request->has('semester_graduated_name_id')) // if student is graduated
         {
             $this->rules['is_graduated'] = 'Accepted';
             $this->messages['is_graduated.accepted'] = 'The student must be graduated to have a graduation semester';
@@ -96,11 +102,24 @@ class StudentProgramController extends Controller
 
         $this->validate($request,$this->rules,$this->messages);
 
-        // dd($request->except(['id','semester_graduated_id']));
-        if($request->semester_graduated_id == "")
-            $student_program->create($request->except(['id','semester_graduated_id']));
-        else
-            $student_program->create($request->except(['id']));
+        $semester_started_id = Semester::firstOrCreate([
+            'name_id' => $request->get('semester_started_name_id'), 
+            'calendar_year' => $request->get('semester_started_year'),
+            'academic_year' => Semester::getAcademicYear($request->get('semester_started_name_id'),$request->get('semester_started_year')),
+        ])->id;
+
+        $array_for_fill = $request->except(['id','semester_started_name_id','semester_started_year','semester_graduated_name_id','semester_graduated_year',]);
+        $array_for_fill['semester_started_id'] = $semester_started_id;
+        if($request->semester_graduated_name_id != "") // if have graduated
+        {
+            $array_for_fill['semester_graduated_id'] = Semester::firstOrCreate([
+                'name_id' => $request->get('semester_graduated_name_id'), 
+                'calendar_year' => $request->get('semester_graduated_year'),
+                'academic_year' => Semester::getAcademicYear($request->get('semester_graduated_name_id'),$request->get('semester_graduated_year')),
+            ])->id;
+        }
+
+        $student_program->create($array_for_fill);
 
         return Redirect::to('/student');
     }
@@ -112,7 +131,8 @@ class StudentProgramController extends Controller
             'sent_student' => $student_program->student,
             'advisors' => Advisor::all()->lists("full_name","id"),
             'programs' => Program::lists("name","id"),
-            'semesters' => Semester::all()->lists("full_name","id")
+            // 'semesters' => Semester::all()->lists("full_name","id")
+            'semester_names' => SemesterName::all()->lists('name','id'),
         ]);
     }
 
@@ -127,7 +147,7 @@ class StudentProgramController extends Controller
         ]);
 
 
-        if($request->has('semester_graduated_id'))
+        if($request->has('semester_graduated_name_id'))
         {
             $this->rules['is_graduated'] = 'Accepted';
             $this->messages['is_graduated.accepted'] = 'The student must be graduated to have a graduation semester';
@@ -139,14 +159,29 @@ class StudentProgramController extends Controller
 
         // dd($request->all());
 
-        if($request->semester_graduated_id == "")
+        $semester_started_id = Semester::firstOrCreate([
+            'name_id' => $request->get('semester_started_name_id'), 
+            'calendar_year' => $request->get('semester_started_year'),
+            'academic_year' => Semester::getAcademicYear($request->get('semester_started_name_id'),$request->get('semester_started_year')),
+        ])->id;
+
+        $array_for_fill = $request->except(['id','semester_started_name_id','semester_started_year','semester_graduated_name_id','semester_graduated_year',]);
+        $array_for_fill['semester_started_id'] = $semester_started_id;
+        if($request->semester_graduated_name_id != "") // if have graduated
+        {
+            $array_for_fill['semester_graduated_id'] = Semester::firstOrCreate([
+                'name_id' => $request->get('semester_graduated_name_id'), 
+                'calendar_year' => $request->get('semester_graduated_year'),
+                'academic_year' => Semester::getAcademicYear($request->get('semester_graduated_name_id'),$request->get('semester_graduated_year')),
+            ])->id;
+        }
+        else
         {
             $student_program->semester_graduated_id = null;
             $student_program->save();
-            $student_program->update($request->except(['semester_graduated_id']));
         }
-        else
-            $student_program->update($request->all());
+
+        $student_program->update($array_for_fill);
 
         return Redirect::to('/student');
     }

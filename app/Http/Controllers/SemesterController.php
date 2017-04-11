@@ -10,6 +10,7 @@ use URL;
 use Validator;
 
 use App\Semester;
+use App\SemesterName;
 use App\YearlyBudget;
 
 class SemesterController extends Controller
@@ -25,7 +26,7 @@ class SemesterController extends Controller
         'regex' => 'Years must be 4 digits.',
     ];
 
-    private $names = ["Fall"=>"Fall","Spring"=>"Spring","Summer1"=>"Summer1","Summer2"=>"Summer2"];
+    // private $names = ["Fall"=>"Fall","Spring"=>"Spring","Summer1"=>"Summer1","Summer2"=>"Summer2"];
 
     /**
      * Create a new controller instance.
@@ -41,7 +42,7 @@ class SemesterController extends Controller
     {
         return view('/semester/store', [
             'semester' => null,
-            'names' => $this->names,
+            'names' => SemesterName::all()->lists('name','id');
             'returnroute' => $returnroute,
         ]);
     }

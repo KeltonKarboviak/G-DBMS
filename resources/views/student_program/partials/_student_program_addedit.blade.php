@@ -47,19 +47,32 @@
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('semester_started_id') ? ' has-error' : '' }}">
-	{!! Form::label('semester_started_id', 'Semester Started:', ['class' => 'col-md-4 control-label']) !!}
+<div class="form-group{{ $errors->has('semester_started_year')  || $errors->has('semester_started_name_id') ? ' has-error' : '' }}">
+	{!! Form::label('', 'Semester Started:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::select('semester_started_id', $semesters, null, ['placeholder' => "Choose a semester", 'class' => 'form-control']) !!}
+		<div class='row'>
+			<div class='col-sm-6'>
+				{!! Form::select('semester_started_name_id', $semester_names, $student_program == null ? null : $student_program->semester_started->name_id, ['placeholder' => "", 'class' => 'form-control']) !!}
 
-		@if ($errors->has('semester_started_id'))
-			<span class="help-block">
-				<strong>{{ $errors->first('semester_started_id') }}</strong>
-			</span>
-		@endif
+				@if ($errors->has('semester_started_name_id'))
+					<span class="help-block">
+						<strong>{{ $errors->first('semester_started_name_id') }}</strong>
+					</span>
+				@endif
+			</div>
+			<div class='col-sm-6'>
+				{!! Form::number('semester_started_year', $student_program == null ? null : $student_program->semester_started->calendar_year, ['class' => 'form-control', 'placeholder' => 'Year']) !!}
+
+				@if ($errors->has('semester_started_year'))
+					<span class="help-block">
+						<strong>{{ $errors->first('semester_started_year') }}</strong>
+					</span>
+				@endif
+			</div>
+		</div>
 	</div>
-	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a>
+	<?php //<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a> ?>
 </div>
 
 @if($student_program == null || $student_program->needs_committee)
@@ -121,10 +134,17 @@
 </div>
 
 <div class="form-group{{ $errors->has('semester_graduated_id') ? ' has-error' : '' }}">
-	{!! Form::label('semester_graduated_id', 'Semester Graduated:', ['class' => 'col-md-4 control-label']) !!}
+	{!! Form::label('', 'Semester Graduated:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
-		{!! Form::select('semester_graduated_id', $semesters, null, ['placeholder' => "Choose a semester", 'class' => 'form-control']) !!}
+		<div class='row'>
+			<div class='col-sm-6'>
+				{!! Form::select('semester_graduated_name_id', $semester_names, $student_program == null ? null : ($student_program->is_graduated ? $student_program->semester_started->name_id : null), ['placeholder' => "", 'class' => 'form-control']) !!}
+			</div>
+			<div class='col-sm-6'>
+				{!! Form::number('semester_graduated_year', $student_program == null ? null : ($student_program->is_graduated ? $student_program->semester_graduated->calendar_year : null), ['class' => 'form-control', 'placeholder' => 'Year']) !!}
+			</div>
+		</div>
 
 		@if ($errors->has('semester_graduated_id'))
 			<span class="help-block">
@@ -132,7 +152,7 @@
 			</span>
 		@endif
 	</div>
-	<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a>
+	<?php //<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a> ?>
 </div>
 
 <div class="form-group">

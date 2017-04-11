@@ -15,18 +15,18 @@ class SemestersTableSeeder extends Seeder
         // DB::table('semesters')->delete();
 
         $semesters = [
-            ['id' => 1, 'name' => 'Fall',    'calendar_year' => 2015, 'academic_year' => 2015],
-            ['id' => 2, 'name' => 'Spring',  'calendar_year' => 2016, 'academic_year' => 2015],
-            ['id' => 3, 'name' => 'Summer1', 'calendar_year' => 2016, 'academic_year' => 2015],
-            ['id' => 4, 'name' => 'Summer2', 'calendar_year' => 2016, 'academic_year' => 2015],
+            ['id' => 1, 'name_id' => 1,    'calendar_year' => 2015, 'academic_year' => 2015],
+            ['id' => 2, 'name_id' => 2,  'calendar_year' => 2016, 'academic_year' => 2015],
+            ['id' => 3, 'name_id' => 3, 'calendar_year' => 2016, 'academic_year' => 2015],
+            ['id' => 4, 'name_id' => 4, 'calendar_year' => 2016, 'academic_year' => 2015],
 
-            ['id' => 5, 'name' => 'Fall',    'calendar_year' => 2016, 'academic_year' => 2016],
-            ['id' => 6, 'name' => 'Spring',  'calendar_year' => 2017, 'academic_year' => 2016],
-            ['id' => 7, 'name' => 'Summer1', 'calendar_year' => 2017, 'academic_year' => 2016],
-            ['id' => 8, 'name' => 'Summer2', 'calendar_year' => 2017, 'academic_year' => 2016],
+            ['id' => 5, 'name_id' => 1,    'calendar_year' => 2016, 'academic_year' => 2016],
+            ['id' => 6, 'name_id' => 2,  'calendar_year' => 2017, 'academic_year' => 2016],
+            ['id' => 7, 'name_id' => 3, 'calendar_year' => 2017, 'academic_year' => 2016],
+            ['id' => 8, 'name_id' => 4, 'calendar_year' => 2017, 'academic_year' => 2016],
 
-            ['id' => 9,  'name' => 'Fall',   'calendar_year' => 2017, 'academic_year' => 2017],
-            ['id' => 10, 'name' => 'Spring', 'calendar_year' => 2018, 'academic_year' => 2017],
+            ['id' => 9,  'name_id' => 1,   'calendar_year' => 2017, 'academic_year' => 2017],
+            ['id' => 10, 'name_id' => 2, 'calendar_year' => 2018, 'academic_year' => 2017],
         ];
 
         // Uncomment the below to run the seeder

@@ -22,7 +22,7 @@ class YearlyBudget extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['academic_year', 'budget'];
+    protected $fillable = ['academic_year', 'budget', 'funding_source_id'];
 
     protected $appends = ['full_name'];
 

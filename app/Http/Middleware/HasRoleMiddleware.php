@@ -6,6 +6,7 @@ use Closure;
 use Session;
 use URL;
 use App;
+use Auth;
 
 class HasRoleMiddleware
 {
@@ -18,6 +19,9 @@ class HasRoleMiddleware
      */
     public function handle($request, Closure $next, $roles)
     {
+        if(!Auth::check())
+            return redirect('/login');
+
         // dd($roles);
         $roles = explode('_',$roles);
         foreach($roles as $role)

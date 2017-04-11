@@ -14,17 +14,30 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('semester_id') ? ' has-error' : '' }}">
+<div class="form-group{{ $errors->has('semester_name_id')  || $errors->has('semester_year') ? ' has-error' : '' }}">
     {!! Form::label('semester_id', 'Semester:', ['class' => 'col-md-4 control-label']) !!}
 
     <div class="col-md-6">
-        {!! Form::select('semester_id', $semesters, null, ['placeholder' => 'Choose a Semester', 'class' => 'form-control']) !!}
+        <div class='row'>
+            <div class='col-sm-6'>
+                {!! Form::select('semester_name_id', $semester_names, $offering == null ? null : $offering->semester->name_id, ['placeholder' => "", 'class' => 'form-control']) !!}
 
-        @if ($errors->has('semester_id'))
-            <span class="help-block">
-                <strong>{{ $errors->first('semester_id') }}</strong>
-            </span>
-        @endif
+                @if ($errors->has('semester_name_id'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('semester_name_id') }}</strong>
+                    </span>
+                @endif
+            </div>
+            <div class='col-sm-6'>
+                {!! Form::number('semester_year', $offering == null ? null : $offering->semester->calendar_year, ['class' => 'form-control', 'placeholder' => 'Year']) !!}
+
+                @if ($errors->has('semester_year'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('semester_year') }}</strong>
+                    </span>
+                @endif
+            </div>
+        </div>
     </div>
 </div>
 

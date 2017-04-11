@@ -9,12 +9,15 @@ use App\Http\Requests;
 use App\GqeOffering;
 use App\GqeSection;
 use App\Semester;
+use App\SemesterName;
 
 class GqeOfferingController extends Controller
 {
     private $rules = [
         'gqe_section_id' => 'required|exists:gqe_sections,id',
-        'semester_id' => 'required|exists:semesters,id',
+        // 'semester_id' => 'required|exists:semesters,id',
+        'semester_name_id' => 'required',
+        'semester_year' => 'required',
         'date' => 'required|date',
         'cutoff_ms' => 'required_with:cutoff_phd|numeric|min:0',
         'cutoff_phd' => 'required_with:cutoff_ms|numeric|min:0',
@@ -22,7 +25,7 @@ class GqeOfferingController extends Controller
 
     private $messages = [
         'gqe_section_id.required' => 'The GQE Section field is required.',
-        'semester_id.required' => 'The Semester field is required.',
+        // 'semester_id.required' => 'The Semester field is required.',
         'cutoff_ms.required_with' => 'The MS Cutoff Score field is required when PhD Cutoff Score is present.',
         'cutoff_ms.numeric' => 'The MS Cutoff Score must be a number.',
         'cutoff_ms.min' => 'The MS Cutoff Score must be at least 0',
@@ -73,19 +76,27 @@ class GqeOfferingController extends Controller
 
     public function store() {
         return view('/gqe/offering/store', [
-            'offering' => new GqeOffering,
+            'offering' => null,//new GqeOffering,
             'sections' => GqeSection::pluck('name', 'id'),
-            'semesters' => Semester::orderBy('calendar_year', 'desc')
-                                ->orderBy('id', 'desc')
-                                ->get()
-                                ->pluck('full_name', 'id'),
+            // 'semesters' => Semester::orderBy('calendar_year', 'desc')
+            //                     ->orderBy('id', 'desc')
+            //                     ->get()
+            //                     ->pluck('full_name', 'id'),
+            'semester_names' => SemesterName::all()->pluck('name','id'),
         ]);
     }
 
     public function store_submit(Request $request) {
         $this->validate($request, $this->rules, $this->messages);
 
-        $offering = GqeOffering::create($request->all());
+        $to_fill = $request->except(['semester_name_id','semester_year']);
+        $to_fill['semester_id'] = Semester::firstOrCreate([
+            'name_id' => $request->get('semester_name_id'),
+            'calendar_year' => $request->get('semester_year'),
+            'academic_year' => Semester::getAcademicYear($request->get('semester_name_id'),$request->get('semester_year')),
+        ])->id;
+
+        $offering = GqeOffering::create($to_fill);
 
         session()->flash('alert-success', 'The GQE Offering has been successfully created.');
 
@@ -96,10 +107,11 @@ class GqeOfferingController extends Controller
         return view('/gqe/offering/update', [
             'offering' => $offering,
             'sections' => GqeSection::pluck('name', 'id'),
-            'semesters' => Semester::orderBy('calendar_year', 'desc')
-                                ->orderBy('id', 'desc')
-                                ->get()
-                                ->pluck('full_name', 'id'),
+            // 'semesters' => Semester::orderBy('calendar_year', 'desc')
+            //                     ->orderBy('id', 'desc')
+            //                     ->get()
+            //                     ->pluck('full_name', 'id'),
+            'semester_names' => SemesterName::all()->pluck('name','id'),
         ]);
     }
 
@@ -109,7 +121,15 @@ class GqeOfferingController extends Controller
         $offering->cutoff_ms  = $request->get('cutoff_ms')  ?: null;
         $offering->cutoff_phd = $request->get('cutoff_phd') ?: null;
         $offering->save();
-        $offering->update($request->except(['cutoff_ms', 'cutoff_phd']));
+
+        $to_fill = $request->except(['semester_name_id','semester_year','cutoff_ms', 'cutoff_phd']);
+        $to_fill['semester_id'] = Semester::firstOrCreate([
+            'name_id' => $request->get('semester_name_id'),
+            'calendar_year' => $request->get('semester_year'),
+            'academic_year' => Semester::getAcademicYear($request->get('semester_name_id'),$request->get('semester_year')),
+        ])->id;
+
+        $offering->update($to_fill);
 
         session()->flash('alert-success', 'The GQE Offering has been successfully updated.');
 

@@ -18,6 +18,7 @@ use App\TuitionWaiver;
 use App\AssistantshipStatus;
 use App\Position;
 use App\Program;
+use App\SemesterName;
 
 class AssistantshipController extends Controller
 {
@@ -39,6 +40,8 @@ class AssistantshipController extends Controller
         'date_deferred' => 'date',
         'current_status_id' => 'required|exists:assistantship_statuses,id',
         'stipend' => 'numeric|min:0',
+        'semester_name_id' => 'required',
+        'semester_year' => 'required',
     ];
     /**
      * Display a listing of the resource.
@@ -140,7 +143,8 @@ class AssistantshipController extends Controller
         return view('assistantship/store', [
             'assist' => null,
             'assist_amounts' => $assist_amounts,
-            'semesters' => Semester::orderBy('calendar_year','desc')->orderBy('id','desc')->get()->lists('full_name','id'),
+            // 'semesters' => Semester::orderBy('calendar_year','desc')->orderBy('id','desc')->get()->lists('full_name','id'),
+            'semester_names' => SemesterName::all()->pluck('name','id'),
             'positions' => Position::all()->lists('name','name'),
             'students' => $students,
             'statuses' => AssistantshipStatus::all()->lists('description','id'),
@@ -160,12 +164,19 @@ class AssistantshipController extends Controller
 
         $this->validate($request,$this->rules);
 
-        $except = [];
+        $except = ['semester_name_id', 'semester_year'];
         foreach(['defer_date','date_responded','date_offered','corresponding_tuition_waiver_id'] as $attr)
             if(!$request->has($attr))
                 $except[] = $attr;
 
-        $assist->create($request->except($except));
+        $to_fill = $request->except($except);
+        $to_fill['semester_id'] = Semester::firstOrCreate([
+            'name_id' => $request->get('semester_name_id'),
+            'calendar_year' => $request->get('semester_year'),
+            'academic_year' => Semester::getAcademicYear($request->get('semester_name_id'),$request->get('semester_year')),
+        ])->id;
+
+        $assist->create($to_fill);
 
         Session::flash('alert-success','Assistantship added successfully');
 
@@ -184,7 +195,8 @@ class AssistantshipController extends Controller
         return view('assistantship/update', [
             'assist' => $assist,
             'assist_amounts' => [],
-            'semesters' => Semester::orderBy('calendar_year','desc')->orderBy('id','desc')->get()->lists('full_name','id'),
+            // 'semesters' => Semester::orderBy('calendar_year','desc')->orderBy('id','desc')->get()->lists('full_name','id'),
+            'semester_names' => SemesterName::all()->pluck('name','id'),
             'positions' => Position::all()->lists('name','name'),
             'students' => Student::join('student_programs','student_programs.student_id','=','students.id')->where('is_current',true)->distinct()->get(['students.*'])->lists('full_name','id'),
             'statuses' => AssistantshipStatus::all()->lists('description','id'),
@@ -221,7 +233,14 @@ class AssistantshipController extends Controller
         if($save)
             $assist->save();
 
-        $assist->update($request->except($except));
+        $to_fill = $request->except($except);
+        $to_fill['semester_id'] = Semester::firstOrCreate([
+            'name_id' => $request->get('semester_name_id'),
+            'calendar_year' => $request->get('semester_year'),
+            'academic_year' => Semester::getAcademicYear($request->get('semester_name_id'),$request->get('semester_year')),
+        ])->id;
+
+        $assist->update($to_fill);
 
         Session::flash('alert-success','Assistantship updated successfully');
 

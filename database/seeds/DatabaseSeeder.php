@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(PassLevelsTableSeeder::class);
 
+        $this->call(SemesterNamesTableSeeder::class);
         $this->call(SemestersTableSeeder::class);
         $this->call(ProgramsTableSeeder::class);
         $this->call(AdvisorsTableSeeder::class);
