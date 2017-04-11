@@ -8,8 +8,29 @@
 
         <nav class="col-md-3">
             <h3>Filters</h3>
+            {!! Form::open(['method' => 'GET', 'class' => 'form-horiztonal']) !!}
+                <div class="form-group">
+                    {!! Form::label('sort_by', 'Sort By:') !!}
+                    {!! Form::select('sort_by', $sort_options, $sort_by, ['class' => 'form-control']) !!}
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('semester_id', 'Semester:') !!}
+                    {!! Form::select('semester_id[]', $semesters, $semester_id, ['id' => 'semester_id', 'class' => 'form-control', 'multiple']) !!}
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('gqe_section_id', 'GQE Section:') !!}
+                    {!! Form::select('gqe_section_id[]', $sections, $section_id, ['id' => 'gqe_section_id', 'class' => 'form-control', 'multiple']) !!}
+                </div>
+
+                <div class="form-group">
+                    {!! Form::submit('Search', ['class' => 'btn btn-info']) !!}
+                    {!! Form::button('Refresh', ['onclick' => 'parent.location="/gqe/offering"', 'class' => 'btn btn-warning']) !!}
+                </div>
+            {!! Form::close() !!}
             <h4>Results: {{ $offerings->count() }}</h4>
-        </nav> <!-- /.col-md-3 -->
+        </nav> <!-- /.col-md-3 Filters -->
 
         <div class="col-md-7">
             <div class="panel-group">
