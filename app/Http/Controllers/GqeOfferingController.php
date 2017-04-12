@@ -53,20 +53,18 @@ class GqeOfferingController extends Controller
 
         $offerings = GqeOffering::with('section', 'semester');
 
-        // dd($request->all(), $request->get('gqe_section_id'));
-        $offerings = $offerings->when($request->has('semester_id'), function ($query) use ($request) {
-                return $query->whereIn('semester_id', $request->get('semester_id'));
-            })
-            ->when($request->has('gqe_section_id'), function ($query) use ($request) {
-                return $query->whereIn('gqe_section_id', $request->get('gqe_section_id'));
-            })
-            ->orderBy($sort_by, 'desc')
+        if ($request->has('semester_id'))
+            $offerings->whereIn('semester_id', $request->get('semester_id'));
+        if ($request->has('gqe_section_id'))
+            $offerings->whereIn('gqe_section_id', $request->get('gqe_section_id'));
+
+        $offerings = $offerings->orderBy($sort_by, 'desc')
             ->get();
 
         return view('/gqe/offering/index', [
             'offerings' => $offerings,
             'sort_options' => $this->sort_options,
-            'sort_by' => $request->get('sort_by'),
+            'sort_by' => $sort_by,
             'semesters' => Semester::orderBy('calendar_year', 'desc')->orderBy('id', 'desc')->get()->pluck('full_name', 'id'),
             'semester_id' => $request->get('semester_id'),
             'sections' => GqeSection::orderBy('id', 'asc')->pluck('name', 'id'),
@@ -76,12 +74,8 @@ class GqeOfferingController extends Controller
 
     public function store() {
         return view('/gqe/offering/store', [
-            'offering' => null,//new GqeOffering,
+            'offering' => null,
             'sections' => GqeSection::pluck('name', 'id'),
-            // 'semesters' => Semester::orderBy('calendar_year', 'desc')
-            //                     ->orderBy('id', 'desc')
-            //                     ->get()
-            //                     ->pluck('full_name', 'id'),
             'semester_names' => SemesterName::all()->pluck('name','id'),
         ]);
     }
@@ -107,10 +101,6 @@ class GqeOfferingController extends Controller
         return view('/gqe/offering/update', [
             'offering' => $offering,
             'sections' => GqeSection::pluck('name', 'id'),
-            // 'semesters' => Semester::orderBy('calendar_year', 'desc')
-            //                     ->orderBy('id', 'desc')
-            //                     ->get()
-            //                     ->pluck('full_name', 'id'),
             'semester_names' => SemesterName::all()->pluck('name','id'),
         ]);
     }

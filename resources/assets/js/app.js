@@ -19,6 +19,14 @@ $(function () {
         $(this).parent().siblings('input[id^=datepicker]').datepicker('show');
     });
 
+    $('#collapse_all').click(function () {
+        $('div[id^=collapse_outer]').collapse('hide');
+    })
+
+    $('#expand_all').click(function () {
+        $('div[id^=collapse_outer]').collapse('show');
+    })
+
 });
 
 

@@ -8,7 +8,7 @@
 
         <nav class="col-md-3">
             <h3>Filters</h3>
-            {!! Form::open(['method' => 'GET', 'class' => 'form-horiztonal']) !!}
+            {!! Form::open(['method' => 'GET', 'url' => url('gqe/offering'), 'class' => 'form-horiztonal']) !!}
                 <div class="form-group">
                     {!! Form::label('sort_by', 'Sort By:') !!}
                     {!! Form::select('sort_by', $sort_options, $sort_by, ['class' => 'form-control']) !!}
@@ -35,11 +35,16 @@
         <div class="col-md-7">
             <div class="panel-group">
 
+                <div class="btn-group">
+	            	<a class="btn btn-default" id="expand_all">Expand All</a>
+	            	<a class="btn btn-default" id="collapse_all">Collapse All</a>
+	            </div>
+
                 @foreach ($offerings as $offering)
                     <div class="panel panel-primary">
                         <div class="panel-heading clearfix">
                             <div class="panel-title pull-left" style="padding-top: 4px;">
-                                <a data-toggle="collapse" href="#collapse{{ $offering->id }}">
+                                <a data-toggle="collapse" href="#collapse_outer{{ $offering->id }}">
                                     {{ $offering->full_name }}
                                 </a>
                             </div>
@@ -54,7 +59,7 @@
                                 {!! Form::close() !!}
                             </div>
                         </div>
-                        <div id="collapse{{ $offering->id }}" class="panel-collapse collapse">
+                        <div id="collapse_outer{{ $offering->id }}" class="panel-collapse collapse">
                             <ul class="list-group">
                                 <li class="list-group-item">GQE Section: {{ $offering->section->name }}</li>
                                 <li class="list-group-item">Semester Offered: {{ $offering->semester->full_name }}</li>

@@ -79,7 +79,6 @@
 		<div class="col-md-7">
             <div class="panel-group">
 
-            	<?php $count = 0; ?>
             	<div class="btn-group">
 	            	<a class="btn btn-default" id="expand_all">Expand All</a>
 	            	<a class="btn btn-default" id="collapse_all">Collapse All</a>
@@ -87,8 +86,7 @@
 
             	<!-- Start data for each student -->
             	@foreach($students as $student)
-            		<?php $count = $count + 1; ?>
-            		@include('student/partials/_student_info',['student' => $student, 'fromAdvisor' => false, 'allowChanges' => $allowChanges, 'count' => $count, 'showRank' => $showRank])
+            		@include('student/partials/_student_info',['student' => $student, 'fromAdvisor' => false, 'allowChanges' => $allowChanges, 'showRank' => $showRank])
             	@endforeach
 
             </div>
@@ -105,18 +103,4 @@
 
 	</div>
 </div>
-@endsection
-
-@section('scripts')
-<script>
-$(function () {
-	$("#collapse_all").click(function(){
-		$('div[id*="collapse"]').collapse('hide');
-	});
-
-	$("#expand_all").click(function(){
-		$('div[id*="collapse"]').collapse('show');
-	});
-});
-</script>
 @endsection
