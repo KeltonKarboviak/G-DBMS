@@ -135,6 +135,7 @@ class GceController extends Controller
         return view('gce/update', [
             'gce' => $gce,
             'students' => Student::orderBy('first_name')->join('student_programs','students.id','=','student_programs.student_id')->join('programs','student_programs.program_id','=','programs.id')->where('programs.needs_gce',true)->distinct()->get(['students.*'])->lists('full_name','id'),
+            'readonly' => true,
         ]);
     }
 

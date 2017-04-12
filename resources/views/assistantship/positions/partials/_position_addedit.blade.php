@@ -18,7 +18,7 @@
     <div class="col-md-6 col-md-offset-4">
         <div class="btn-group">
             {!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
-            <a href="{{ url('/assistantship/position') }}" class="btn btn-danger">Cancel</a>
+            <a href="{{ url('/assistantship/positions') }}" class="btn btn-danger">Cancel</a>
         </div>
     </div>
 </div>

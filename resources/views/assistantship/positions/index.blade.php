@@ -6,7 +6,7 @@
 <?php $allowChanges = Auth::user()->role->name === 'Director'?>
 <div class="container">
     <div class="row">
-        <div class="col-md-2 col-md-offset-5">
+        <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h2 class="panel-title">Assistantship Positions</h2>
@@ -35,7 +35,7 @@
 
         <!-- Affixed side nav for 'Add a GQE Section' button -->
         @if($allowChanges)
-            <nav class="col-md-2 col-md-offset-3">
+            <nav class="col-md-2 col-md-offset-2">
             	<div data-spy="affix" data-offset-top="-1">
         			<a href="{{ url('/assistantship/positions/add') }}" class="btn btn-success btn-lg">Add an Assistantship Position</a>
             	</div>

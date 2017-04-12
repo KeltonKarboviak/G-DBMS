@@ -11,7 +11,7 @@
                     <h2 class="panel-title">Add Assistantship Status</h2>
                 </div>
                 <div class="panel-body">
-                    {!! Form::model($section, ['route' => ['status.store_submit'], 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+                    {!! Form::model($status, ['route' => ['status.store_submit'], 'method' => 'POST', 'class' => 'form-horizontal']) !!}
                         @include('assistantship/statuses/partials/_status_addedit')
                     {!! Form::close() !!}
                 </div>
