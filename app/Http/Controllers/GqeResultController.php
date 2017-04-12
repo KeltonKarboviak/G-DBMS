@@ -45,12 +45,10 @@ class GqeResultController extends Controller
 
         $students = Student::with([
             'gqe_results.offering.section',
-            'gqe_results.pass_level',
-            'programs' => function ($query) use ($current_students_choice) {
-                $query->whereIn('student_programs.is_current', $current_students_choice)
-                    ->with('program');
-            }
-        ]);
+            'gqe_results.pass_level'
+        ])->whereHas('programs', function ($query) use ($current_students_choice) {
+            $query->whereIn('student_programs.is_current', $current_students_choice);
+        })->with('programs');
 
         if ($request->has('gqe_section_id'))
             $sections->whereIn('id', $request->get('gqe_section_id'));
@@ -109,11 +107,10 @@ class GqeResultController extends Controller
     }
 
     public function store(GqeResult $result) {
-        $students = Student::with('programs')
-            ->whereHas('programs', function ($query) {
-                return $query->where('student_programs.is_current', 1);
-            })
-            ->get()
+        $students = Student::whereHas('programs', function ($query) {
+                $query->where('student_programs.is_current', 1);
+            })->with('programs')
+            ->get(['id', 'first_name', 'last_name'])
             ->pluck('full_name', 'id');
 
         $offerings = GqeOffering::orderBy('date', 'desc')
