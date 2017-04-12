@@ -4,4 +4,7 @@ span.glyphicon-ok {
 span.glyphicon-remove {
   color: red; }
 
+select.form-control + span {
+  width: 100% !important; }
+
 /*# sourceMappingURL=app.css.map */

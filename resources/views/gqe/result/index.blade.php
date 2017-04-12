@@ -115,7 +115,7 @@
 
                 <div class="form-group">
                     {!! Form::label('gqe_section_id', 'GQE Section:') !!}
-                    {!! Form::select('gqe_section_id[]', $sections, $gqe_section_id, ['id' => 'gqe_section_id', 'class' => 'form-control', 'multiple']) !!}
+                    {!! Form::select('gqe_section_id[]', $select_sections, $gqe_section_id, ['id' => 'gqe_section_id', 'class' => 'form-control', 'multiple']) !!}
                 </div>
 
                 <div class="form-group">
@@ -132,7 +132,7 @@
                 <table class="table table-bordered table-hover text-center">
                     <thead>
                         <tr class="bg-primary">
-                            <th>Student</th>
+                            <th class="col-md-4">Student</th>
 
                             @foreach ($sections as $section_id => $section_name)
                                 <th>{{ $section_name }}</th>
@@ -280,11 +280,11 @@
                     @if ($display_aggs)
                         <tfoot>
                             @foreach (['max', 'min', 'avg', 'total'] as $agg)
-                                <tr class="bg-primary">
+                                <tr class="bg-info">
                                     <th>{{ $agg }}</th>
 
                                     @foreach ($sections as $section_id => $section_name)
-                                        <th>{{ sprintf('%.2f', $aggregates[$section_id][$agg]) }}</th>
+                                        <th>{{ sprintf('%.2f', $aggregates->has($section_id) ? $aggregates[$section_id][$agg] : 0) }}</th>
                                     @endforeach
                                 </tr>
                             @endforeach
