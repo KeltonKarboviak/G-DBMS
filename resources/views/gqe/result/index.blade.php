@@ -97,6 +97,32 @@
 
         <nav class="col-md-3">
             <h3>Filters</h3>
+            {!! Form::open(['method' => 'GET', 'url' => url('gqe/result'), 'class' => 'form-horiztonal']) !!}
+                <div class="form-group">
+                    {!! Form::label('sort_by', 'Sort By:') !!}
+                    {!! Form::select('sort_by', $sort_options, $sort_by, ['class' => 'form-control']) !!}
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('current_students', 'Current Students:') !!}
+                    {!! Form::select('current_students[]', $current_students_choices, $current_students_choice, ['id' => 'current_students', 'class' => 'form-control', 'multiple']) !!}
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('semester_id', 'Semester:') !!}
+                    {!! Form::select('semester_id[]', $semesters, $semester_id, ['id' => 'semester_id', 'class' => 'form-control', 'multiple']) !!}
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('gqe_section_id', 'GQE Section:') !!}
+                    {!! Form::select('gqe_section_id[]', $sections, $gqe_section_id, ['id' => 'gqe_section_id', 'class' => 'form-control', 'multiple']) !!}
+                </div>
+
+                <div class="form-group">
+					{!! Form::submit('Search', ['class' => 'btn btn-info']) !!}
+					{!! Form::button('Refresh', ['onClick' => "parent.location='/gqe/result'", 'class' => 'btn btn-warning']) !!}
+				</div>
+            {!! Form::close() !!}
             <h4>Results: {{ $students->count() }}</h4>
         </nav>
 
@@ -105,14 +131,16 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center">
                     <thead>
-                        <tr>
+                        <tr class="bg-primary">
                             <th>Student</th>
 
-                            @foreach ($sections as $section)
-                                <th>{{ $section->name }}</th>
+                            @foreach ($sections as $section_id => $section_name)
+                                <th>{{ $section_name }}</th>
                             @endforeach
 
-                            <th>Finished?</th>
+                            @if (!$display_aggs) <!-- If user is not filtering GQE Sections -->
+                                <th>Finished?</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -121,7 +149,7 @@
                                 <td>
                                     <div>{{ $student->full_name }}</div>
                                     <div>{{ $student->id }}</div>
-                                    <div>{{ $student->current_program->program->name }}</div>
+                                    <div>{{ $student->programs->last()->program->name }}</div>
                                 </td>
 
                                 <?php
@@ -131,10 +159,10 @@
                                         })
                                         ->values()
                                         ->groupBy(function ($result) {
-                                            return $result->offering->section->id;
+                                            return $result->offering->gqe_section_id;
                                         });
 
-                                    $pass_level_needed = $student->current_program->program->pass_level_needed_id;
+                                    $pass_level_needed = $student->programs->last()->program->pass_level_needed_id;
 
                                     $finished_gqes = $section_results->sum(function ($section) use ($pass_level_needed) {
                                         return $section->contains(function ($index, $result) use ($pass_level_needed) {
@@ -143,9 +171,9 @@
                                     });
                                 ?>
 
-                                @foreach ($sections as $section)
+                                @foreach ($sections as $section_id => $section_name)
                                     <td>
-                                        <?php $results = $section_results->get($section->id, []); ?>
+                                        <?php $results = $section_results->get($section_id, []); ?>
                                         @foreach ($results as $result)
                                             <div data-toggle="modal" data-target="#modal_{{ $result->student_id }}_{{ $result->offer_id }}" data-backdrop="static"
                                                 class="{{ $result->pass_level_id === null
@@ -241,12 +269,27 @@
                                     </td>
                                 @endforeach <!-- /foreach ($sections as $section) -->
 
-                                <td>
-                                    <span class="glyphicon glyphicon-{{ $finished_gqes >= $student->current_program->program->gqes_needed ? 'ok' : 'remove' }}"></span>
-                                </td>
+                                @if (!$display_aggs) <!-- If user is not filtering GQE Sections -->
+                                    <td>
+                                        <span class="glyphicon glyphicon-{{ $finished_gqes >= $student->programs->last()->program->gqes_needed ? 'ok' : 'remove' }}"></span>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach <!-- /foreach ($students as $student) -->
                     </tbody>
+                    @if ($display_aggs)
+                        <tfoot>
+                            @foreach (['max', 'min', 'avg', 'total'] as $agg)
+                                <tr class="bg-primary">
+                                    <th>{{ $agg }}</th>
+
+                                    @foreach ($sections as $section_id => $section_name)
+                                        <th>{{ sprintf('%.2f', $aggregates[$section_id][$agg]) }}</th>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tfoot>
+                    @endif
                 </table>
             </div> <!-- /.table-responsive -->
 
