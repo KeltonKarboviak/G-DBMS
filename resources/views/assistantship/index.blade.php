@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<?php $allowChanges = Auth::user()->role->name === 'Director' ?>
 <div class="container">
 	<div class="row">
 
@@ -53,42 +54,28 @@
 		<div class="col-md-7">
             <div class="panel-group">
 
-            	<?php $assist_count = 0; ?>
             	<div class="btn-group">
 	            	<a class="btn btn-default" id="expand_all">Expand All</a>
 	            	<a class="btn btn-default" id="collapse_all">Collapse All</a>
 	            </div>
 
-            	<!-- Start data for each student -->
+            	<!-- Start data for each assistantship -->
             	@foreach($assists as $assist)
-            		<?php $assist_count = $assist_count + 1; ?>
-            		@include('assistantship/partials/_assistantship_info',['assist' => $assist, 'allowChanges' => true, 'assist_count' => $assist_count,])
+            		@include('assistantship/partials/_assistantship_info', ['assist' => $assist, 'allowChanges' => $allowChanges])
             	@endforeach
 
             </div>
         </div>
 
-		<!-- Affixed side nav for 'Add an Assistantship' button -->
-        <nav class="col-md-2">
-        	<div data-spy="affix" data-offset-top="-1">
-    			<a href="{{ url('/assistantship/add') }}" class="btn btn-success btn-lg">Add an Assistantship</a>
-        	</div>
-    	</nav>
+		@if ($allowChanges)
+			<!-- Affixed side nav for 'Add an Assistantship' button -->
+	        <nav class="col-md-2">
+	        	<div data-spy="affix" data-offset-top="-1">
+	    			<a href="{{ url('/assistantship/add') }}" class="btn btn-success btn-lg">Add an Assistantship</a>
+	        	</div>
+	    	</nav>
+	    @endif
 
 	</div>
 </div>
-@endsection
-
-@section('scripts')
-<script>
-$(function () {
-	$("#collapse_all").click(function(){
-		$('div[id*="collapse"]').collapse('hide');
-	});
-
-	$("#expand_all").click(function(){
-		$('div[id*="collapse"]').collapse('show');
-	});
-});
-</script>
 @endsection

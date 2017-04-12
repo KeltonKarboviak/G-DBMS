@@ -50,35 +50,29 @@ class TuitionWaiverController extends Controller
         $students = Student::whereHas('programs', function($query) {
                 return $query->where('student_programs.is_current', 1);
             })
-            ->get()
+            ->get(['id', 'first_name', 'last_name'])
             ->pluck('full_name', 'id');
-
-        // $semesters = Semester::orderBy('calendar_year', 'desc')
-        //     ->orderBy('id', 'desc')
-        //     ->get()
-        //     ->pluck('full_name', 'id');
 
         $sources = FundingSource::pluck('name', 'id');
 
         return view('/tuition_waiver/store', [
-            'waiver' => null,//new TuitionWaiver,
+            'waiver' => null,
             'students' => $students,
-            'semester_names' => SemesterName::all()->pluck('name','id'),
+            'semester_names' => SemesterName::pluck('name','id'),
             'sources' => $sources,
         ]);
     }
 
     public function store_submit(Request $request) {
         $this->rules['student_id'] = 'required|exists:students,id';
-        $this->rules['semester_name_id'] = 'required';
-        $this->rules['semester_year'] = 'required';
+        $this->rules['semester_name_id'] = 'required|exists:semester_names,id';
+        $this->rules['semester_year'] = 'required|numeric|digits:4|regex:/\d{4}/';
 
         $this->validate($request, $this->rules, $this->messages);
 
-        // $waiver = new TuitionWaiver($request->all());
-        // dd($request->all(), $waiver);
-
-        $to_fill = $request->except(['semester_name_id','semester_year']);
+        $to_fill = $request->except(['received', 'date_received', 'semester_name_id','semester_year']);
+        $to_fill['received'] = $request->has('received');
+        $to_fill['date_received'] = $request->get('date_received') ?: null;
         $to_fill['semester_id'] = Semester::firstOrCreate([
             'name_id' => $request->get('semester_name_id'),
             'calendar_year' => $request->get('semester_year'),
@@ -86,9 +80,6 @@ class TuitionWaiverController extends Controller
         ])->id;
 
         $waiver = TuitionWaiver::create($to_fill);
-
-        $waiver->date_received = $request->get('date_received') ?: null;
-        $waiver->save();
 
         session()->flash('alert-success', 'The Tuition Waiver has been successfully created.');
 
@@ -113,12 +104,10 @@ class TuitionWaiverController extends Controller
         $waiver->date_received = $request->get('date_received') ?: null;
         $waiver->amount_received = $request->get('amount_received') ?: null;
         $waiver->credit_hours = $request->get('credit_hours') ?: null;
+        $waiver->funding_source_id = $request->get('funding_source_id');
         $waiver->received = $request->has('received');
 
-        // dd($request->all(), $waiver);
-
         $waiver->save();
-        // $waiver->update($request->except('date_received', ''))
 
         session()->flash('alert-success', 'The Tuition Waiver has been successfully updated.');
 

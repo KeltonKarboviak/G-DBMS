@@ -3,7 +3,7 @@
 @extends('layouts.app')
 
 @section('content')
-<?php $allowChanges = Auth::user()->role->name === 'Director'?>
+<?php $allowChanges = Auth::user()->role->name === 'Director'; ?>
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
@@ -17,16 +17,18 @@
                             <div class="pull-left" style="padding-top: 4px;">
                                 {{ $status->description }}
                             </div>
-                            <div class="btn-group pull-right">
-                                {!! Form::open(['method' => 'DELETE', 'route' => ['status.delete', $status], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
-                                    <a href="{{ route('status.update', $status) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit">
-                                        <span class="glyphicon glyphicon-edit"></span>
-                                    </a>
-                                    <button type="submit" class="btn btn-default btn-sm" data-toggle="tooltip" title="Delete">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                {!! Form::close() !!}
-                            </div>
+                            @if ($allowChanges)
+                                <div class="btn-group pull-right">
+                                    {!! Form::open(['method' => 'DELETE', 'route' => ['status.delete', $status], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
+                                        <a href="{{ route('status.update', $status) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </a>
+                                        <button type="submit" class="btn btn-default btn-sm" data-toggle="tooltip" title="Delete">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    {!! Form::close() !!}
+                                </div>
+                            @endif
                         </li>
                     @endforeach
                 </ul> <!-- /.list-group -->

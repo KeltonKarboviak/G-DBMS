@@ -3,7 +3,7 @@
 @extends('layouts.app')
 
 @section('content')
-<?php $allowChanges = Auth::user()->role->name === 'Director' ?>
+<?php $allowChanges = Auth::user()->role->name === 'Director'; ?>
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">

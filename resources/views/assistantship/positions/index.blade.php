@@ -3,7 +3,7 @@
 @extends('layouts.app')
 
 @section('content')
-<?php $allowChanges = Auth::user()->role->name === 'Director'?>
+<?php $allowChanges = Auth::user()->role->name === 'Director'; ?>
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
@@ -17,16 +17,18 @@
                             <div class="pull-left" style="padding-top: 4px;">
                                 {{ $position->name }}
                             </div>
-                            <div class="btn-group pull-right">
-                                {!! Form::open(['method' => 'DELETE', 'route' => ['position.delete', $position], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
-                                    <a href="{{url('/assistantship/positions/' . $position->name)}}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit">
-                                        <span class="glyphicon glyphicon-edit"></span>
-                                    </a>
-                                    <button type="submit" class="btn btn-default btn-sm" data-toggle="tooltip" title="Delete">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                {!! Form::close() !!}
-                            </div>
+                            @if ($allowChanges)
+                                <div class="btn-group pull-right">
+                                    {!! Form::open(['method' => 'DELETE', 'route' => ['position.delete', $position], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
+                                        <a href="{{url('/assistantship/positions/' . $position->name)}}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </a>
+                                        <button type="submit" class="btn btn-default btn-sm" data-toggle="tooltip" title="Delete">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    {!! Form::close() !!}
+                                </div>
+                            @endif
                         </li>
                     @endforeach
                 </ul> <!-- /.list-group -->
@@ -34,7 +36,7 @@
         </div> <!-- /.col-md-2 .col-md-offset-5 -->
 
         <!-- Affixed side nav for 'Add a GQE Section' button -->
-        @if($allowChanges)
+        @if ($allowChanges)
             <nav class="col-md-2 col-md-offset-2">
             	<div data-spy="affix" data-offset-top="-1">
         			<a href="{{ url('/assistantship/positions/add') }}" class="btn btn-success btn-lg">Add an Assistantship Position</a>
