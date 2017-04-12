@@ -116,6 +116,15 @@
                                     @endif
                                 </ul>
                             </li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Funding Source <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('/source') }}">Info</a></li>
+                                    @if ($role == 'Director')
+                                        <li><a href="{{ url('/source/add') }}">Add</a></li>
+                                    @endif
+                                </ul>
+                            </li>
                         @endif
                     </ul>
                 @endif

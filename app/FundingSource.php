@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class FundingSource extends Model
 {
+    public $timestamps = false;
+
+    protected $fillable = ['name', 'is_grant'];
+
     /**
      *
      */
