@@ -41,7 +41,17 @@ class GqeResultController extends Controller
         $sort_by = $request->get('sort_by', 'last_name');
         $current_students_choice = $request->get('current_students', [1]);
 
+        $filter_gqe_offerings_callback = function ($query) use ($request) {
+            $query->whereHas('offering', function ($query) use ($request) {
+                if ($request->has('semester_id'))
+                    $query->whereIn('gqe_offerings.semester_id', $request->get('semester_id'));
+                if ($request->has('gqe_section_id'))
+                    $query->whereIn('gqe_offerings.gqe_section_id', $request->get('gqe_section_id'));
+            })->with('offering');
+        };
+
         $sections = GqeSection::orderBy('id', 'asc');
+        $select_sections = $sections->pluck('name', 'id');
 
         $students = Student::with([
             'gqe_results.offering.section',
@@ -53,27 +63,12 @@ class GqeResultController extends Controller
         if ($request->has('gqe_section_id'))
             $sections->whereIn('id', $request->get('gqe_section_id'));
 
-        if ($request->has('semester_id') || $request->has('gqe_section_id'))
-            $students->with(['gqe_results' => function ($query) use ($request) {
-                $query->whereHas('offering', function($query) use ($request) {
-                    if ($request->has('semester_id'))
-                        $query->whereIn('gqe_offerings.semester_id', $request->get('semester_id'));
-                    if ($request->has('gqe_section_id'))
-                        $query->whereIn('gqe_offerings.gqe_section_id', $request->get('gqe_section_id'));
-                })->with('offering');
-            }]);
+        if ($request->has('semester_id') || $request->has('gqe_section_id')) {
+            $students->whereHas('gqe_results', $filter_gqe_offerings_callback)
+                     ->with(['gqe_results' => $filter_gqe_offerings_callback]);
 
-        $sections = $sections->pluck('name', 'id');
-        $students = $students->orderBy($sort_by)
-            ->get(['id', 'first_name', 'last_name']);
-        $semesters = Semester::orderBy('calendar_year', 'desc')
-            ->orderBy('id', 'desc')
-            ->get()
-            ->pluck('full_name', 'id');
+            $display_aggs = true;
 
-        $display_aggs = $sections->count() < 4;
-
-        if ($display_aggs)
             $aggregates = Student::selectRaw(
                 'gqe_offerings.gqe_section_id,
                 COUNT(gqe_results.score) as total,
@@ -84,12 +79,28 @@ class GqeResultController extends Controller
                 ->join('programs', 'student_programs.program_id', '=', 'programs.id')
                 ->join('gqe_results', 'students.id', '=', 'gqe_results.student_id')
                 ->join('gqe_offerings', 'gqe_results.offer_id', '=', 'gqe_offerings.id')
-                ->where('student_programs.is_current', 1)
-                ->groupBy('gqe_offerings.gqe_section_id')
+                ->where('student_programs.is_current', 1);
+
+            if ($request->has('semester_id'))
+                $aggregates->whereIn('gqe_offerings.semester_id', $request->get('semester_id'));
+            if ($request->has('gqe_section_id'))
+                $aggregates->whereIn('gqe_offerings.gqe_section_id', $request->get('gqe_section_id'));
+
+            $aggregates = $aggregates->groupBy('gqe_offerings.gqe_section_id')
                 ->get()
                 ->keyBy('gqe_section_id');
-        else
+        } else {
+            $display_aggs = false;
             $aggregates = [];
+        }
+
+        $sections = $sections->pluck('name', 'id');
+        $students = $students->orderBy($sort_by)
+            ->get(['id', 'first_name', 'last_name']);
+        $semesters = Semester::orderBy('calendar_year', 'desc')
+            ->orderBy('id', 'desc')
+            ->get()
+            ->pluck('full_name', 'id');
 
         return view('/gqe/result/index', [
             'students' => $students,
@@ -99,6 +110,7 @@ class GqeResultController extends Controller
             'current_students_choice' => $current_students_choice,
             'semesters' => $semesters,
             'semester_id' => $request->get('semester_id'),
+            'select_sections' => $select_sections,
             'sections' => $sections,
             'gqe_section_id' => $request->get('gqe_section_id'),
             'display_aggs' => $display_aggs,
