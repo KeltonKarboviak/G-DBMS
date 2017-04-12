@@ -71,15 +71,23 @@ class GqeResultController extends Controller
 
             $aggregates = Student::selectRaw(
                 'gqe_offerings.gqe_section_id,
+                (SELECT COUNT(*) 
+                    FROM gqe_results as r
+                    JOIN gqe_offerings as ino ON r.offer_id = ino.id
+                    JOIN students as s ON s.id = r.student_id
+                    JOIN student_programs as sp ON sp.student_id = s.id
+                    JOIN programs as p ON p.id = sp.program_id
+                    WHERE p.pass_level_needed_id <= r.pass_level_id
+                        AND gqe_offerings.gqe_section_id = ino.gqe_section_id
+                ) as passed,
                 COUNT(gqe_results.score) as total,
                 MAX(gqe_results.score) as max,
                 MIN(gqe_results.score) as min,
                 AVG(gqe_results.score) as avg')
                 ->join('student_programs', 'students.id', '=', 'student_programs.student_id')
-                ->join('programs', 'student_programs.program_id', '=', 'programs.id')
                 ->join('gqe_results', 'students.id', '=', 'gqe_results.student_id')
                 ->join('gqe_offerings', 'gqe_results.offer_id', '=', 'gqe_offerings.id')
-                ->where('student_programs.is_current', 1);
+                ->whereIn('student_programs.is_current', $current_students_choice);
 
             if ($request->has('semester_id'))
                 $aggregates->whereIn('gqe_offerings.semester_id', $request->get('semester_id'));

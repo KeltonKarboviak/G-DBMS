@@ -279,12 +279,12 @@
                     </tbody>
                     @if ($display_aggs)
                         <tfoot>
-                            @foreach (['max', 'min', 'avg', 'total'] as $agg)
-                                <tr class="bg-info">
-                                    <th>{{ $agg }}</th>
+                            @foreach (['max', 'min', 'avg', 'passed', 'total'] as $agg)
+                                <tr class="text-info" style="background-color: #eaf5fb;">
+                                    <th class="bg-primary" style="background-color: #4c91cd;">{{ $agg }}</th>
 
                                     @foreach ($sections as $section_id => $section_name)
-                                        <th>{{ sprintf('%.2f', $aggregates->has($section_id) ? $aggregates[$section_id][$agg] : 0) }}</th>
+                                        <td>{{ sprintf('%.2f', $aggregates->has($section_id) ? $aggregates[$section_id][$agg] : 0) }}</td>
                                     @endforeach
                                 </tr>
                             @endforeach
