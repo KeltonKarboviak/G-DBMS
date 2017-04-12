@@ -68,7 +68,7 @@
             </div>
         </div>
 
-		<!-- Affixed side nav for 'Add a Student' button -->
+		<!-- Affixed side nav for 'Add an Assistantship' button -->
         <nav class="col-md-2">
         	<div data-spy="affix" data-offset-top="-1">
     			<a href="{{ url('/assistantship/add') }}" class="btn btn-success btn-lg">Add an Assistantship</a>

@@ -95,7 +95,7 @@
                                 </ul>
                             </li>
                         @endif
-                        @if ($role == 'Director' || $role == 'Chair')
+                        @if ($role == 'Director' || $role == 'Chair' || $role === 'Secretary')
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Assistantship <span class="caret"></span></a>
                                 <ul class="dropdown-menu">

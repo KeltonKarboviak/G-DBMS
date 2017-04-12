@@ -188,21 +188,16 @@ class StudentController extends Controller
             }); 
         }
         $students = $query->distinct()->get(['students.*']);
-        // $sArray = $students->all();
         $showRank = false;
         if($sort_by === 'ranking')
         {
-            // usort($sArray,["App\Http\Controllers\StudentController","rank_compare"]);
-            // $students->sortBy('ranking');
             $students = $students->sortByDesc(function($stud){
                 return $stud->ranking;
             });
             $showRank = true;
-            // dd($students,$students[0]->ranking);
         }
 
         return view('/student/index', [
-            // 'students' => $sArray,
             'students' => $students,
             'advisors' => Advisor::all()->lists("full_name","id"),
             'programs' => Program::lists("name","id"), 

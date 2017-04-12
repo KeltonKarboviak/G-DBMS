@@ -35,14 +35,16 @@ Route::group(['middleware' => 'has_role:Director_Chair_Faculty_Secretary'], func
 	Route::get('/advisor/info/{advisor}', ['as' => 'advisor.info', 'uses' => 'AdvisorController@info']);
 });
 
-//Highest View level - Director, Chair
+//Ferpa View level - Director, Chair
 Route::group(['middleware' => 'has_role:Director_Chair'], function (){
-
-
 	Route::get('/gqe/result', 'GqeResultController@index');
 	Route::get('/gqe/offering', 'GqeOfferingController@index');
 	Route::get('/gqe/section', 'GqeSectionController@index');
 	Route::get('/gqe/passlevel', 'PassLevelController@index');
+});
+
+//Money View level - Director, Chair, Secretary
+Route::group(['middleware' => 'has_role:Director_Chair_Secretary'], function (){
 	Route::get('/assistantship', ['as' => 'assistantship.index_filter', 'uses' => 'AssistantshipController@index_filter']);
 	Route::get('/assistantship/positions', ['as' => 'position.index', 'uses' => 'PositionController@index']);
 	Route::get('/assistantship/status', ['as' => 'status.index', 'uses' => 'StatusController@index']);

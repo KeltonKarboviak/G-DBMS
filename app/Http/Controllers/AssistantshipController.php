@@ -42,6 +42,7 @@ class AssistantshipController extends Controller
         'stipend' => 'numeric|min:0',
         'semester_name_id' => 'required',
         'semester_year' => 'required',
+        'time' => 'between:0,15',
     ];
     /**
      * Display a listing of the resource.

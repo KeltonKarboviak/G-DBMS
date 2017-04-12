@@ -50,6 +50,8 @@ class CreateAssistantshipsTable extends Migration
             $table->foreign('funding_source_id')->references('id')->on('funding_sources')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+
+            $table->string('time', 15)->default(''); //as in 1/4 time or 1/2 time assistantship
         });
     }
 

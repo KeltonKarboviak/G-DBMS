@@ -63,10 +63,23 @@ class GceController extends Controller
     public function store()
     {
         // dd(Student::join('student_programs','students.id','=','student_programs.student_id')->join('programs','student_programs.program_id','=','programs.id')->where('programs.needs_gce',true)->distinct()->get(['students.*'])->lists('full_name','id'));
-
+        $students = Student::orderBy('first_name')
+            ->join('student_programs','students.id','=','student_programs.student_id')
+            ->join('programs','student_programs.program_id','=','programs.id')
+            ->where('programs.needs_gce',true)->distinct()->get(['students.*']);
+        $students = $students->filter(function ($student){
+            $sps = $student->programs->filter(function ($sp){
+                return $sp->program->needs_gce;
+            });
+            $passed = false;
+            foreach($sps as $sp)
+                $passed = $passed || $sp->passed_gqes;
+            return $passed;
+        });
+        $students = $students->lists('full_name','id');
         return view('gce/store', [
             'gce' => null,
-            'students' => Student::orderBy('first_name')->join('student_programs','students.id','=','student_programs.student_id')->join('programs','student_programs.program_id','=','programs.id')->where('programs.needs_gce',true)->distinct()->get(['students.*'])->lists('full_name','id'),
+            'students' => $students,
         ]);
     }
 

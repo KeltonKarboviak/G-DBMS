@@ -148,6 +148,20 @@
 	</div>
 </div>
 
+<div class="form-group{{ $errors->has('time') ? ' has-error' : '' }}">
+	{!! Form::label('time', 'Time:', ['class' => 'col-md-4 control-label']) !!}
+
+	<div class="col-md-6">
+		{!! Form::text('time', null, ['class' => 'form-control', 'placeholder' => '1/4 time, 1/2 time, etc']) !!}
+
+		@if ($errors->has('time'))
+			<span class="help-block">
+				<strong>{{ $errors->first('time') }}</strong>
+			</span>
+		@endif
+	</div>
+</div>
+
 <div class="form-group{{ $errors->has('funding_source_id') ? ' has-error' : '' }}">
 	{!! Form::label('funding_source_id', 'Stipend Funding Source:', ['class' => 'col-md-4 control-label']) !!}
 

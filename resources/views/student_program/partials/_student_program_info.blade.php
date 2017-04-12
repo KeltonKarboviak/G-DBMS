@@ -1,3 +1,5 @@
+<?php $ferpa = Auth::user()->role->name == 'Director' || Auth::user()->role->name == 'Chair' ?>
+
 <div class="panel panel-info">
   	<div class="panel-heading clearfix">
   		<div class="panel-title pull-left" style="padding-top: 4px;">
@@ -21,16 +23,18 @@
 		        		@if(!$fromAdvisor)
 		        		<li class="list-group-item">Advisor: {{ $student_program->advisor->full_name }} <a href={{ "/advisor/info/" . $student_program->advisor_id}} class="glyphicon glyphicon-new-window"></a></li>
 		        		@endif
-		        		<li class="list-group-item">Semester Started: {{ $student_program->semester_started->full_name }}</li>
-		        		<li class="list-group-item{{ !$student_program->has_program_study ? ' list-group-item-danger' : '' }}">Has Program of Study: {{ $student_program->has_program_study == 1 ? "Yes" : "No" }}</li>
-		        		<?php $passedGCE = false; ?>
-		        		@if($student_program != null && !$student_program->gce_results->isEmpty())
-		        			<?php $passedGCE = $student_program->gce_results->contains(function ($index, $result) { return $result->passed; }); ?>
+			        	<li class="list-group-item">Semester Started: {{ $student_program->semester_started->full_name }}</li>
+			        	@if($ferpa)
+			        		<li class="list-group-item{{ !$student_program->has_program_study ? ' list-group-item-danger' : '' }}">Has Program of Study: {{ $student_program->has_program_study == 1 ? "Yes" : "No" }}</li>
+			        		<?php $passedGCE = false; ?>
+			        		@if($student_program != null && !$student_program->gce_results->isEmpty())
+			        			<?php $passedGCE = $student_program->gce_results->contains(function ($index, $result) { return $result->passed; }); ?>
+			        		@endif
+			        		@if($student_program->program->needs_gce)
+			        			<li class="list-group-item{{ !$passedGCE ? ' list-group-item-danger' : '' }}">GCE Completed: {{ $passedGCE ? "Yes" : "No" }}</li>
+			        		@endif
+			        		<li class="list-group-item{{ !$student_program->passed_gqes ? ' list-group-item-danger' : ''}}">GQEs Passed: {{ $student_program->num_gqes_passed . "/" . $student_program->num_gqes_needed }}</li>
 		        		@endif
-		        		@if($student_program->program->needs_gce)
-		        		<li class="list-group-item{{ !$passedGCE ? ' list-group-item-danger' : '' }}">GCE Completed: {{ $passedGCE ? "Yes" : "No" }}</li>
-		        		@endif
-		        		<li class="list-group-item{{ !$student_program->passed_gqes ? ' list-group-item-danger' : ''}}">GQEs Passed: {{ $student_program->num_gqes_passed . "/" . $student_program->num_gqes_needed }}</li>
 		        	</ul>
 	        	</div>
 	        	<div class="col-md-6">
@@ -38,11 +42,13 @@
 		        		<li class="list-group-item{{ !$student_program->is_current ? ' list-group-item-warning' : '' }}">Current: {{ $student_program->is_current ? "Yes" : "No" }}</li>
 		        		<li class="list-group-item">Graduated: {{ $student_program->is_graduated ? "Yes" : "No" }}</li>
 		        		<li class="list-group-item">Semester Graduated: {{ $student_program->semester_graduated != null ? $student_program->semester_graduated->full_name : "N/A" }}</li>
-		        		@if($student_program->program->needs_committee)
-		        		<li class="list-group-item{{ !$student_program->has_committee ? ' list-group-item-danger' : '' }}">Has Committee: {{ $student_program->has_committee == 1 ? "Yes" : "No" }}</li>
-		        		@endif
-		        		@if($student_program->program->needs_gce && $passedGCE)
-		        		<li class="list-group-item">GCE Completion Date: {{ $passedGCE ? App\GceResult::select('date')->where('student_id',$student_program->student_id)->where('passed',true)->get()[0]["date"] : "" }}
+		        		@if($ferpa)
+			        		@if($student_program->program->needs_committee)
+			        			<li class="list-group-item{{ !$student_program->has_committee ? ' list-group-item-danger' : '' }}">Has Committee: {{ $student_program->has_committee == 1 ? "Yes" : "No" }}</li>
+			        		@endif
+			        		@if($student_program->program->needs_gce && $passedGCE)
+			        			<li class="list-group-item">GCE Completion Date: {{ $passedGCE ? App\GceResult::select('date')->where('student_id',$student_program->student_id)->where('passed',true)->get()[0]["date"] : "" }}
+			        		@endif
 		        		@endif
 	        		</ul>
 	        	</div>

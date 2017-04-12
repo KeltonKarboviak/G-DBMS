@@ -21,6 +21,7 @@
 		        		<li class="list-group-item">Date Offered: {{ $assist->date_offered }}</li>		        		
 		        		<li class="list-group-item">Date Deferred: {{ $assist->defer_date }}</li>
 		        		<li class="list-group-item">Stipend: {{ $assist->stipend }}</li>
+                <li class="list-group-item">Time: {{ $assist->time }}</li>
 		        	</ul>
 	        	</div>
 	        	<div class="col-md-6">
