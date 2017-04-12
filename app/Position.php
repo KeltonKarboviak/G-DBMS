@@ -11,7 +11,7 @@ class Position extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'name';
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -19,4 +19,8 @@ class Position extends Model
      * @var bool
      */
     public $incrementing = false;
+
+    public $timestamps = false;
+
+    protected $fillable = ['name'];
 }

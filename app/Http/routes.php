@@ -44,6 +44,8 @@ Route::group(['middleware' => 'has_role:Director_Chair'], function (){
 	Route::get('/gqe/section', 'GqeSectionController@index');
 	Route::get('/gqe/passlevel', 'PassLevelController@index');
 	Route::get('/assistantship', ['as' => 'assistantship.index_filter', 'uses' => 'AssistantshipController@index_filter']);
+	Route::get('/assistantship/positions', ['as' => 'position.index', 'uses' => 'PositionController@index']);
+	Route::get('/assistantship/status', ['as' => 'status.index', 'uses' => 'StatusController@index']);
 	Route::get('/waiver', 'TuitionWaiverController@index');
 });
 
@@ -109,6 +111,18 @@ Route::group(['middleware' => 'has_role:Director'], function (){
 	Route::get('/assistantship/{assist}', ['as' => 'assistantship.update', 'uses' => 'AssistantshipController@update']);
 	Route::patch('/assistantship/{assist}', ['as' => 'assistantship.update_submit', 'uses' => 'AssistantshipController@update_submit']);
 	Route::delete('/assistantship/{assist}', ['as' => 'assistantship.delete', 'uses' => 'AssistantshipController@delete']);
+
+	Route::get('/assistantship/positions/add', ['as' => 'position.store', 'uses' => 'PositionController@store']);
+	Route::post('/assistantship/positions/add', ['as' => 'position.store_submit', 'uses' => 'PositionController@store_submit']);
+	Route::get('/assistantship/positions/{position}', ['as' => 'position.update', 'uses' => 'PositionController@update']);
+	Route::patch('/assistantship/positions/{position}', ['as' => 'position.update_submit', 'uses' => 'PositionController@update_submit']);
+	Route::delete('/assistantship/positions/{position}', ['as' => 'position.delete', 'uses' => 'PositionController@delete']);
+
+	Route::get('/assistantship/status/add', ['as' => 'status.store', 'uses' => 'StatusController@store']);
+	Route::post('/assistantship/status/add', ['as' => 'status.store_submit', 'uses' => 'StatusController@store_submit']);
+	Route::get('/assistantship/status/{status}', ['as' => 'status.update', 'uses' => 'StatusController@update']);
+	Route::patch('/assistantship/status/{status}', ['as' => 'status.update_submit', 'uses' => 'StatusController@update_submit']);
+	Route::delete('/assistantship/status/{status}', ['as' => 'status.delete', 'uses' => 'StatusController@delete']);
 
 	Route::get('/waiver/add', ['as' => 'tuition_waiver.store', 'uses' => 'TuitionWaiverController@store']);
     Route::post('/waiver', ['as' => 'tuition_waiver.store_submit', 'uses' => 'TuitionWaiverController@store_submit']);

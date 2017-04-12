@@ -103,6 +103,8 @@
                                     @if($role == 'Director')
                                         <li><a href="{{ url('/assistantship/add') }}">Add</a></li>
                                     @endif
+                                    <li><a href="{{ url('/assistantship/positions/') }}">Positions</a></li>
+                                    <li><a href="{{ url('/assistantship/status/') }}">Statuses</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
