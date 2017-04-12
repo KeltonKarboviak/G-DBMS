@@ -1,9 +1,9 @@
 <div class="panel panel-info">
   	<div class="panel-heading clearfix">
   		<div class="panel-title pull-left" style="padding-top: 4px;">
-  				<a data-toggle="collapse" href="#collapse_stud_prog_partial{{ $stud_prog_count }}">{{ $student_program->program->name }}</a>
+  				<a data-toggle="collapse" href="#collapse_stud_prog_partial{{ $student_program->id }}">{{ $student_program->program->name . ($student_program->is_graduated ? ' - Graduated' : '') }}</a>
   		</div>
-  		
+
   		@if($allowChanges)
   		{!! Form::open(['method' => 'DELETE', 'route' => ['student_program.delete', $student_program], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
       		<div class="btn-group pull-right">
@@ -13,7 +13,7 @@
       	{!! Form::close() !!}
       	@endif
 	</div>
-  	<div id="collapse_stud_prog_partial{{ $stud_prog_count }}" class="panel-collapse {{ $student_program == null ? '' : (!$student_program->is_current ? 'collapse' : 'in') }}">
+  	<div id="collapse_stud_prog_partial{{ $student_program->id }}" class="panel-collapse {{ $student_program == null ? '' : (!$student_program->is_current ? 'collapse' : 'in') }}">
   		<div class="panel-body">
       		<div class="row">
       			<div class="col-md-6">

@@ -4,18 +4,16 @@
 <div class="panel panel-primary">
   	<div class="panel-heading clearfix">
   		<div class="panel-title pull-left" style="padding-top: 4px;">
-  			@if($sort_by === 'first_name')
-  				<a data-toggle="collapse" href="#collapse{{ $count }}">{{ $student->first_name . " " . $student->last_name }}</a>
-  			@else
-  				<a data-toggle="collapse" href="#collapse{{ $count }}">{{ $student->last_name . ", " . $student->first_name }}</a>
-  			@endif
+  			<a data-toggle="collapse" href="#collapse_outer{{ $student->id }}">
+  				{{ $sort_by === 'first_name' ? $student->full_name : $student->proper_name }}
+  			</a>
   		</div>
-  		
+
   		@if($allowChanges)
   		{!! Form::open(['method' => 'DELETE', 'route' => ['student.delete', $student], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
       		<div class="btn-group pull-right">
       			@if($showRank)
-      				<a data-toggle="collapse" href="#collapse{{ $count }}" class="bg-primary btn btn-primary btn-sm">Rank: {{ $student->ranking }}</a>
+      				<a data-toggle="collapse" href="#collapse_outer{{ $student->id }}" class="bg-primary btn btn-primary btn-sm">Rank: {{ $student->ranking }}</a>
       			@endif
       			<a href="{{ url('/student/' . $student->id) }}" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>
       			{!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-default btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Delete']) !!}
@@ -23,7 +21,7 @@
       	{!! Form::close() !!}
       	@endif
 		</div>
-  	<div id="collapse{{ $count }}" class="panel-collapse collapse">
+  	<div id="collapse_outer{{ $student->id }}" class="panel-collapse collapse">
   		<div class="panel-body">
       		<div class="row">
       			<div class="col-md-6">
@@ -53,8 +51,7 @@
 	        @foreach($student->programs as $stud_prog)
 	        	<?php $spcount = $spcount + 1; ?>
 	        	@include('student_program/partials/_student_program_info', ['student_program' => $stud_prog,
-	        		'fromAdvisor' => $fromAdvisor, 'allowChanges' => $allowChanges, 
-	        		'stud_prog_count' => $count . '_' . $spcount])
+	        		'fromAdvisor' => $fromAdvisor, 'allowChanges' => $allowChanges])
 	        @endforeach
 
 	        @if($student->gce_results->count() > 0)

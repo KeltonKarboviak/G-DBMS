@@ -23,15 +23,18 @@ class Student extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id', 'first_name', 'last_name', 'email', 'undergrad_gpa','faculty_supported', 
+        'id', 'first_name', 'last_name', 'email', 'undergrad_gpa','faculty_supported',
     ];
 
 
-    protected $appends = ['ranking','full_name'];
+    protected $appends = ['full_name', 'proper_name', 'ranking'];
 
-    public function getFullNameAttribute()
-    {
-        return $this->first_name . " " . $this->last_name;
+    public function getFullNameAttribute() {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getProperNameAttribute() {
+        return "{$this->last_name}, {$this->first_name}";
     }
 
     public function getRankingAttribute()
@@ -57,7 +60,6 @@ class Student extends Model
         $rank = $this->undergrad_gpa * 100.0 + $gre_score + $english + $sponsor;
 
         return sprintf('%0.0f',number_format($rank));
-        // return floatval($rank);
     }
 
     /**
