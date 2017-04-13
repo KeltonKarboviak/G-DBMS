@@ -8,7 +8,7 @@
     <title>Laravel</title>
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700" />
 
     <!-- Styles -->
@@ -33,7 +33,7 @@
     </style>
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-und navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
 
@@ -47,7 +47,8 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/home') }}">
-                    G-DBMS
+                    <img src="{{ asset('storage/csci_logo.png') }}" alt="UND Computer Science - GDBMS" class="img-responsive" />
+                    <!-- G-DBMS -->
                 </a>
             </div>
 
@@ -141,8 +142,9 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
+                                <li><a href="#"><i class="fa fa-btn fa-vcard"></i>Edit Profile</a></li>
                                 @if ($role == 'Director')
-                                    <li><a href="{{ url('/register') }}">Register new user</a></li>
+                                    <li><a href="{{ url('/register') }}"><i class="fa fa-btn fa-user-plus"></i>Register New User</a></li>
                                 @endif
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                             </ul>
