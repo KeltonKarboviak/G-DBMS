@@ -1,7 +1,5 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
-$undGreen: #009A44;
-
 span.glyphicon-ok {
     color: green;
 }
@@ -12,4 +10,91 @@ span.glyphicon-remove {
 
 select.form-control + span {
     width: 100% !important;
+}
+
+$undGreen: #009a44;
+$navbar_text_color: #e6e6e6;
+$navbar_text_color_hover: #fff;
+
+.navbar {
+    > .container {
+        .navbar-brand {
+            margin-left: -30px;
+
+            @media screen and (max-width: 767px) {
+                margin-left: -15px;
+            }
+        }
+    }
+}
+
+.navbar-und {
+    background-color: $undGreen;
+    border-color: #008037;
+
+    .navbar-toggle {
+        border-color: #008037;
+
+        &:focus, &:hover {
+            // background-color: #333;
+            background-color: #00b34d;
+        }
+
+        .icon-bar {
+            background-color: #fff;
+        }
+    }
+
+    .navbar-brand {
+        color: $navbar_text_color;
+        padding: 4px 15px 0;
+
+        &:focus, &:hover {
+            background-color: transparent;
+            color: $navbar_text_color_hover;
+        }
+
+        > img {
+            width: 200px;
+        }
+    }
+
+    .navbar-nav {
+        > li {
+            > a {
+                color: $navbar_text_color;
+                padding-bottom: 5px;
+
+                &:focus, &:hover {
+                    background-color: transparent;
+                    border-bottom: 2px solid #000;
+                    color: $navbar_text_color_hover;
+                }
+            }
+        }
+
+        > .open {
+            > .dropdown-menu {
+                > li {
+                    > a {
+                        @media screen and (max-width: 767px) {
+                            color: $navbar_text_color;
+                        }
+
+                        &:focus, &:hover {
+                            @media screen and (max-width: 767px) {
+                                background-color: transparent;
+                                color: $navbar_text_color_hover;
+                            }
+                        }
+                    }
+                }
+            }
+
+            > a, > a:focus, > a:hover {
+                background-color: #008037;
+                color: $navbar_text_color_hover;
+            }
+        }
+    }
 }

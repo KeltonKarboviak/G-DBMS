@@ -92,6 +92,7 @@
 @endsection
 
 @section('content')
+<?php $allowChanges = Auth::user()->role->name === 'Director'; ?>
 <div class="container">
     <div class="row">
 
@@ -250,16 +251,18 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            {!! Form::open(['method' => 'DELETE', 'route' => ['gqe_result.delete', $student, $result->offering], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
-                                                            <div class="btn-group">
-                                                                <a href="{{ route('gqe_result.update', [$student->id, $result->offering->id]) }}" class="btn btn-default" data-toggle="tooltip" title="Edit">
-                                                                    <span class="glyphicon glyphicon-edit"></span>
-                                                                </a>
-                                                                <button type="submit" class="btn btn-default" data-toggle="tooltip" title="Delete">
-                                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                                </button>
-                                                            </div>
-                                                            {!! Form::close() !!}
+                                                            @if ($allowChanges)
+                                                                {!! Form::open(['method' => 'DELETE', 'route' => ['gqe_result.delete', $student, $result->offering], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
+                                                                <div class="btn-group">
+                                                                    <a href="{{ route('gqe_result.update', [$student->id, $result->offering->id]) }}" class="btn btn-default" data-toggle="tooltip" title="Edit">
+                                                                        <span class="glyphicon glyphicon-edit"></span>
+                                                                    </a>
+                                                                    <button type="submit" class="btn btn-default" data-toggle="tooltip" title="Delete">
+                                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                                    </button>
+                                                                </div>
+                                                                {!! Form::close() !!}
+                                                            @endif
                                                         </div>
                                                     </div>
 
@@ -295,12 +298,14 @@
 
         </div> <!-- /.col-md-7 -->
 
-        <!-- Affixed side nav for 'Add a GQE Result' button -->
-        <nav class="col-md-2">
-        	<div data-spy="affix" data-offset-top="-1">
-    			<a href="{{ url('/gqe/result/add') }}" class="btn btn-success btn-lg">Add a GQE Result</a>
-        	</div>
-    	</nav> <!-- /.col-md-2 -->
+        @if ($allowChanges)
+            <!-- Affixed side nav for 'Add a GQE Result' button -->
+            <nav class="col-md-2">
+            	<div data-spy="affix" data-offset-top="-1">
+        			<a href="{{ url('/gqe/result/add') }}" class="btn btn-success btn-lg">Add a GQE Result</a>
+            	</div>
+        	</nav> <!-- /.col-md-2 -->
+        @endif
 
     </div>
 </div>

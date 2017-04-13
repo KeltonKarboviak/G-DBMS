@@ -22,13 +22,13 @@ Route::auth();
 
 Route::get('/register','Auth\AuthController@showRegistrationForm');
 
+
 //Lowest View Level - Faculty, Secretary, Chair, Director
-Route::group(['middleware' => 'has_role:Director_Chair_Faculty_Secretary'], function (){
+Route::group(['middleware' => 'has_role:Director_Chair_Faculty_Secretary'], function () {
 	Route::get('/home', 'HomeController@index');
 	Route::get('/home/chart', 'HomeController@chart');
 	Route::get('/home/drilldown', 'HomeController@drilldown');
 	Route::get('/home/budget/{budget}', 'HomeController@budget_show');
-	Route::patch('/home/budget/{budget}', ['as' => 'budget.update', 'uses' => 'HomeController@budget_update']);
 
 	Route::get('/student', ['as' => 'student.index_filter', 'uses' => 'StudentController@index_filter']);
 	Route::get('/advisor', 'AdvisorController@index');
@@ -36,7 +36,7 @@ Route::group(['middleware' => 'has_role:Director_Chair_Faculty_Secretary'], func
 });
 
 //Ferpa View level - Director, Chair
-Route::group(['middleware' => 'has_role:Director_Chair'], function (){
+Route::group(['middleware' => 'has_role:Director_Chair'], function () {
 	Route::get('/gqe/result', 'GqeResultController@index');
 	Route::get('/gqe/offering', 'GqeOfferingController@index');
 	Route::get('/gqe/section', 'GqeSectionController@index');
@@ -44,16 +44,17 @@ Route::group(['middleware' => 'has_role:Director_Chair'], function (){
 });
 
 //Money View level - Director, Chair, Secretary
-Route::group(['middleware' => 'has_role:Director_Chair_Secretary'], function (){
+Route::group(['middleware' => 'has_role:Director_Chair_Secretary'], function () {
 	Route::get('/assistantship', ['as' => 'assistantship.index_filter', 'uses' => 'AssistantshipController@index_filter']);
 	Route::get('/assistantship/positions', ['as' => 'position.index', 'uses' => 'PositionController@index']);
 	Route::get('/assistantship/status', ['as' => 'status.index', 'uses' => 'StatusController@index']);
 	Route::get('/assistantship/gta_assignments/',['as' => 'gta_assignment.index_filter', 'uses' => 'GtaAssignmentController@index_filter']);
 	Route::get('/waiver', 'TuitionWaiverController@index');
+	Route::get('/source', 'FundingSourceController@index');
 });
 
 //Lowest Edit level - Director, Secretary
-Route::group(['middleware' => 'has_role:Director_Secretary'], function (){
+Route::group(['middleware' => 'has_role:Director_Secretary'], function () {
 	Route::get('/{returnroute}/semesters/add',['as' => 'semester.store', 'uses' => 'SemesterController@store']);
 	Route::post('/{returnroute}/semesters/add', ['as' => 'semester.store_submit', 'uses' => 'SemesterController@store_submit']);
 
@@ -64,7 +65,9 @@ Route::group(['middleware' => 'has_role:Director_Secretary'], function (){
 });
 
 //Highest Edit level - Director Only
-Route::group(['middleware' => 'has_role:Director'], function (){
+Route::group(['middleware' => 'has_role:Director'], function () {
+	Route::patch('/home/budget/{budget}', ['as' => 'budget.update', 'uses' => 'HomeController@budget_update']);
+
 	Route::delete('/student/{student}', ['as' => 'student.delete', 'uses' => 'StudentController@delete']);
 
 	Route::post('/student_program/add', ['as' => 'student_program.store_submit', 'uses' => 'StudentProgramController@store_submit']);
@@ -132,4 +135,10 @@ Route::group(['middleware' => 'has_role:Director'], function (){
     Route::get('/waiver/{waiver}/edit', ['as' => 'tuition_waiver.update', 'uses' => 'TuitionWaiverController@update']);
     Route::patch('/waiver/{waiver}', ['as' => 'tuition_waiver.update_submit', 'uses' => 'TuitionWaiverController@update_submit']);
     Route::delete('/waiver/{waiver}', ['as' => 'tuition_waiver.delete', 'uses' => 'TuitionWaiverController@delete']);
+
+    Route::get('/source/add', ['as' => 'funding_source.store', 'uses' => 'FundingSourceController@store']);
+	Route::post('/source', ['as' => 'funding_source.store_submit', 'uses' => 'FundingSourceController@store_submit']);
+	Route::get('/source/{source}/edit', ['as' => 'funding_source.update', 'uses' => 'FundingSourceController@update']);
+	Route::patch('/source/{source}', ['as' => 'funding_source.update_submit', 'uses' => 'FundingSourceController@update_submit']);
+	Route::delete('/source/{source}', ['as' => 'funding_source.delete', 'uses' => 'FundingSourceController@delete']);
 });

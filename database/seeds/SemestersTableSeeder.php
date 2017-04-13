@@ -15,17 +15,17 @@ class SemestersTableSeeder extends Seeder
         // DB::table('semesters')->delete();
 
         $semesters = [
-            ['id' => 1, 'name_id' => 1,    'calendar_year' => 2015, 'academic_year' => 2015],
-            ['id' => 2, 'name_id' => 2,  'calendar_year' => 2016, 'academic_year' => 2015],
+            ['id' => 1, 'name_id' => 1, 'calendar_year' => 2015, 'academic_year' => 2015],
+            ['id' => 2, 'name_id' => 2, 'calendar_year' => 2016, 'academic_year' => 2015],
             ['id' => 3, 'name_id' => 3, 'calendar_year' => 2016, 'academic_year' => 2015],
             ['id' => 4, 'name_id' => 4, 'calendar_year' => 2016, 'academic_year' => 2015],
 
-            ['id' => 5, 'name_id' => 1,    'calendar_year' => 2016, 'academic_year' => 2016],
-            ['id' => 6, 'name_id' => 2,  'calendar_year' => 2017, 'academic_year' => 2016],
+            ['id' => 5, 'name_id' => 1, 'calendar_year' => 2016, 'academic_year' => 2016],
+            ['id' => 6, 'name_id' => 2, 'calendar_year' => 2017, 'academic_year' => 2016],
             ['id' => 7, 'name_id' => 3, 'calendar_year' => 2017, 'academic_year' => 2016],
             ['id' => 8, 'name_id' => 4, 'calendar_year' => 2017, 'academic_year' => 2016],
 
-            ['id' => 9,  'name_id' => 1,   'calendar_year' => 2017, 'academic_year' => 2017],
+            ['id' => 9,  'name_id' => 1, 'calendar_year' => 2017, 'academic_year' => 2017],
             ['id' => 10, 'name_id' => 2, 'calendar_year' => 2018, 'academic_year' => 2017],
         ];
 

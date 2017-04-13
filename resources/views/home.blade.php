@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<?php $allowViewing = Auth::user()->role->name == 'Director' || Auth::user()->role->name == 'Chair' || Auth::user()->role->name === "Secretary"?>
+<?php $allowViewing = in_array(Auth::user()->role->name, ['Director', 'Chair', 'Secretary'], true); ?>
+<?php $allowChanges = Auth::user()->role->name == 'Director'; ?>
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -62,41 +63,44 @@
                                 </div>
                             </div>
 
-                            <hr />
+                            @if ($allowChanges)
 
-                            <div class="form-group{{ $errors->has('academic_year') ? ' has-error' : '' }}">
-                                {!! Form::label('academic_year', 'Academic Year:', ['class' => 'col-md-4 control-label']) !!}
+                                <hr />
 
-                                <div class="col-md-6">
-                                    {!! Form::number('academic_year', null, ['disabled' => 'disabled', 'class' => 'form-control disabled']) !!}
+                                <div class="form-group{{ $errors->has('academic_year') ? ' has-error' : '' }}">
+                                    {!! Form::label('academic_year', 'Academic Year:', ['class' => 'col-md-4 control-label']) !!}
 
-                                    @if ($errors->has('academic_year'))
-                                        <span class="help-block">
-                            				<strong>{{ $errors->first('academic_year') }}</strong>
-                            			</span>
-                            		@endif
+                                    <div class="col-md-6">
+                                        {!! Form::number('academic_year', null, ['disabled' => 'disabled', 'class' => 'form-control disabled']) !!}
+
+                                        @if ($errors->has('academic_year'))
+                                            <span class="help-block">
+                                				<strong>{{ $errors->first('academic_year') }}</strong>
+                                			</span>
+                                		@endif
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group{{ $errors->has('budget') ? ' has-error' : '' }}">
-                                {!! Form::label('budget', 'Budget:', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="form-group{{ $errors->has('budget') ? ' has-error' : '' }}">
+                                    {!! Form::label('budget', 'Budget:', ['class' => 'col-md-4 control-label']) !!}
 
-                                <div class="col-md-6">
-                                    {!! Form::number('budget', null, ['class' => 'form-control']) !!}
+                                    <div class="col-md-6">
+                                        {!! Form::number('budget', null, ['class' => 'form-control']) !!}
 
-                                    @if ($errors->has('budget'))
-                                        <span class="help-block">
-                            				<strong>{{ $errors->first('budget') }}</strong>
-                            			</span>
-                            		@endif
+                                        @if ($errors->has('budget'))
+                                            <span class="help-block">
+                                				<strong>{{ $errors->first('budget') }}</strong>
+                                			</span>
+                                		@endif
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4">
-                                    {!! Form::submit('Update', ['class' => 'btn btn-success']) !!}
+                                <div class="form-group">
+                                    <div class="col-md-6 col-md-offset-4">
+                                        {!! Form::submit('Update', ['class' => 'btn btn-success']) !!}
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
     					{!! Form::close() !!}
 
                     </div>
