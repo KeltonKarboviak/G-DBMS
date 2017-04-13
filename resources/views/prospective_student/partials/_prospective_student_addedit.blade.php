@@ -76,7 +76,7 @@
 	</div>
 </div>
 
-<!-- <div class="form-group{{ $errors->has('gre_score') ? ' has-error' : '' }}">
+<div class="form-group{{ $errors->has('gre_score') ? ' has-error' : '' }}">
 	{!! Form::label('gre_score', 'GRE score:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
@@ -116,13 +116,13 @@
 			</span>
 		@endif
 	</div>
-</div> -->
+</div>
 
 <div class="form-group">
 	<div class="col-md-6 col-md-offset-4">
 		<div class="btn-group">
        	{!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
-       	{!! Form::button('Cancel', ['onClick' => "parent.location='/student'", 'class' => 'btn btn-danger']) !!}
+       	{!! Form::button('Cancel', ['onClick' => "parent.location='/prospective_student'", 'class' => 'btn btn-danger']) !!}
         </div>
     </div>
 </div>

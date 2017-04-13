@@ -77,6 +77,7 @@ class StudentProgramController extends Controller
             'advisors' => Advisor::all()->lists("full_name","id"),
             'programs' => Program::lists("name","id"),
             'semester_names' => SemesterName::all()->lists("name","id"),
+            'needs_committee' => Program::lists('needs_committee','id'),
         ]);
     }
 
@@ -133,6 +134,7 @@ class StudentProgramController extends Controller
             'programs' => Program::lists("name","id"),
             // 'semesters' => Semester::all()->lists("full_name","id")
             'semester_names' => SemesterName::all()->lists('name','id'),
+            'needs_committee' => Program::lists('needs_committee','id'),
         ]);
     }
 

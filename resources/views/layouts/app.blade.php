@@ -58,7 +58,7 @@
                     <?php $role = Auth::user()->role->name; ?>
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/home') }}">Home</a></li>
+                        <li><a href="{{ url('/home') }}">Budget</a></li>
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -66,6 +66,7 @@
                                 @if($role == 'Director' || $role == 'Secretary')
                                     <li><a href="{{ url('/student/add') }}">Add</a></li>
                                 @endif
+                                <li><a href="{{ url('/prospective_student') }}">Prospective Students</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -106,6 +107,7 @@
                                     @endif
                                     <li><a href="{{ url('/assistantship/positions/') }}">Positions</a></li>
                                     <li><a href="{{ url('/assistantship/status/') }}">Statuses</a></li>
+                                    <li><a href="{{ url('/assistantship/gta_assignments/') }}">GTA Assignments</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">

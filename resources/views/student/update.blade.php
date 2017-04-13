@@ -16,6 +16,12 @@
 				</div>
 			</div>
  		</div>
+
+ 		<div class="col-md-1">
+ 			{!! Form::open(['method' => 'POST', 'route' => ['prospective_student.demote', $student], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmMessage("Are you sure you want to demote this student?")']) !!}
+  				{!! Form::button('Demote Student to Prospective', ['type' => 'submit', 'class' => 'btn btn-default btn-lg btn-danger',]) !!}
+  			{!! Form::close() !!}
+ 		</div>
 	</div>
 </div>
 @endsection

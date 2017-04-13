@@ -10,7 +10,7 @@
 				</div>
 				<div class="panel-body">
 					{!! Form::model($student_program, ['route' => ['student_program.update_submit', $student_program], 'method' => 'PATCH', 'class' => 'form-horizontal']) !!}
-						@include('student_program/partials/_student_program_addedit')
+						@include('student_program/partials/_student_program_addedit', ['needs_committee' => $needs_committee])
 					{!! Form::close() !!}
 				</div>
 			</div>

@@ -75,8 +75,8 @@
 	<?php //<a class="btn btn-default" data-toggle="tooltip" title="Add a semester" href={{ '/' . str_replace("/","SLASH", "/" . Request::decodedPath()) . '/semesters/add' }} ><span class="glyphicon glyphicon-plus"></span></a> ?>
 </div>
 
-@if($student_program == null || $student_program->needs_committee)
-<div class="form-group{{ $errors->has('has_committee') ? ' has-error' : '' }}">
+<!-- @if($student_program == null || $student_program->needs_committee) --> 
+<div class="form-group{{ $errors->has('has_committee') ? ' has-error' : '' }}" id='has_committee_div'>
 	{!! Form::label('has_committee', 'Has Committee:', ['class' => 'col-md-4 control-label']) !!}
 
 	<div class="col-md-6">
@@ -89,7 +89,7 @@
 		@endif
 	</div>
 </div>
-@endif
+<!-- @endif --> 
 
 <div class="form-group{{ $errors->has('has_program_study') ? ' has-error' : '' }}">
 	{!! Form::label('has_program_study', 'Has Program of Study:', ['class' => 'col-md-4 control-label']) !!}
@@ -163,3 +163,28 @@
         </div>
     </div>
 </div>
+
+@foreach ($needs_committee as $program_id => $needs)
+	<input type="hidden" id="msg_{{ $program_id }}" value="{{ $needs }}" />
+@endforeach
+
+@section('scripts')
+<script>
+$(function () {
+	$('select[name="program_id"]').change(function () {
+		var option = $(this).children('option:selected').val();
+		needed = $('#msg_' + option).val();
+		console.log(option);
+		var $has_committee_div = $('div#has_committee_div');
+		if (needed === "1") {
+			$has_committee_div.removeClass('hidden')
+				.find('input').attr('disabled', false);
+		}
+		else {
+			$has_committee_div.addClass('hidden')
+				.find('input').attr('disabled', true);
+		}
+	}).change();
+});
+</script>
+@endsection

@@ -38,6 +38,10 @@
                                                 <td>Remaining</td><td></td>
                                             </tr>
 
+                                            <tr id="pending_assistantships" class="info" data-toggle="collapse" data-target=".collapse_pending_assistantships">
+                                                <td>Pending Assistantships</td><td></td>
+                                            </tr>
+
                                             <tr id="assistantships" class="info" data-toggle="collapse" data-target=".collapse_assistantships">
                                                 <td>Assistantships</td><td></td>
                                             </tr>
@@ -122,6 +126,9 @@
 
 <script>
 $(function () {
+    Highcharts.setOptions({
+     colors: ['#cc8033', '#cc3333', '#3333cc', '#33cc33',]
+    });
 
     // Build the chart
     Highcharts.chart('chart', {
@@ -205,6 +212,10 @@ $(function () {
                     name: 'Source',
                     colorByPoint: true,
                     data: [{
+                        name: 'Pending Assistantships',
+                        y: data['pending_assistantships'],
+                        drilldown: 'pending_assistantships'
+                    }, {
                         name: 'Assistantships',
                         y: data['assistantships'],
                         drilldown: 'assistantships'

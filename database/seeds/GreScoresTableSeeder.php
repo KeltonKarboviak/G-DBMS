@@ -15,7 +15,7 @@ class GreScoresTableSeeder extends Seeder
         // DB::table('gre_scores')->delete();
 
         $scores = [
-            ['student_id' => '8881111', 'score' => 280],
+            ['student_id' => '3331111', 'score' => 280],
         ];
 
         // Uncomment the below to run the seeder

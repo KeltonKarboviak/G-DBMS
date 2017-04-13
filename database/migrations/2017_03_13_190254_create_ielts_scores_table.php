@@ -15,7 +15,7 @@ class CreateIeltsScoresTable extends Migration
         Schema::create('ielts_scores', function (Blueprint $table) {
             $table->char('student_id');
             $table->primary('student_id');
-            $table->foreign('student_id')->references('id')->on('students')
+            $table->foreign('student_id')->references('id')->on('prospective_students')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 

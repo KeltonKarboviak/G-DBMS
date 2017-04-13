@@ -34,6 +34,10 @@ function ConfirmDelete() {
     return confirm("Are you sure you want to delete?");
 }
 
+function ConfirmMessage(message) {
+    return confirm(message);
+}
+
 if (typeof jQuery.when.all === 'undefined') {
     jQuery.when.all = function (deferreds) {
         return $.Deferred(function (def) {

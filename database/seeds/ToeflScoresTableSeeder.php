@@ -15,7 +15,7 @@ class ToeflScoresTableSeeder extends Seeder
         // DB::table('toefl_scores')->delete();
 
         $scores = [
-            ['student_id' => '8883333', 'score' => 55],
+            ['student_id' => '3333333', 'score' => 55],
         ];
 
         // Uncomment the below to run the seeder

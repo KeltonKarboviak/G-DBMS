@@ -1,7 +1,7 @@
 <div class="panel panel-primary">
   	<div class="panel-heading clearfix">
   		<div class="panel-title pull-left" style="padding-top: 4px;">
-  				<a data-toggle="collapse" href="#collapseouter{{ $assist->id }}">{{ $assist->student->full_name . ' - ' . $assist->position . ' - ' . $assist->semester->full_name}}</a>
+  				<a data-toggle="collapse" href="#collapse_outer{{ $assist->id }}">{{ $assist->student->full_name . ' - ' . $assist->position . ' - ' . $assist->semester->full_name}}</a>
   		</div>
 
   		@if ($allowChanges)

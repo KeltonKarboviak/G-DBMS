@@ -15,7 +15,7 @@ class IeltsScoresTableSeeder extends Seeder
         // DB::table('ielts_scores')->delete();
 
         $scores = [
-            ['student_id' => '8884444', 'score' => 8.25],
+            ['student_id' => '3334444', 'score' => 8.25],
         ];
 
         // Uncomment the below to run the seeder

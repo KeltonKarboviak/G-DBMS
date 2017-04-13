@@ -53,8 +53,18 @@ class HomeController extends Controller
 
         $assistantships = (double)Assistantship
             ::join('semesters', 'assistantships.semester_id', '=', 'semesters.id')
+            ->join('assistantship_statuses','assistantships.current_status_id','=','assistantship_statuses.id')
             ->where('semesters.academic_year', '=', $year)
             ->where('assistantships.funding_source_id', '=', 1)
+            ->whereIn('assistantship_statuses.description',['Accepted','Terminated'])
+            ->sum('assistantships.stipend');
+
+        $pending_assistantships = (double)Assistantship
+            ::join('semesters', 'assistantships.semester_id', '=', 'semesters.id')
+            ->join('assistantship_statuses','assistantships.current_status_id','=','assistantship_statuses.id')
+            ->where('semesters.academic_year', '=', $year)
+            ->where('assistantships.funding_source_id', '=', 1)
+            ->where('assistantship_statuses.description','Pending')
             ->sum('assistantships.stipend');
 
         $waivers = (double)TuitionWaiver
@@ -71,6 +81,7 @@ class HomeController extends Controller
             'assistantships' => $assistantships,
             'waivers' => $waivers,
             'remaining' => $remaining,
+            'pending_assistantships' => $pending_assistantships,
         ]);
     }
 
@@ -88,13 +99,19 @@ class HomeController extends Controller
         if ($budget == null)
             return Response::json(['success' => false]);
 
-        if ($name === 'assistantships') {
+        if ($name === 'assistantships' || $name === 'pending_assistantships') {
+            if($name === 'assistantships')
+                $options = ['Accepted','Terminated'];
+            else if($name == 'pending_assistantships')
+                $options = ['Pending'];
             $data = Assistantship
                 ::selectRaw('concat(students.first_name, " ", students.last_name) as full_name, sum(assistantships.stipend) as sum')
                 ->join('semesters', 'assistantships.semester_id', '=', 'semesters.id')
                 ->join('students', 'assistantships.student_id', '=', 'students.id')
+                ->join('assistantship_statuses','assistantships.current_status_id','=','assistantship_statuses.id')
                 ->where('semesters.academic_year', $year)
                 ->where('assistantships.funding_source_id', 1)
+                ->whereIn('assistantship_statuses.description',$options)
                 ->groupBy('assistantships.student_id')
                 ->lists('sum', 'full_name');
         } else if ($name === 'waivers') {

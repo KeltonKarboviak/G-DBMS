@@ -31,6 +31,7 @@ Route::group(['middleware' => 'has_role:Director_Chair_Faculty_Secretary'], func
 	Route::get('/home/budget/{budget}', 'HomeController@budget_show');
 
 	Route::get('/student', ['as' => 'student.index_filter', 'uses' => 'StudentController@index_filter']);
+	Route::get('/prospective_student', ['as' => 'prospective_student.index_filter', 'uses' => 'ProspectiveStudentController@index_filter']);
 	Route::get('/advisor', 'AdvisorController@index');
 	Route::get('/advisor/info/{advisor}', ['as' => 'advisor.info', 'uses' => 'AdvisorController@info']);
 });
@@ -62,6 +63,11 @@ Route::group(['middleware' => 'has_role:Director_Secretary'], function () {
 	Route::post('/student/add', ['as' => 'student.store_submit', 'uses' => 'StudentController@store_submit']);
 	Route::get('/student/{student}', ['as' => 'student.update', 'uses' => 'StudentController@update']);
 	Route::patch('/student/{student}', ['as' => 'student.update_submit', 'uses' => 'StudentController@update_submit']);
+
+	Route::get('/prospective_student/add', ['as' => 'prospective_student.store', 'uses' => 'ProspectiveStudentController@store']);
+	Route::post('/prospective_student/add', ['as' => 'prospective_student.store_submit', 'uses' => 'ProspectiveStudentController@store_submit']);
+	Route::get('/prospective_student/{student}', ['as' => 'prospective_student.update', 'uses' => 'ProspectiveStudentController@update']);
+	Route::patch('/prospective_student/{student}', ['as' => 'prospective_student.update_submit', 'uses' => 'ProspectiveStudentController@update_submit']);
 });
 
 //Highest Edit level - Director Only
@@ -69,6 +75,10 @@ Route::group(['middleware' => 'has_role:Director'], function () {
 	Route::patch('/home/budget/{budget}', ['as' => 'budget.update', 'uses' => 'HomeController@budget_update']);
 
 	Route::delete('/student/{student}', ['as' => 'student.delete', 'uses' => 'StudentController@delete']);
+	Route::delete('/prospective_student/{student}', ['as' => 'prospective_student.delete', 'uses' => 'ProspectiveStudentController@delete']);
+
+	Route::match(['post','delete'],'/prospective_student/promote/{student}', ['as' => 'prospective_student.promote', 'uses' => 'ProspectiveStudentController@promote']);
+	Route::match(['post','delete'],'/prospective_student/demote/{student}', ['as' => 'prospective_student.demote', 'uses' => 'ProspectiveStudentController@demote']);
 
 	Route::post('/student_program/add', ['as' => 'student_program.store_submit', 'uses' => 'StudentProgramController@store_submit']);
 	Route::get('/student_program/add/{student_program}', ['as' => 'student_program.store', 'uses' => 'StudentProgramController@store']);

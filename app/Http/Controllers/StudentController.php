@@ -22,7 +22,7 @@ class StudentController extends Controller
 	private $rules = [
 		'first_name' => 'required',
 		'last_name' => 'required',
-		'id' => 'required|size:7|regex:/\d{7}/|unique:students',
+		'id' => 'required|size:7|regex:/\d{7}/|unique:students', //overwritten in update_submit
 		'email' => 'email',
 		'undergrad_gpa' => 'required|numeric|between:0,4',
         'toefl_score' => 'integer|between:0,120',
@@ -44,7 +44,7 @@ class StudentController extends Controller
 
     private $sort_options = ['last_name' => 'Last name',
         'first_name' => 'First name',
-        'ranking' => 'Ranking',
+        /*'ranking' => 'Ranking',*/
         'id' => 'EMPLID',
         'has_committee' => 'Has committee',
         'has_program_study' => 'Has program of study',
@@ -81,9 +81,9 @@ class StudentController extends Controller
     public function index_filter(Request $request)
     {
         $sort_by = $request->get('sort_by','last_name');
-        $sort_out_of_db = in_array($sort_by, ['semester_started','ranking']);
+        $sort_out_of_db = in_array($sort_by, ['semester_started',/*'ranking'*/]);
 
-        $query = Student::with('gce_results','gqe_results','gre','ielts','toefl','programs')->join('student_programs','student_programs.student_id','=','students.id','left outer');
+        $query = Student::with('gce_results','gqe_results',/*'gre','ielts','toefl',*/'programs')->join('student_programs','student_programs.student_id','=','students.id','left outer');
         if(!$sort_out_of_db) // ie sort by a db field
             $query->orderBy($sort_by);
 
@@ -192,14 +192,14 @@ class StudentController extends Controller
         $showRank = false;
         if($sort_out_of_db)
         {
-            if($sort_by === 'ranking')
+            /*if($sort_by === 'ranking')
             {
                 $students = $students->sortByDesc(function($stud){
                     return $stud->ranking;
                 });
                 $showRank = true;
             }
-            else if($sort_by === 'semester_started')
+            else */if($sort_by === 'semester_started')
             {
                 $students = $students->sortByDesc(function($stud){
                     $last_start = -1;
@@ -274,14 +274,14 @@ class StudentController extends Controller
 
         $student->create($request->except(['gre_score','toefl_score','ielts_score']));
 
-        if($request->has('gre_score'))
-            $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
+        // if($request->has('gre_score'))
+        //     $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
 
-        if($request->has('ielts_score'))
-            $ielts = IeltsScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('ielts_score')]);
+        // if($request->has('ielts_score'))
+        //     $ielts = IeltsScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('ielts_score')]);
 
-        if($request->has('toefl_score'))
-            $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
+        // if($request->has('toefl_score'))
+        //     $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
 
 
 
@@ -290,7 +290,7 @@ class StudentController extends Controller
 
     public function update(Student $student)
     {
-        $student->load('gre','toefl','ielts');
+        // $student->load('gre','toefl','ielts');
     	return view('/student/update', [
     		'student' => $student,
     		'advisors' => Advisor::all()->lists("full_name","id"),
@@ -314,14 +314,14 @@ class StudentController extends Controller
     	$student->update($request->except(['gre_score','toefl_score','ielts_score']));
 
 
-        if($request->has('gre_score'))
-            $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
+        // if($request->has('gre_score'))
+        //     $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
 
-        if($request->has('ielts_score'))
-            $ielts = IeltsScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('ielts_score')]);
+        // if($request->has('ielts_score'))
+        //     $ielts = IeltsScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('ielts_score')]);
 
-        if($request->has('toefl_score'))
-            $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
+        // if($request->has('toefl_score'))
+        //     $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
 
     	return Redirect::to('/student');
     }
