@@ -26,6 +26,10 @@ class TuitionWaiverController extends Controller
 
     ];
 
+    private $sort_options = [
+        'semester_id' => 'Semester',
+    ];
+
     /**
      * Create a new controller instance.
      *
@@ -35,14 +39,42 @@ class TuitionWaiverController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
-        $waivers = TuitionWaiver::with('semester', 'student', 'funding_source')
-            ->orderBy('date_received', 'desc')
-            ->orderBy('semester_id', 'desc')
-            ->get();
+    public function index(Request $request) {
+        $sort_by = $request->get('sort_by', 'semester_id');
+
+        $waivers = TuitionWaiver::with('semester', 'student', 'funding_source');
+
+        $semesters = Semester::with('name')
+            ->orderBy('calendar_year', 'desc')
+            ->orderBy('id', 'desc')
+            ->get()
+            ->pluck('full_name', 'id');
+
+        $sources = FundingSource::orderBy('name', 'asc')
+            ->pluck('name', 'id');
+
+        if ($request->has('semester_id'))
+            $waivers->whereIn('semester_id', $request->get('semester_id'));
+        if ($request->has('funding_source_id'))
+            $waivers->whereIn('funding_source_id', $request->get('funding_source_id'));
+        if ($request->has('received'))
+            $waivers->whereIn('received', $request->get('received'));
+
+        if ($sort_by === 'semester_id')
+            $waivers = $waivers->orderBy('date_received', 'desc')
+                ->orderBy('semester_id', 'desc')
+                ->get();
 
         return view('/tuition_waiver/index', [
             'waivers' => $waivers,
+            'sort_options' => $this->sort_options,
+            'sort_by' => $sort_by,
+            'semesters' => $semesters,
+            'semester_id' => $request->get('semester_id'),
+            'sources' => $sources,
+            'source_id' => $request->get('funding_source_id'),
+            'received_choices' => [1 => 'Yes', 0 => 'No'],
+            'received_choice' => $request->get('received'),
         ]);
     }
 
