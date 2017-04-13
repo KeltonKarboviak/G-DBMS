@@ -53,4 +53,8 @@ class Assistantship extends Model
     public function funding_source() {
         return $this->belongsTo(FundingSource::class, 'funding_source_id');
     }
+
+    public function gta_assignment() {
+        return $this->hasOne(GtaAssignment::class);
+    }
 }

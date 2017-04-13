@@ -20,7 +20,7 @@ class Advisor extends Model
      */
     public $incrementing = false;
 
-    protected $appends = ['full_name'];
+    protected $appends = ['full_name','proper_name'];
 
     public $timestamps = false;
 
@@ -31,6 +31,11 @@ class Advisor extends Model
     public function getFullNameAttribute() {
     	return "{$this->first_name} {$this->last_name}";
     }
+
+        public function getProperNameAttribute() {
+        return "{$this->last_name}, {$this->first_name}";
+    }
+
 
     /**
      *

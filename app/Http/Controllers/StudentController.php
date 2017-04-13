@@ -48,7 +48,7 @@ class StudentController extends Controller
         'id' => 'EMPLID',
         'has_committee' => 'Has committee',
         'has_program_study' => 'Has program of study',
-        'semester_started_id' => 'Semester started',
+        'semester_started' => 'Semester started',
         'program_id' => 'Program',
       ];
     /**
@@ -81,9 +81,10 @@ class StudentController extends Controller
     public function index_filter(Request $request)
     {
         $sort_by = $request->get('sort_by','last_name');
+        $sort_out_of_db = in_array($sort_by, ['semester_started','ranking']);
 
-        $query = Student::with('gce_results','gqe_results','gre','ielts','toefl')->join('student_programs','student_programs.student_id','=','students.id','left outer');
-        if($sort_by !== 'ranking')
+        $query = Student::with('gce_results','gqe_results','gre','ielts','toefl','programs')->join('student_programs','student_programs.student_id','=','students.id','left outer');
+        if(!$sort_out_of_db) // ie sort by a db field
             $query->orderBy($sort_by);
 
 
@@ -189,12 +190,28 @@ class StudentController extends Controller
         }
         $students = $query->distinct()->get(['students.*']);
         $showRank = false;
-        if($sort_by === 'ranking')
+        if($sort_out_of_db)
         {
-            $students = $students->sortByDesc(function($stud){
-                return $stud->ranking;
-            });
-            $showRank = true;
+            if($sort_by === 'ranking')
+            {
+                $students = $students->sortByDesc(function($stud){
+                    return $stud->ranking;
+                });
+                $showRank = true;
+            }
+            else if($sort_by === 'semester_started')
+            {
+                $students = $students->sortByDesc(function($stud){
+                    $last_start = -1;
+                    foreach ($stud->programs as $sp) {
+                        if($last_start == -1)
+                            $last_start = $sp->semester_started->sort_num;
+                        else if($sp->semester_started->sort_num > $last_start)
+                            $last_start = $sp->semester_started->sort_num;
+                    }
+                    return $last_start;
+                });
+            }
         }
 
         return view('/student/index', [

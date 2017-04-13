@@ -19,6 +19,8 @@ use App\AssistantshipStatus;
 use App\Position;
 use App\Program;
 use App\SemesterName;
+use App\Advisor;
+use App\GtaAssignment;
 
 class AssistantshipController extends Controller
 {
@@ -43,6 +45,9 @@ class AssistantshipController extends Controller
         'semester_name_id' => 'required',
         'semester_year' => 'required',
         'time' => 'between:0,15',
+        'course' => 'required_with:instructor_id',
+        'instructor_id' => 'required_with:course',
+        'funding_source_id' => 'required',
     ];
     /**
      * Display a listing of the resource.
@@ -56,7 +61,8 @@ class AssistantshipController extends Controller
             ->join('students','students.id','=','assistantships.student_id')
             ->join('student_programs','students.id','=','student_programs.student_id');
 
-        $query->orderBy($sort_by);
+        if($sort_by !== 'semester')
+            $query->orderBy($sort_by);
 
         if($request->has('first_name'))
             $query->where('first_name',$request->get('first_name'));
@@ -106,6 +112,13 @@ class AssistantshipController extends Controller
 
         $assists = $query->distinct()->get(['assistantships.*']);
 
+        if($sort_by === 'semester')
+        {
+            $assists = $assists->sortByDesc(function($assist){
+                return $assist->semester->sort_num;
+            });
+        }
+
         return view('/assistantship/index', [
             'assists' => $assists,
             'programs' => Program::lists("name","id"), 
@@ -116,7 +129,7 @@ class AssistantshipController extends Controller
             'last_name' => $request->get('last_name'),
             'program_id' => $request->get('program_id'),
             'sort_by' => $sort_by,
-            'sort_options' => ['last_name' => 'Last Name','current_status_id' => 'Current Status','semester_id' => 'Semester'],
+            'sort_options' => ['last_name' => 'Last Name','current_status_id' => 'Current Status','semester' => 'Semester'],
             'current_status_id' => $request->get('current_status_id'),
             'funding_source_id' => $request->get('funding_source_id'),
             'semester_id' => $request->get('semester_id'),
@@ -151,6 +164,8 @@ class AssistantshipController extends Controller
             'statuses' => AssistantshipStatus::all()->lists('description','id'),
             'funding_sources' => FundingSource::all()->lists('name','id'),
             'tuition_waivers' => TuitionWaiver::all()->lists('description','id'),
+            'instructors' => Advisor::all()->lists('full_name','id'),
+            'assignment' => null,
         ]);
     }
 
@@ -165,7 +180,7 @@ class AssistantshipController extends Controller
 
         $this->validate($request,$this->rules);
 
-        $except = ['semester_name_id', 'semester_year'];
+        $except = ['semester_name_id', 'semester_year','instructor_id','course'];
         foreach(['defer_date','date_responded','date_offered','corresponding_tuition_waiver_id'] as $attr)
             if(!$request->has($attr))
                 $except[] = $attr;
@@ -177,7 +192,16 @@ class AssistantshipController extends Controller
             'academic_year' => Semester::getAcademicYear($request->get('semester_name_id'),$request->get('semester_year')),
         ])->id;
 
-        $assist->create($to_fill);
+        $assist = $assist->create($to_fill);
+
+        if($request->get('position') === 'GTA' && $request->has('instructor_id') && $request->has('course'))
+        {
+            GtaAssignment::updateOrCreate([
+                'assistantship_id' => $assist->id,
+                'instructor_id' => $request->get('instructor_id'),
+                'course' => $request->get('course'),
+            ]);
+        }
 
         Session::flash('alert-success','Assistantship added successfully');
 
@@ -204,6 +228,8 @@ class AssistantshipController extends Controller
             'funding_sources' => FundingSource::all()->lists('name','id'),
             'tuition_waivers' => TuitionWaiver::all()->lists('description','id'),
             'readonly' => true,
+            'instructors' => Advisor::all()->lists('full_name','id'),
+            'assignment' => $assist->gta_assignment,
         ]);
     }
 
@@ -217,7 +243,7 @@ class AssistantshipController extends Controller
 
         $this->validate($request,$this->rules);
         
-        $except = [];
+        $except = ['semester_name_id', 'semester_year','instructor_id','course'];
         $save = false;
         foreach(['defer_date','date_responded','date_offered','corresponding_tuition_waiver_id'] as $attr)
         {
@@ -241,7 +267,37 @@ class AssistantshipController extends Controller
             'academic_year' => Semester::getAcademicYear($request->get('semester_name_id'),$request->get('semester_year')),
         ])->id;
 
+        // dd($assist);
+        if($assist->position === 'GTA' && $request->get('position') !== $assist->position) // if was GTA but now not
+        {
+            //delete corresponding gta_assignment
+            $gta = $assist->gta_assignment;
+            $gta->delete();
+        }
+
         $assist->update($to_fill);
+
+        if($request->get('position') === 'GTA' && $request->has('instructor_id') && $request->has('course'))
+        {
+            if(GtaAssignment::where('assistantship_id',$assist->id)->exists())
+            {
+                // dd('GTA',$request->get('course'));
+                $gta = GtaAssignment::firstOrCreate([
+                    'assistantship_id' => $assist->id,
+                ]);
+                $gta->instructor_id = $request->get('instructor_id');
+                $gta->course = $request->get('course');
+                $gta->save();
+            }
+            else
+            {
+                GtaAssignment::create([
+                    'assistantship_id' => $assist->id,
+                    'instructor_id' => $request->get('instructor_id'),
+                    'course' => $request->get('course'),
+                ]);
+            }
+        }
 
         Session::flash('alert-success','Assistantship updated successfully');
 

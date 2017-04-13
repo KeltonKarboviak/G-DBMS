@@ -42,5 +42,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AssistantshipStatusesTableSeeder::class);
         $this->call(TuitionWaiversTableSeeder::class);
         $this->call(AssistantshipsTableSeeder::class);
+        $this->call(GtaAssignmentsTableSeeder::class);
     }
 }

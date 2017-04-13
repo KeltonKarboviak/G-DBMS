@@ -48,6 +48,7 @@ Route::group(['middleware' => 'has_role:Director_Chair_Secretary'], function (){
 	Route::get('/assistantship', ['as' => 'assistantship.index_filter', 'uses' => 'AssistantshipController@index_filter']);
 	Route::get('/assistantship/positions', ['as' => 'position.index', 'uses' => 'PositionController@index']);
 	Route::get('/assistantship/status', ['as' => 'status.index', 'uses' => 'StatusController@index']);
+	Route::get('/assistantship/gta_assignments/',['as' => 'gta_assignment.index_filter', 'uses' => 'GtaAssignmentController@index_filter']);
 	Route::get('/waiver', 'TuitionWaiverController@index');
 });
 

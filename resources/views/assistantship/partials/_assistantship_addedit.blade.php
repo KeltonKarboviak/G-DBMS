@@ -190,6 +190,41 @@
 	</div>
 </div>
 
+<div class="panel panel-default hidden" id="gta_assignment_panel">
+	<div class="panel-heading">
+		<h2 class="panel-title">GTA Assignment</h2>
+	</div>
+	<div class="panel-body">
+		<div class="form-group{{ $errors->has('instructor_id') ? ' has-error' : '' }}">
+			{!! Form::label('instructor_id', 'Instructor:', ['class' => 'col-md-4 control-label']) !!}
+
+			<div class="col-md-6">
+				{!! Form::select('instructor_id', $instructors, $assignment == null ? null : $assignment->instructor_id, ['placeholder' => "Choose an Instructor", 'class' => 'form-control', 'disabled']) !!}
+
+				@if ($errors->has('instructor_id'))
+					<span class="help-block">
+						<strong>{{ $errors->first('instructor_id') }}</strong>
+					</span>
+				@endif
+			</div>
+		</div>
+
+		<div class="form-group{{ $errors->has('course') ? ' has-error' : '' }}">
+			{!! Form::label('course', 'Course:', ['class' => 'col-md-4 control-label']) !!}
+
+			<div class="col-md-6">
+				{!! Form::text('course', $assignment == null ? null : $assignment->course, ['class' => 'form-control', 'placeholder' => 'CS160, etc','disabled']) !!}
+
+				@if ($errors->has('course'))
+					<span class="help-block">
+						<strong>{{ $errors->first('course') }}</strong>
+					</span>
+				@endif
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="form-group">
 	<div class="col-md-6 col-md-offset-4">
 		<div class="btn-group">
@@ -211,6 +246,23 @@ $(function () {
 			$('#msg_' + $(this).val()).val()
 		);
 	});
+
+	$('select[name="position"]').change(function () {
+		var position = $(this).children('option:selected').html();
+		console.log(position);
+		var $gta_panel = $('div#gta_assignment_panel');
+		if (position === "GTA") {
+			$gta_panel.removeClass('hidden')
+				.find('select').attr('disabled', false)
+				.end()
+				.find('input').attr('disabled', false);
+		}
+		else
+			$gta_panel.addClass('hidden')
+				.find('select').attr('disabled', true)
+				.end()
+				.find('input').attr('disabled', true);
+	}).change();
 });
 </script>
 @endsection

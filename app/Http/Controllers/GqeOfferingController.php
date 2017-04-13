@@ -35,7 +35,7 @@ class GqeOfferingController extends Controller
     ];
 
     private $sort_options = [
-        'semester_id' => 'Semester',
+        'semester' => 'Semester',
         'gqe_section_id' => 'GQE Section',
     ];
 
@@ -49,7 +49,7 @@ class GqeOfferingController extends Controller
     }
 
     public function index(Request $request) {
-        $sort_by = $request->get('sort_by', 'semester_id');
+        $sort_by = $request->get('sort_by', 'semester');
 
         $offerings = GqeOffering::with('section', 'semester');
 
@@ -58,14 +58,19 @@ class GqeOfferingController extends Controller
         if ($request->has('gqe_section_id'))
             $offerings->whereIn('gqe_section_id', $request->get('gqe_section_id'));
 
-        $offerings = $offerings->orderBy($sort_by, 'desc')
-            ->get();
+        if($sort_by !== 'semester')
+            $offerings = $offerings->orderBy($sort_by, 'desc')->get();
+        else
+            $offerings = $offerings->get()->sortByDesc(function($off){
+                return (int)($off->semester->sort_num . sprintf("%02d",$off->gqe_section_id));
+            });
 
         return view('/gqe/offering/index', [
             'offerings' => $offerings,
             'sort_options' => $this->sort_options,
             'sort_by' => $sort_by,
-            'semesters' => Semester::orderBy('calendar_year', 'desc')->orderBy('id', 'desc')->get()->pluck('full_name', 'id'),
+            // 'semesters' => Semester::orderBy('calendar_year', 'desc')->orderBy('id', 'desc')->get()->pluck('full_name', 'id'),
+            'semesters' => Semester::get()->sortByDesc('sort_num')->pluck('full_name', 'id'),
             'semester_id' => $request->get('semester_id'),
             'sections' => GqeSection::orderBy('id', 'asc')->pluck('name', 'id'),
             'section_id' => $request->get('gqe_section_id')

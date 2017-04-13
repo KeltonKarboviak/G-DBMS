@@ -37,6 +37,25 @@
       				<li class="list-group-item">Tuition Waiver: {{ $assist->corresponding_waiver->credit_hours }} credits</li>
       			</ul>
       		@endif
+          @if($assist->gta_assignment != null)
+            <div class='panel panel-info'>
+              <div class='panel-heading'>GTA Assignment:</div>
+<!--               <div class='panel-body' style="padding-bottom">
+                <div class="row">
+                  <div class="col-md-6"> -->
+                    <ul class="list-group">
+                      <li class="list-group-item">Course: {{ $assist->gta_assignment->course }}</li>                
+                    <!-- </ul> -->
+                  <!-- </div> -->
+                  <!-- <div class="col-md-6"> -->
+                    <!-- <ul class="list-group"> -->
+                      <li class="list-group-item">Instructor: {{ $assist->gta_assignment->instructor->proper_name }}</li>
+                    </ul>
+                  <!-- </div> -->
+<!--                 </div>
+              </div> -->
+            </div>
+          @endif
         </div>
     </div>
 </div>
