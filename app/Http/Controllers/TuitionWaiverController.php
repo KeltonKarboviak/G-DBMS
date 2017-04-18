@@ -60,10 +60,14 @@ class TuitionWaiverController extends Controller
         if ($request->has('received'))
             $waivers->whereIn('received', $request->get('received'));
 
-        if ($sort_by === 'semester_id')
-            $waivers = $waivers->orderBy('date_received', 'desc')
-                ->orderBy('semester_id', 'desc')
-                ->get();
+        if ($sort_by === 'semester_id') {
+            $waivers = $waivers->get()
+                ->sortByDesc(function ($waiver) {
+                    return $waiver->semester->sort_num;
+                });
+        } else {
+            $waivers = $waivers->get();
+        }
 
         return view('/tuition_waiver/index', [
             'waivers' => $waivers,
