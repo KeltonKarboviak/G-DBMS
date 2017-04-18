@@ -153,13 +153,33 @@ class HomeController extends Controller
         ]);
     }
 
-    public function budget_update(Request $request, YearlyBudget $budget) {
-        $budget->update($request->only(['academic_year', 'budget']));
+    public function budget_store(Request $request) {
+        $this->validate($request, [
+            'academic_year' => 'required|regex:/\d{4}/|unique:yearly_budgets',
+        ]);
 
-        $request->session()->flash(
-            'alert-success', "Budget update for {$budget->full_name} was successful! New amount: {$request->budget}"
+        $budget = new YearlyBudget($request->all());
+        $budget->funding_source_id = 1;
+        $budget->save();
+
+        session()->flash(
+            'alert-success', "Successfully created a new budget for {$budget->full_name}! Amount: \${$budget->budget}"
         );
 
-        return redirect("/home/budget/{$budget->academic_year}");
+        return redirect()->route('budget.show', $budget);
+    }
+
+    public function budget_update(Request $request, YearlyBudget $budget) {
+        $this->validate($request, [
+            'budget' => 'required|numeric|min:0',
+        ]);
+
+        $budget->update($request->only(['academic_year', 'budget']));
+
+        session()->flash(
+            'alert-success', "Budget update for {$budget->full_name} was successful! New amount: \${$budget->budget}."
+        );
+
+        return redirect()->route('budget.show', $budget);
     }
 }

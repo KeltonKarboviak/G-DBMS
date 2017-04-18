@@ -100,8 +100,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <div class="col-md-6 col-md-offset-4">
-                                        {!! Form::submit('Update', ['class' => 'btn btn-success']) !!}
+                                    <div class="col-md-3 col-md-offset-4">
+                                        {!! Form::submit('Submit', ['class' => 'btn btn-success']) !!}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="btn-group btn-toggle pull-right">
+                                            <button type="button" data-action="update" class="btn btn-info active">Update</button>
+                                            <button type="button" data-action="add" class="btn btn-default">Add New</button>
+                                        </div>
                                     </div>
                                 </div>
                             @endif
@@ -127,7 +133,7 @@
 <script>
 $(function () {
     Highcharts.setOptions({
-     colors: ['#cc8033', '#cc3333', '#3333cc', '#33cc33',]
+        colors: ['#cc8033', '#cc3333', '#3333cc', '#33cc33',]
     });
 
     // Build the chart
@@ -199,7 +205,7 @@ $(function () {
         var year = $(this).val();
 
         // Change the form's action to direct to the correct budget academic_year
-        $("form").attr("action", "/home/budget/" + year);
+        $('form').attr('action', '/home/budget/' + year);
 
         // AJAX call to get pie chart data
         $.ajax({
@@ -268,6 +274,41 @@ $(function () {
             }
         });
     }).change();
+
+    $('.btn-toggle').click(function () {
+        var $btns = $(this).find('.btn');
+
+        $btns
+            .toggleClass('active')
+            .toggleClass('btn-info')
+            .toggleClass('btn-default');
+
+        var new_action = $btns.filter('.active').data('action');
+        var $input_academic_year = $('input[name=academic_year]');
+
+        if (new_action === 'update') {
+            // $('form').find('input[name=_method]').val('PATCH');
+            $input_academic_year.prop('disabled', true);
+            $('select[name=academic_year]').change();  //
+        } else {
+            // $('form').find('input[name=_method]').val('POST');
+            $input_academic_year.prop('disabled', false);
+        }
+    })
+
+    $('form').submit(function () {
+        var action = $('.btn-toggle').find('.active').data('action');
+
+        if (action === 'update') {
+            $(this).find('input[name=_method]').val('PATCH');
+            $(this).attr('action', '/home/budget/' + $('input[name=academic_year]').val());
+        } else {  // user wants to Add a New Budget
+            $(this).find('input[name=_method]').val('POST');
+            $(this).attr('action', '/home/budget');
+        }
+
+        return true;  // Let typical form submit do its work
+    });
 
 });
 

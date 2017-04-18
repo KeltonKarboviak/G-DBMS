@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth', 'first_login']], function () {
 		Route::get('/home', 'HomeController@index');
 		Route::get('/home/chart', 'HomeController@chart');
 		Route::get('/home/drilldown', 'HomeController@drilldown');
-		Route::get('/home/budget/{budget}', 'HomeController@budget_show');
+		Route::get('/home/budget/{budget}', ['as' => 'budget.show', 'uses' => 'HomeController@budget_show']);
 
 		Route::get('/student', ['as' => 'student.index_filter', 'uses' => 'StudentController@index_filter']);
 		Route::get('/prospective_student', ['as' => 'prospective_student.index_filter', 'uses' => 'ProspectiveStudentController@index_filter']);
@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth', 'first_login']], function () {
 		Route::get('/user', 'UserController@index');
 		Route::delete('/user/{user}', ['as' => 'user.delete', 'uses' => 'UserController@delete']);
 
+		Route::post('/home/budget', ['as' => 'budget.store', 'uses' => 'HomeController@budget_store']);
 		Route::patch('/home/budget/{budget}', ['as' => 'budget.update', 'uses' => 'HomeController@budget_update']);
 
 		Route::delete('/student/{student}', ['as' => 'student.delete', 'uses' => 'StudentController@delete']);
