@@ -22,9 +22,8 @@ class GceController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
+    public function __construct() {
+
     }
 
     private $rules = [
@@ -33,25 +32,8 @@ class GceController extends Controller
 
     private $messages  = [];
 
-    private function checkboxConvert($onoff)
-    {
-        if($onoff == "on")
-            return true;
-        else
-            return false;
-    }
-
-    private function dateConvert($mmddyyyy)
-    {
-        $firstSlash = strpos($mmddyyyy,'/');
-        $month = substr($mmddyyyy,0,$firstSlash);
-        $secondSlash = strpos($mmddyyyy,'/',$firstSlash+1);
-        $day = substr($mmddyyyy, $firstSlash + 1, $secondSlash - $firstSlash - 1);
-        $year = substr($mmddyyyy, $secondSlash+1);
-
-        $output = $year . '-' . $month . '-' . $day;
-        // dd($output);
-        return $output;
+    private function checkboxConvert($onoff) {
+        return $onoff === 'on';
     }
 
     /**
@@ -62,7 +44,6 @@ class GceController extends Controller
      */
     public function store()
     {
-        // dd(Student::join('student_programs','students.id','=','student_programs.student_id')->join('programs','student_programs.program_id','=','programs.id')->where('programs.needs_gce',true)->distinct()->get(['students.*'])->lists('full_name','id'));
         $students = Student::orderBy('first_name')
             ->join('student_programs','students.id','=','student_programs.student_id')
             ->join('programs','student_programs.program_id','=','programs.id')
@@ -85,16 +66,13 @@ class GceController extends Controller
 
     public function store_submit(Request $request, GceResult $gce)
     {
-        // dd(date('Y-m-d',strtotime(str_replace('/','-',$request->get('date')))));
         $request->merge([
             "passed" => $this->checkboxConvert($request->get("passed","off")),
-            // "date" => $this->dateConvert($request->get('date')),
         ]);
         $this->rules['student_id'] = 'required';
 
         if($request->get('passed'))
         {
-            // dd('passed');
             $this->rules['student_id'] = 'unique:gce_results,student_id,NULL,id,passed,1';
             $this->messages['student_id.unique'] = 'The student has already passed the GCE.';
         }
@@ -126,15 +104,12 @@ class GceController extends Controller
 
     public function update_submit(Request $request, GceResult $gce)
     {
-        // dd(date('Y-m-d',strtotime(str_replace('/','-',$request->get('date')))));
         $request->merge([
             "passed" => $this->checkboxConvert($request->get("passed","off")),
-            // "date" => $this->dateConvert($request->get('date')),
         ]);
 
         if($request->get('passed'))
         {
-            // dd('passed');
             $this->rules['student_id'] = 'unique:gce_results,student_id,NULL,id,passed,1';
             $this->messages['student_id.unique'] = 'The student has already passed the GCE.';
         }

@@ -16,18 +16,6 @@ $undGreen: #009a44;
 $navbar_text_color: #e6e6e6;
 $navbar_text_color_hover: #fff;
 
-.navbar {
-    > .container {
-        .navbar-brand {
-            margin-left: -30px;
-
-            @media screen and (max-width: 767px) {
-                margin-left: -15px;
-            }
-        }
-    }
-}
-
 .navbar-und {
     background-color: $undGreen;
     border-color: #008037;
@@ -36,7 +24,6 @@ $navbar_text_color_hover: #fff;
         border-color: #008037;
 
         &:focus, &:hover {
-            // background-color: #333;
             background-color: #00b34d;
         }
 
@@ -47,15 +34,14 @@ $navbar_text_color_hover: #fff;
 
     .navbar-brand {
         color: $navbar_text_color;
-        padding: 4px 15px 0;
 
         &:focus, &:hover {
             background-color: transparent;
             color: $navbar_text_color_hover;
         }
 
-        > img {
-            width: 200px;
+        > .fa {
+            margin-left: 6px;
         }
     }
 

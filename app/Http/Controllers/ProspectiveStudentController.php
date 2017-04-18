@@ -10,7 +10,6 @@ use Session;
 use URL;
 
 use App\ProspectiveStudent;
-// use App\Semester;
 use App\GreScore;
 use App\IeltsScore;
 use App\ToeflScore;
@@ -52,33 +51,16 @@ class ProspectiveStudentController extends Controller
         'first_name' => 'First name',
         'ranking' => 'Ranking',
         'id' => 'EMPLID',
-      ];
+    ];
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    public function __construct() {
 
-    public function rank_compare(ProspectiveStudent $s1, ProspectiveStudent $s2)
-    {
-        return $s2->ranking - $s1->ranking;
     }
-
-    /**
-     * Show the list of students.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function index()
-    // {
-    //     return view('/prospective_student/index', [
-    //         'students' => Student::orderBy('last_name')->get()
-    //     ]);
-    // }
 
     public function promote(ProspectiveStudent $student)
     {
@@ -144,11 +126,10 @@ class ProspectiveStudentController extends Controller
 
 
         if($request->has('first_name'))
-            $query->where('first_name',$request->get('first_name'));
+            $query->where('first_name', 'like', '%'.$request->get('first_name').'%');
         if($request->has('last_name'))
-            $query->where('last_name',$request->get('last_name'));
-        // if($request->has('is_current'))
-        
+            $query->where('last_name', 'like', '%'.$request->get('last_name').'%');
+
         if($request->has('faculty_supported'))
         {
             if($request->get('faculty_supported') === 'Yes')
@@ -156,7 +137,7 @@ class ProspectiveStudentController extends Controller
             else
                 $query->where('faculty_supported',false);
         }
-        
+
         $students = $query->distinct()->get(['prospective_students.*']);
         $showRank = false;
         if($sort_out_of_db)
@@ -168,28 +149,13 @@ class ProspectiveStudentController extends Controller
                 });
                 $showRank = true;
             }
-            // else if($sort_by === 'semester_started')
-            // {
-            //     $students = $students->sortByDesc(function($stud){
-            //         $last_start = -1;
-            //         foreach ($stud->programs as $sp) {
-            //             if($last_start == -1)
-            //                 $last_start = $sp->semester_started->sort_num;
-            //             else if($sp->semester_started->sort_num > $last_start)
-            //                 $last_start = $sp->semester_started->sort_num;
-            //         }
-            //         return $last_start;
-            //     });
-            // }
         }
 
         return view('/prospective_student/index', [
             'students' => $students,
-            // 'semesters' => Semester::all()->lists("full_name","id"),
             'yesNo' => ['Yes' => 'Yes', 'No' => 'No'],
             'first_name' => $request->get('first_name'),
             'last_name' => $request->get('last_name'),
-            // 'semester_started_id' => $request->get('semester_started_id'),
             'faculty_supported' => $request->get('faculty_supported'),
             'sort_options' => $this->sort_options,
             'sort_by' => $sort_by,
@@ -205,30 +171,22 @@ class ProspectiveStudentController extends Controller
 
     public function store()
     {
-    	// dd("hi");
-    	// session()->forget('previousURL');
     	return view('/prospective_student/store', [
     		'student' => null,
-    		// 'semesters' => Semester::all()->lists("full_name","id")
     	]);
     }
 
-    private function checkboxConvert($onoff)
-    {
-        if($onoff == "on")
-            return true;
-        else
-            return false;
+    private function checkboxConvert($onoff) {
+        return $onoff === 'on';
     }
 
     public function store_submit(Request $request, ProspectiveStudent $student)
     {
-    	// global $rules, $messages;
     	$request->merge([
             "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
 
-    	$this->validate($request,$this->rules,$this->messages);     
+    	$this->validate($request,$this->rules,$this->messages);
 
         $student->create($request->except(['gre_score','toefl_score','ielts_score']));
 
@@ -241,8 +199,6 @@ class ProspectiveStudentController extends Controller
         if($request->has('toefl_score'))
             $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
 
-
-
     	return Redirect::to('/prospective_student');
     }
 
@@ -251,19 +207,15 @@ class ProspectiveStudentController extends Controller
         $student->load('gre','toefl','ielts');
     	return view('/prospective_student/update', [
     		'student' => $student,
-    		// 'semesters' => Semester::all()->lists("full_name","id")
     	]);
     }
 
     public function update_submit(Request $request, ProspectiveStudent $student)
     {
-    	// global $rules, $messages;
     	$this->rules['id'] = 'required|size:7|regex:/\d{7}/|unique:students,id,'.$student->id;
     	$request->merge([
             "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
-
-    	// dd($request->all());
 
     	$this->validate($request,$this->rules,$this->messages);
 

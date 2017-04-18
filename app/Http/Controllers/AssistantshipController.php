@@ -24,15 +24,13 @@ use App\GtaAssignment;
 
 class AssistantshipController extends Controller
 {
-
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
+    public function __construct() {
+
     }
 
     private $rules = [
@@ -49,6 +47,7 @@ class AssistantshipController extends Controller
         'instructor_id' => 'required_with:course',
         'funding_source_id' => 'required',
     ];
+
     /**
      * Display a listing of the resource.
      *
@@ -65,50 +64,22 @@ class AssistantshipController extends Controller
             $query->orderBy($sort_by);
 
         if($request->has('first_name'))
-            $query->where('first_name',$request->get('first_name'));
-        if($request->has('last_name'))
-            $query->where('last_name',$request->get('last_name'));
+            $query->where('first_name', 'like', '%'.$request->get('first_name').'%');
 
-        if ($request->has('program_id')) 
-        {
-            $ids = $request->get('program_id');
-            $query->where(function($query) use ($ids)
-            {
-                foreach ($ids as $id) {
-                    $query->orWhere('program_id',$id);
-                }
-            }); 
-        }
-        if ($request->has('semester_id')) 
-        {
-            $ids = $request->get('semester_id');
-            $query->where(function($query) use ($ids)
-            {
-                foreach ($ids as $id) {
-                    $query->orWhere('semester_id',$id);
-                }
-            }); 
-        }
-        if ($request->has('funding_source_id')) 
-        {
-            $ids = $request->get('funding_source_id');
-            $query->where(function($query) use ($ids)
-            {
-                foreach ($ids as $id) {
-                    $query->orWhere('funding_source_id',$id);
-                }
-            }); 
-        }
-        if ($request->has('current_status_id')) 
-        {
-            $ids = $request->get('current_status_id');
-            $query->where(function($query) use ($ids)
-            {
-                foreach ($ids as $id) {
-                    $query->orWhere('current_status_id',$id);
-                }
-            }); 
-        }
+        if($request->has('last_name'))
+            $query->where('last_name', 'like', '%'.$request->get('last_name').'%');
+
+        if ($request->has('program_id'))
+            $query->whereIn('program_id', $request->get('program_id'));
+
+        if ($request->has('semester_id'))
+            $query->whereIn('semester_id', $request->get('semester_id'));
+
+        if ($request->has('funding_source_id'))
+            $query->whereIn('funding_source_id', $request->get('funding_source_id'));
+
+        if ($request->has('current_status_id'))
+            $query->whereIn('current_status_id', $request->get('current_status_id'));
 
         $assists = $query->distinct()->get(['assistantships.*']);
 
@@ -121,7 +92,7 @@ class AssistantshipController extends Controller
 
         return view('/assistantship/index', [
             'assists' => $assists,
-            'programs' => Program::lists("name","id"), 
+            'programs' => Program::lists("name","id"),
             'semesters' => Semester::all()->lists("full_name","id"),
             'statuses' => AssistantshipStatus::all()->lists('description','id'),
             'funding_sources' => FundingSource::all()->lists('name','id'),
@@ -145,11 +116,18 @@ class AssistantshipController extends Controller
      */
     public function store(Request $request)
     {
-        $students = Student::join('student_programs','student_programs.student_id','=','students.id')->where('is_current',true)->distinct()->get(['students.*'])->lists('full_name','id');
+        $students = Student::join('student_programs','student_programs.student_id','=','students.id')
+            ->where('is_current',true)
+            ->distinct()
+            ->get(['students.*'])
+            ->lists('full_name','id');
+
         $assist_amounts = [];
         foreach($students as $id => $name)
         {
-            $max_semesters = Program::join('student_programs','student_programs.program_id','=','programs.id')->where('student_id',$id)->max('assistantship_semesters_allowed');
+            $max_semesters = Program::join('student_programs','student_programs.program_id','=','programs.id')
+                ->where('student_id',$id)
+                ->max('assistantship_semesters_allowed');
             $taken_semesters = Assistantship::where('student_id',$id)->count();
             $assist_amounts[$id] = $taken_semesters . " semester(s) already awarded.<br>" . $max_semesters . " semester(s) max.";
         }
@@ -157,7 +135,6 @@ class AssistantshipController extends Controller
         return view('assistantship/store', [
             'assist' => null,
             'assist_amounts' => $assist_amounts,
-            // 'semesters' => Semester::orderBy('calendar_year','desc')->orderBy('id','desc')->get()->lists('full_name','id'),
             'semester_names' => SemesterName::all()->pluck('name','id'),
             'positions' => Position::all()->lists('name','name'),
             'students' => $students,
@@ -220,7 +197,6 @@ class AssistantshipController extends Controller
         return view('assistantship/update', [
             'assist' => $assist,
             'assist_amounts' => [],
-            // 'semesters' => Semester::orderBy('calendar_year','desc')->orderBy('id','desc')->get()->lists('full_name','id'),
             'semester_names' => SemesterName::all()->pluck('name','id'),
             'positions' => Position::all()->lists('name','name'),
             'students' => Student::join('student_programs','student_programs.student_id','=','students.id')->where('is_current',true)->distinct()->get(['students.*'])->lists('full_name','id'),
@@ -235,14 +211,13 @@ class AssistantshipController extends Controller
 
     public function update_submit(Request $request, Assistantship $assist)
     {
-        // dd($request->has('defer_date'),$request->get('defer_date'));
         if($request->has('stipend') && $request->get('stipend') > 0)
         {
             $this->rules['funding_source_id'] = 'required|exists:funding_sources,id';
         }
 
         $this->validate($request,$this->rules);
-        
+
         $except = ['semester_name_id', 'semester_year','instructor_id','course'];
         $save = false;
         foreach(['defer_date','date_responded','date_offered','corresponding_tuition_waiver_id'] as $attr)
@@ -267,7 +242,6 @@ class AssistantshipController extends Controller
             'academic_year' => Semester::getAcademicYear($request->get('semester_name_id'),$request->get('semester_year')),
         ])->id;
 
-        // dd($assist);
         if($assist->position === 'GTA' && $request->get('position') !== $assist->position) // if was GTA but now not
         {
             //delete corresponding gta_assignment
@@ -281,7 +255,6 @@ class AssistantshipController extends Controller
         {
             if(GtaAssignment::where('assistantship_id',$assist->id)->exists())
             {
-                // dd('GTA',$request->get('course'));
                 $gta = GtaAssignment::firstOrCreate([
                     'assistantship_id' => $assist->id,
                 ]);

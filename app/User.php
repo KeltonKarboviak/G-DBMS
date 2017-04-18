@@ -38,10 +38,20 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $appends = ['full_name', 'proper_name'];
+
+    public function getFullNameAttribute() {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getProperNameAttribute() {
+        return "{$this->last_name}, {$this->first_name}";
+    }
+
     /**
      *
      */
     public function role() {
-        return $this->belongsTo(UserRole::class, 'role_id');
+        return $this->hasOne(UserRole::class, 'id', 'role_id');
     }
 }

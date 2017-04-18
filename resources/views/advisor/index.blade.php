@@ -1,23 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+<?php $allowChanges = Auth::user()->role->name == 'Director'; ?>
 <div class="container">
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
             <div class="panel-group">
 
-            	<?php $count = 0; ?>
-
-            	<?php $allowChanges = Auth::user()->role->name == 'Director'; ?>
-
             	<!-- Start data for each advisor -->
             	@foreach ($advisors as $advisor)
-            		<?php $count = $count+1; ?>
-
             		<div class="panel panel-primary">
 				      	<div class="panel-heading clearfix">
 				      		<div class="panel-title pull-left" style="padding-top: 4px;">
-				      			<a data-toggle="collapse" href="#collapse{{ $count }}">{{ $advisor->last_name . ", " . $advisor->first_name }}</a>
+				      			<a data-toggle="collapse" href="#collapse_outer{{ $advisor->id }}">{{ $advisor->last_name . ", " . $advisor->first_name }}</a>
 				      		</div>
 				      		{!! Form::open(['method' => 'DELETE', 'route' => ['advisor.delete', $advisor], 'class' => 'form-horizontal', 'onsubmit' => 'return ConfirmDelete()']) !!}
 					      		<div class="btn-group pull-right">
@@ -29,17 +24,11 @@
 					      		</div>
 					      	{!! Form::close() !!}
 			      		</div>
-				      	<div id="collapse{{ $count }}" class="panel-collapse collapse">
-				      		<div class="panel-body">
-					      		<div class="row">
-					      			<!-- <div class="col-md-6"> -->
-							        	<ul class="list-group">
-							        		<li class="list-group-item">EMPLID: {{ $advisor->id }}</li>
-							        		<li class="list-group-item">Email: <a href="mailto:{{ $advisor->email }}">{{ $advisor->email }} <span class="glyphicon glyphicon-envelope"></span></a></li>
-						        		</ul>
-						        	<!-- </div> -->
-						        </div>
-					        </div>
+				      	<div id="collapse_outer{{ $advisor->id }}" class="panel-collapse collapse">
+				        	<ul class="list-group">
+				        		<li class="list-group-item">EMPLID: {{ $advisor->id }}</li>
+				        		<li class="list-group-item">Email: <a href="mailto:{{ $advisor->email }}">{{ $advisor->email }} <span class="glyphicon glyphicon-envelope"></span></a></li>
+			        		</ul>
 					    </div>
 				    </div>
             	@endforeach

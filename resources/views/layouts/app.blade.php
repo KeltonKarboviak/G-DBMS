@@ -47,8 +47,8 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/home') }}">
-                    <img src="{{ asset('storage/csci_logo.png') }}" alt="UND Computer Science - GDBMS" class="img-responsive" />
-                    <!-- G-DBMS -->
+                    {{-- <img src="{{ asset('storage/csci_logo.png') }}" alt="UND Computer Science - GDBMS" class="img-responsive" /> --}}
+                     G-DBMS <i class="fa fa-database"></i>
                 </a>
             </div>
 
@@ -59,6 +59,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li><a href="{{ url('/home') }}">Budget</a></li>
+
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -140,11 +141,11 @@
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->first_name . " " . Auth::user()->last_name }} <span class="caret"></span>
+                                {{ Auth::user()->full_name }} <span class="caret"></span>
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#"><i class="fa fa-btn fa-vcard"></i>Edit Profile</a></li>
+                                <li><a href="{{ route('user.update', Auth::user()) }}"><i class="fa fa-btn fa-vcard"></i>Edit Profile</a></li>
                                 @if ($role == 'Director')
                                     <li><a href="{{ url('/register') }}"><i class="fa fa-btn fa-user-plus"></i>Register New User</a></li>
                                 @endif

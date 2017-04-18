@@ -42,164 +42,95 @@ class StudentController extends Controller
         'ielts_score.numeric' => 'IELTS score must be a number between 0 and 9.5',
 	];
 
-    private $sort_options = ['last_name' => 'Last name',
+    private $sort_options = [
+        'last_name' => 'Last name',
         'first_name' => 'First name',
-        /*'ranking' => 'Ranking',*/
         'id' => 'EMPLID',
         'has_committee' => 'Has committee',
         'has_program_study' => 'Has program of study',
         'semester_started' => 'Semester started',
         'program_id' => 'Program',
-      ];
+    ];
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    public function __construct() {
 
-    public function rank_compare(Student $s1, Student $s2)
-    {
-        return $s2->ranking - $s1->ranking;
     }
-
-    /**
-     * Show the list of students.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function index()
-    // {
-    //     return view('/student/index', [
-    //         'students' => Student::orderBy('last_name')->get()
-    //     ]);
-    // }
 
     public function index_filter(Request $request)
     {
         $sort_by = $request->get('sort_by','last_name');
-        $sort_out_of_db = in_array($sort_by, ['semester_started',/*'ranking'*/]);
+        $sort_out_of_db = in_array($sort_by, ['semester_started']);
 
-        $query = Student::with('gce_results','gqe_results',/*'gre','ielts','toefl',*/'programs')->join('student_programs','student_programs.student_id','=','students.id','left outer');
+        $query = Student::with('gce_results','gqe_results','programs')->join('student_programs','student_programs.student_id','=','students.id','left outer');
         if(!$sort_out_of_db) // ie sort by a db field
             $query->orderBy($sort_by);
 
 
         if($request->has('first_name'))
-            $query->where('first_name',$request->get('first_name'));
+            $query->where('first_name', 'like', '%'.$request->get('first_name').'%');
         if($request->has('last_name'))
-            $query->where('last_name',$request->get('last_name'));
-        // if($request->has('is_current'))
+            $query->where('last_name', 'like', '%'.$request->get('last_name').'%');
+
         if($request->all() == null)
         {
-            // $query->where('is_current',true);
             $query->where(function($query)
             {
                 $query->orWhere('is_current',true)->orWhere(function($query)
                 {
                     $query->whereNull('is_current');
                 });
-            }); 
+            });
         }
         else if($request->has('is_current')) //the default is for current students only
         {
             if($request->get('is_current') === 'Yes')
             {
-                // $query->where('is_current',true);
                 $query->where(function($query)
                 {
                     $query->orWhere('is_current',true)->orWhere(function($query)
                     {
                         $query->whereNull('is_current');
                     });
-                }); 
+                });
             }
             else
                 $query->where('is_current',false);
         }
-        if($request->has('has_committee'))
-        {
-            if($request->get('has_committee') === 'Yes')
-                $query->where('has_committee',true);
-            else
-                $query->where('has_committee',false);
-        }
-        if($request->has('has_program_study'))
-        {
-            if($request->get('has_program_study') === 'Yes')
-                $query->where('has_program_study',true);
-            else
-                $query->where('has_program_study',false);
-        }
-        if($request->has('is_graduated'))
-        {
-            if($request->get('is_graduated') === 'Yes')
-                $query->where('is_graduated',true);
-            else
-                $query->where('is_graduated',false);
-        }
-        if($request->has('faculty_supported'))
-        {
-            if($request->get('faculty_supported') === 'Yes')
-                $query->where('faculty_supported',true);
-            else
-                $query->where('faculty_supported',false);
-        }
-        if ($request->has('program_id')) 
-        {
-            $ids = $request->get('program_id');
-            $query->where(function($query) use ($ids)
-            {
-                foreach ($ids as $id) {
-                    $query->orWhere('program_id',$id);
-                }
-            }); 
-        }
-        if ($request->has('advisor_id')) 
-        {
-            $ids = $request->get('advisor_id');
-            $query->where(function($query) use ($ids)
-            {
-                foreach ($ids as $id) {
-                    $query->orWhere('advisor_id',$id);
-                }
-            }); 
-        }
-        if ($request->has('semester_started_id')) 
-        {
-            $ids = $request->get('semester_started_id');
-            $query->where(function($query) use ($ids)
-            {
-                foreach ($ids as $id) {
-                    $query->orWhere('semester_started_id',$id);
-                }
-            }); 
-        }
-        if ($request->has('semester_graduated_id')) 
-        {
-            $ids = $request->get('semester_graduated_id');
-            $query->where(function($query) use ($ids)
-            {
-                foreach ($ids as $id) {
-                    $query->orWhere('semester_graduated_id',$id);
-                }
-            }); 
-        }
+
+        if ($request->has('has_committee'))
+            $query->where('has_committee', $request->get('has_committee') === 'Yes');
+
+        if ($request->has('has_program_study'))
+            $query->where('has_program_study', $request->get('has_program_study') === 'Yes');
+
+        if ($request->has('is_graduated'))
+            $query->where('is_graduated', $request->get('is_graduated') === 'Yes');
+
+        if ($request->has('faculty_supported'))
+            $query->where('faculty_supported', $request->get('faculty_supported') === 'Yes');
+
+        if ($request->has('program_id'))
+            $query->whereIn('program_id', $request->get('program_id'));
+
+        if ($request->has('advisor_id'))
+            $query->whereIn('advisor_id', $request->get('advisor_id'));
+
+        if ($request->has('semester_started_id'))
+            $query->whereIn('semester_started_id', $request->get('semester_started_id'));
+
+        if ($request->has('semester_graduated_id'))
+            $query->whereIn('semester_graduated_id', $request->get('semester_graduated_id'));
+
         $students = $query->distinct()->get(['students.*']);
         $showRank = false;
         if($sort_out_of_db)
         {
-            /*if($sort_by === 'ranking')
-            {
-                $students = $students->sortByDesc(function($stud){
-                    return $stud->ranking;
-                });
-                $showRank = true;
-            }
-            else */if($sort_by === 'semester_started')
+            if($sort_by === 'semester_started')
             {
                 $students = $students->sortByDesc(function($stud){
                     $last_start = -1;
@@ -217,7 +148,7 @@ class StudentController extends Controller
         return view('/student/index', [
             'students' => $students,
             'advisors' => Advisor::all()->lists("full_name","id"),
-            'programs' => Program::lists("name","id"), 
+            'programs' => Program::lists("name","id"),
             'semesters' => Semester::all()->lists("full_name","id"),
             'yesNo' => ['Yes' => 'Yes', 'No' => 'No'],
             'first_name' => $request->get('first_name'),
@@ -245,52 +176,33 @@ class StudentController extends Controller
 
     public function store()
     {
-    	// dd("hi");
-    	// session()->forget('previousURL');
     	return view('/student/store', [
     		'student' => null,
     		'advisors' => Advisor::all()->lists("full_name","id"),
-    		'programs' => Program::lists("name","id"), 
+    		'programs' => Program::lists("name","id"),
     		'semesters' => Semester::all()->lists("full_name","id")
     	]);
     }
 
-    private function checkboxConvert($onoff)
-    {
-        if($onoff == "on")
-            return true;
-        else
-            return false;
+    private function checkboxConvert($onoff) {
+        return $onoff === 'on';
     }
 
     public function store_submit(Request $request, Student $student)
     {
-    	// global $rules, $messages;
     	$request->merge([
             "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
 
-    	$this->validate($request,$this->rules,$this->messages);     
+    	$this->validate($request,$this->rules,$this->messages);
 
         $student->create($request->except(['gre_score','toefl_score','ielts_score']));
-
-        // if($request->has('gre_score'))
-        //     $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
-
-        // if($request->has('ielts_score'))
-        //     $ielts = IeltsScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('ielts_score')]);
-
-        // if($request->has('toefl_score'))
-        //     $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
-
-
 
     	return Redirect::to('/student');
     }
 
     public function update(Student $student)
     {
-        // $student->load('gre','toefl','ielts');
     	return view('/student/update', [
     		'student' => $student,
     		'advisors' => Advisor::all()->lists("full_name","id"),
@@ -301,27 +213,14 @@ class StudentController extends Controller
 
     public function update_submit(Request $request, Student $student)
     {
-    	// global $rules, $messages;
     	$this->rules['id'] = 'required|size:7|regex:/\d{7}/|unique:students,id,'.$student->id;
     	$request->merge([
             "faculty_supported" => $this->checkboxConvert($request->get("faculty_supported","off")),
     	]);
 
-    	// dd($request->all());
-
     	$this->validate($request,$this->rules,$this->messages);
 
     	$student->update($request->except(['gre_score','toefl_score','ielts_score']));
-
-
-        // if($request->has('gre_score'))
-        //     $gre = GreScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('gre_score')]);
-
-        // if($request->has('ielts_score'))
-        //     $ielts = IeltsScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('ielts_score')]);
-
-        // if($request->has('toefl_score'))
-        //     $toefl = ToeflScore::updateOrCreate(['student_id' => $request->get('id'), 'score' => $request->get('toefl_score')]);
 
     	return Redirect::to('/student');
     }

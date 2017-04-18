@@ -15,7 +15,6 @@ class GqeOfferingController extends Controller
 {
     private $rules = [
         'gqe_section_id' => 'required|exists:gqe_sections,id',
-        // 'semester_id' => 'required|exists:semesters,id',
         'semester_name_id' => 'required',
         'semester_year' => 'required',
         'date' => 'required|date',
@@ -25,7 +24,6 @@ class GqeOfferingController extends Controller
 
     private $messages = [
         'gqe_section_id.required' => 'The GQE Section field is required.',
-        // 'semester_id.required' => 'The Semester field is required.',
         'cutoff_ms.required_with' => 'The MS Cutoff Score field is required when PhD Cutoff Score is present.',
         'cutoff_ms.numeric' => 'The MS Cutoff Score must be a number.',
         'cutoff_ms.min' => 'The MS Cutoff Score must be at least 0',
@@ -45,7 +43,7 @@ class GqeOfferingController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth');
+
     }
 
     public function index(Request $request) {
@@ -69,7 +67,6 @@ class GqeOfferingController extends Controller
             'offerings' => $offerings,
             'sort_options' => $this->sort_options,
             'sort_by' => $sort_by,
-            // 'semesters' => Semester::orderBy('calendar_year', 'desc')->orderBy('id', 'desc')->get()->pluck('full_name', 'id'),
             'semesters' => Semester::get()->sortByDesc('sort_num')->pluck('full_name', 'id'),
             'semester_id' => $request->get('semester_id'),
             'sections' => GqeSection::orderBy('id', 'asc')->pluck('name', 'id'),

@@ -26,23 +26,20 @@ class SemesterController extends Controller
         'regex' => 'Years must be 4 digits.',
     ];
 
-    // private $names = ["Fall"=>"Fall","Spring"=>"Spring","Summer1"=>"Summer1","Summer2"=>"Summer2"];
-
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
+    public function __construct() {
+
     }
 
     public function store($returnroute)
     {
         return view('/semester/store', [
             'semester' => null,
-            'names' => SemesterName::all()->lists('name','id');
+            'names' => SemesterName::all()->lists('name','id'),
             'returnroute' => $returnroute,
         ]);
     }

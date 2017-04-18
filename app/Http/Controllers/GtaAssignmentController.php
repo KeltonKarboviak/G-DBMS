@@ -34,7 +34,7 @@ class GtaAssignmentController extends Controller
         if($request->has('last_name'))
             $query->where('last_name',$request->get('last_name'));
 
-        if ($request->has('semester_id')) 
+        if ($request->has('semester_id'))
         {
             $ids = $request->get('semester_id');
             $query->where(function($query) use ($ids)
@@ -42,7 +42,7 @@ class GtaAssignmentController extends Controller
                 foreach ($ids as $id) {
                     $query->orWhere('semester_id',$id);
                 }
-            }); 
+            });
         }
         if($request->has('instructor_id'))
         	$query->whereIn($request->get('instructor_id'));
@@ -55,8 +55,6 @@ class GtaAssignmentController extends Controller
         		return $gta->assistantship->semester->sort_num;
         	});
         }
-
-
 
         return view('/assistantship/gta_assignments/index', [
             'gtas' => $gtas,

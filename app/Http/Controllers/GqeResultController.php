@@ -34,7 +34,7 @@ class GqeResultController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth');
+
     }
 
     public function index(Request $request) {
@@ -71,7 +71,7 @@ class GqeResultController extends Controller
 
             $aggregates = Student::selectRaw(
                 'gqe_offerings.gqe_section_id,
-                (SELECT COUNT(*) 
+                (SELECT COUNT(*)
                     FROM gqe_results as r
                     JOIN gqe_offerings as ino ON r.offer_id = ino.id
                     JOIN students as s ON s.id = r.student_id

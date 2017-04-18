@@ -18,9 +18,8 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
+    public function __construct() {
+
     }
 
     /**
@@ -28,8 +27,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         return view('/home', [
             'budget' => YearlyBudget::find( (int)date('m') >= 8 ? (int)date('Y') :  (int)date('Y') - 1 ),
             'years' => YearlyBudget::all()->lists('full_name', 'academic_year'),
@@ -100,10 +98,11 @@ class HomeController extends Controller
             return Response::json(['success' => false]);
 
         if ($name === 'assistantships' || $name === 'pending_assistantships') {
-            if($name === 'assistantships')
+            if ($name === 'assistantships')
                 $options = ['Accepted','Terminated'];
-            else if($name == 'pending_assistantships')
+            else if ($name == 'pending_assistantships')
                 $options = ['Pending'];
+
             $data = Assistantship
                 ::selectRaw('concat(students.first_name, " ", students.last_name) as full_name, sum(assistantships.stipend) as sum')
                 ->join('semesters', 'assistantships.semester_id', '=', 'semesters.id')
@@ -111,7 +110,7 @@ class HomeController extends Controller
                 ->join('assistantship_statuses','assistantships.current_status_id','=','assistantship_statuses.id')
                 ->where('semesters.academic_year', $year)
                 ->where('assistantships.funding_source_id', 1)
-                ->whereIn('assistantship_statuses.description',$options)
+                ->whereIn('assistantship_statuses.description', $options)
                 ->groupBy('assistantships.student_id')
                 ->lists('sum', 'full_name');
         } else if ($name === 'waivers') {
@@ -141,9 +140,6 @@ class HomeController extends Controller
     }
 
     public function budget_show(Request $request, YearlyBudget $budget) {
-        // $year = $request->input('year');
-        // $budget = YearlyBudget::find($year);
-
         if ($request->ajax()) {
             return Response::json([
                 'success' => $budget != null,
@@ -158,7 +154,6 @@ class HomeController extends Controller
     }
 
     public function budget_update(Request $request, YearlyBudget $budget) {
-
         $budget->update($request->only(['academic_year', 'budget']));
 
         $request->session()->flash(

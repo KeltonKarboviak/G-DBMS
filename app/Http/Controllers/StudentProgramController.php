@@ -24,9 +24,7 @@ class StudentProgramController extends Controller
         'student_id' => 'required|exists:students,id',
         'advisor_id' => 'required|exists:advisors,id',
         'program_id' => 'required|exists:programs,id',
-        // 'semester_graduated_id' => 'required_if:is_graduated,on|exists:semesters,id',
         'semester_graduated_name_id' => 'required_if:is_graduated,on',
-        // 'semester_started_id' => 'required|exists:semesters,id',
         'semester_started_name_id' => 'required',
         'semester_started_year' => 'required',
         'semester_graduated_name_id' => 'required_with:semester_graduated_year|required_if:is_graduated,on',
@@ -35,7 +33,7 @@ class StudentProgramController extends Controller
     ];
 
     private $messages = [
-        // 'semester_graduated_id.required_if' => 'You must supply the semester the student graduated.',
+
     ];
 
     /**
@@ -43,9 +41,8 @@ class StudentProgramController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
+    public function __construct() {
+
     }
 
 
@@ -55,22 +52,14 @@ class StudentProgramController extends Controller
         return Redirect::to(URL::previous());
     }
 
-    private function checkboxConvert($onoff)
-    {
-        if($onoff == "on")
-            return true;
-        else
-            return false;
+    private function checkboxConvert($onoff) {
+        return $onoff === 'on';
     }
 
     public function store($student_id)
     {
-        // dd("hi");
-        // session()->forget('previousURL');
-        // $stud_prog = new StudentProgram();
-        // $stud_prog->student_id = $student->id;
         $student = Student::where('id',$student_id)->get()[0];
-        // dd($student);
+
         return view('/student_program/store', [
             'student_program' => null,
             'sent_student' => $student,
@@ -83,15 +72,12 @@ class StudentProgramController extends Controller
 
     public function store_submit(Request $request, StudentProgram $student_program)
     {
-        // dd($student_program);
-        // global $rules, $messages;
         $request->merge([
             "has_program_study" => $this->checkboxConvert($request->get("has_program_study","off")),
             "has_committee" => $this->checkboxConvert($request->get("has_committee","off")),
             "is_current" => $this->checkboxConvert($request->get("is_current","off")),
             "is_graduated" => $this->checkboxConvert($request->get("is_graduated","off")),
         ]);
-
 
         if($request->has('semester_graduated_name_id')) // if student is graduated
         {
@@ -104,7 +90,7 @@ class StudentProgramController extends Controller
         $this->validate($request,$this->rules,$this->messages);
 
         $semester_started_id = Semester::firstOrCreate([
-            'name_id' => $request->get('semester_started_name_id'), 
+            'name_id' => $request->get('semester_started_name_id'),
             'calendar_year' => $request->get('semester_started_year'),
             'academic_year' => Semester::getAcademicYear($request->get('semester_started_name_id'),$request->get('semester_started_year')),
         ])->id;
@@ -114,7 +100,7 @@ class StudentProgramController extends Controller
         if($request->semester_graduated_name_id != "") // if have graduated
         {
             $array_for_fill['semester_graduated_id'] = Semester::firstOrCreate([
-                'name_id' => $request->get('semester_graduated_name_id'), 
+                'name_id' => $request->get('semester_graduated_name_id'),
                 'calendar_year' => $request->get('semester_graduated_year'),
                 'academic_year' => Semester::getAcademicYear($request->get('semester_graduated_name_id'),$request->get('semester_graduated_year')),
             ])->id;
@@ -132,7 +118,6 @@ class StudentProgramController extends Controller
             'sent_student' => $student_program->student,
             'advisors' => Advisor::all()->lists("full_name","id"),
             'programs' => Program::lists("name","id"),
-            // 'semesters' => Semester::all()->lists("full_name","id")
             'semester_names' => SemesterName::all()->lists('name','id'),
             'needs_committee' => Program::lists('needs_committee','id'),
         ]);
@@ -140,14 +125,12 @@ class StudentProgramController extends Controller
 
     public function update_submit(Request $request, StudentProgram $student_program)
     {
-        // global $rules, $messages;
         $request->merge([
             "has_program_study" => $this->checkboxConvert($request->get("has_program_study","off")),
             "has_committee" => $this->checkboxConvert($request->get("has_committee","off")),
             "is_current" => $this->checkboxConvert($request->get("is_current","off")),
             "is_graduated" => $this->checkboxConvert($request->get("is_graduated","off")),
         ]);
-
 
         if($request->has('semester_graduated_name_id'))
         {
@@ -159,10 +142,8 @@ class StudentProgramController extends Controller
 
         $this->validate($request,$this->rules,$this->messages);
 
-        // dd($request->all());
-
         $semester_started_id = Semester::firstOrCreate([
-            'name_id' => $request->get('semester_started_name_id'), 
+            'name_id' => $request->get('semester_started_name_id'),
             'calendar_year' => $request->get('semester_started_year'),
             'academic_year' => Semester::getAcademicYear($request->get('semester_started_name_id'),$request->get('semester_started_year')),
         ])->id;
@@ -172,7 +153,7 @@ class StudentProgramController extends Controller
         if($request->semester_graduated_name_id != "") // if have graduated
         {
             $array_for_fill['semester_graduated_id'] = Semester::firstOrCreate([
-                'name_id' => $request->get('semester_graduated_name_id'), 
+                'name_id' => $request->get('semester_graduated_name_id'),
                 'calendar_year' => $request->get('semester_graduated_year'),
                 'academic_year' => Semester::getAcademicYear($request->get('semester_graduated_name_id'),$request->get('semester_graduated_year')),
             ])->id;
@@ -187,79 +168,4 @@ class StudentProgramController extends Controller
 
         return Redirect::to('/student');
     }
-    // /**
-    // * Display a listing of the resource.
-    // *
-    // * @return \Illuminate\Http\Response
-    //  */
-    // public function index()
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Show the form for creating a new resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function create()
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show($id)
-    // {
-    //     //
-    // }
-
-    // /*
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit($id)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update(Request $request, $id)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy($id)
-    // {
-    //     //
-    // }
 }
