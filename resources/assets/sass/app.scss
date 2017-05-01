@@ -1,5 +1,19 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
+/// Mixin to prefix a property
+/// @author Hugo Giraudel
+/// @param {String} $property - Property name
+/// @param {*} $value - Property value
+/// @param {List} $prefixes (()) - List of prefixes to print
+@mixin prefix($property, $value, $prefixes: ()) {
+  @each $prefix in $prefixes {
+    #{'-' + $prefix + '-' + $property}: $value;
+  }
+
+  // Output standard non-prefixed declaration
+  #{$property}: $value;
+}
+
 span.glyphicon-ok {
     color: green;
 }
@@ -12,16 +26,49 @@ select.form-control + span {
     width: 100% !important;
 }
 
-$undGreen: #009a44;
+$und_green: #009a44;
+$und_border_color: #296b29;
 $navbar_text_color: #e6e6e6;
 $navbar_text_color_hover: #fff;
 
+$und_select_color: lighten($und_green, 10%);
+
+/* Custom style for Select2 elements for highlighted options */
+.select2-container--bootstrap {
+    .select2-results__option--highlighted[aria-selected] {
+        background-color: $und_select_color;
+    }
+}
+
+/* Custom style for splash page jumbotron */
+.jumbotron {
+    // background-color: #4c4945;
+    background-color: inherit;
+
+    color: #fff;
+    text-align: center;
+
+    > img {
+        display: block;
+        margin: 20px auto 10px;
+    }
+
+    > .btn {
+        background-color: $und_select_color;
+        border-color: $und_border_color;
+        @include prefix(box-shadow, #{0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.2)}, ms webkit moz o);
+        color: #fff;
+        margin-top: 30px;
+    }
+}
+
+/* Custom style for a UND themed navbar */
 .navbar-und {
-    background-color: $undGreen;
-    border-color: #008037;
+    background-color: $und_green;
+    border-color: $und_border_color;
 
     .navbar-toggle {
-        border-color: #008037;
+        border-color: $und_border_color;
 
         &:focus, &:hover {
             background-color: #00b34d;
@@ -78,9 +125,20 @@ $navbar_text_color_hover: #fff;
             }
 
             > a, > a:focus, > a:hover {
-                background-color: #008037;
+                background-color: $und_border_color;
                 color: $navbar_text_color_hover;
             }
         }
+    }
+}
+
+/* Custom style for UND themed panel */
+.panel-und {
+    border-color: $und_border_color;
+
+    > .panel-heading {
+        background-color: $und_green;
+        border-color: $und_border_color;
+        color: #fff;
     }
 }

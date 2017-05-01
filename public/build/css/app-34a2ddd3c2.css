@@ -7,11 +7,33 @@ span.glyphicon-remove {
 select.form-control + span {
   width: 100% !important; }
 
+/* Custom style for Select2 elements for highlighted options */
+.select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
+  background-color: #00cd5b; }
+
+/* Custom style for splash page jumbotron */
+.jumbotron {
+  background-color: inherit;
+  color: #fff;
+  text-align: center; }
+  .jumbotron > img {
+    display: block;
+    margin: 20px auto 10px; }
+  .jumbotron > .btn {
+    background-color: #00cd5b;
+    border-color: #296b29;
+    -ms-box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.2);
+    -o-box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.2);
+    color: #fff;
+    margin-top: 30px; }
+
+/* Custom style for a UND themed navbar */
 .navbar-und {
   background-color: #009a44;
-  border-color: #008037; }
+  border-color: #296b29; }
   .navbar-und .navbar-toggle {
-    border-color: #008037; }
+    border-color: #296b29; }
     .navbar-und .navbar-toggle:focus, .navbar-und .navbar-toggle:hover {
       background-color: #00b34d; }
     .navbar-und .navbar-toggle .icon-bar {
@@ -38,7 +60,15 @@ select.form-control + span {
       background-color: transparent;
       color: #fff; } }
   .navbar-und .navbar-nav > .open > a, .navbar-und .navbar-nav > .open > a:focus, .navbar-und .navbar-nav > .open > a:hover {
-    background-color: #008037;
+    background-color: #296b29;
+    color: #fff; }
+
+/* Custom style for UND themed panel */
+.panel-und {
+  border-color: #296b29; }
+  .panel-und > .panel-heading {
+    background-color: #009a44;
+    border-color: #296b29;
     color: #fff; }
 
 /*# sourceMappingURL=app.css.map */

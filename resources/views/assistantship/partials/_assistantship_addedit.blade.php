@@ -190,7 +190,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default hidden" id="gta_assignment_panel">
+<div class="panel panel-und hidden" id="gta_assignment_panel">
 	<div class="panel-heading">
 		<h2 class="panel-title">GTA Assignment</h2>
 	</div>

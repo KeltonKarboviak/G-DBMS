@@ -4,7 +4,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
+			<div class="panel panel-und">
 				<div class="panel-heading">
 					<h2 class="panel-title">Edit a GCE Result</h2>
 				</div>

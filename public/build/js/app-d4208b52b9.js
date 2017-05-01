@@ -30,6 +30,9 @@ $(function () {
 });
 
 
+// Sets the default for every Select2 element to use the Bootstrap theme
+$.fn.select2.defaults.set('theme', 'bootstrap');
+
 function ConfirmDelete() {
     return confirm("Are you sure you want to delete?");
 }

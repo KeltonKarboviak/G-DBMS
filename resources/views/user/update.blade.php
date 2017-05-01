@@ -11,7 +11,7 @@
 
                 @can('update_pass', $user)
                     <!-- Panel for update User's Password -->
-                    <div class="panel panel-default">
+                    <div class="panel panel-und">
                         <div class="panel-heading">
                             <div class="panel-title">Update Password</div>
                         </div>
@@ -69,11 +69,11 @@
                                 </div>
                             {!! Form::close() !!}
                         </div>
-                    </div> <!-- /.panel .panel-default User's Password -->
+                    </div> <!-- /.panel .panel-und User's Password -->
                 @endcan
 
                 <!-- Panel for updating User's Basic Information -->
-                <div class="panel panel-default">
+                <div class="panel panel-und">
                     <div class="panel-heading">
                         <div class="panel-title">Update User Profile</div>
                     </div>
@@ -147,7 +147,7 @@
                             </div>
                         {!! Form::close() !!}
                     </div>
-                </div> <!-- /.panel .panel-default User's Information -->
+                </div> <!-- /.panel .panel-und User's Information -->
             </div> <!-- /.panel-group -->
         </div> <!-- /.col-md-8 .col-md-offset-2 -->
 
