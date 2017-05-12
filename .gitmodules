@@ -1,0 +1,6 @@
+[submodule "docs/SRS"]
+	path = docs/SRS
+	url = https://git.overleaf.com/7953154xqdcysvczkwq
+[submodule "docs/SDS"]
+	path = docs/SDS
+	url = https://git.overleaf.com/8837438zzkhhgdrxtcj
